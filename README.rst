@@ -5,6 +5,13 @@ Cosmo Utils - Utitlities for LSS Research
     :target: http://www.astropy.org
     :alt: Powered by Astropy Badge
 
+.. image:: https://travis-ci.org/vcalderon2009/cosmo_utils.svg?branch=master
+    :target: https://travis-ci.org/vcalderon2009/cosmo_utils
+
+.. image:: https://readthedocs.org/projects/cosmo-utils/badge/?version=latest
+    :target: http://cosmo-utils.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 
 Repository with scripts used in my LSS research
 
