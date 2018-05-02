@@ -33,8 +33,8 @@ def get_test_path():
         Path to the `test` directory
     """
     # Base path
-    module_path    = cosmo_utils__path__[0]
-    test_path      = os.path.join(module_path,'utils','tests')
+    module_path    = cosmo_utils.__path__
+    test_path      = os.path.join(module_path[0],'utils','tests')
     test_data_path = os.path.join(test_path, 'data')
     # test_path      = os.path.join(  base_path,
     #                                 'cosmo_utils',
