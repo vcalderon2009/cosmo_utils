@@ -2,7 +2,7 @@
 cosmo_utils Documentation
 *************************
 
-This is the documentation for cosmo_utils.
+This is the documentation for cosmo_utils. 
 
 Reference/API
 =============
