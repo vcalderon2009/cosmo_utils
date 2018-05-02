@@ -30,8 +30,8 @@ def get_test_path():
     test_path : str
         Path to the `test` directory
     """
-    test_path      = os.path.abspath('.')
-    test_data_path = os.path.abspath('./data')
+    test_path      = os.path.dirname(os.path.abspath('.'))
+    test_data_path = os.path.join(test_path, 'data')
 
     return test_path, test_data_path
 
