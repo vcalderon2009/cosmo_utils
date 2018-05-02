@@ -21,4 +21,5 @@ if not _ASTROPY_SETUP_:
 
     from .example_mod import *
     from . import utils
+    from . import custom_exceptions
 
