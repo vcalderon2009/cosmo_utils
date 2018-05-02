@@ -12,6 +12,10 @@ Cosmo Utils - Utitlities for LSS Research
     :target: http://cosmo-utils.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://coveralls.io/repos/github/vcalderon2009/cosmo_utils/badge.svg?branch=master
+    :target: https://coveralls.io/github/vcalderon2009/cosmo_utils?branch=master
+
+
 
 Repository with scripts used in my LSS research
 
