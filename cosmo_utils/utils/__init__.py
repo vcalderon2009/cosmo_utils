@@ -3,7 +3,10 @@
 # This sub-module is destined for common non-package specific utility
 # functions.
 
-from . import file_utils
-from . import work_paths
+from __future__ import absolute_import
+
+from cosmo_utils.utils import file_utils
+from cosmo_utils.utils import work_paths
+
 # from . import stats_funcs
 # from . import file_readers
