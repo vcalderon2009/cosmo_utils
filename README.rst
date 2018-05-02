@@ -1,4 +1,4 @@
-Repository with scripts used in my LSS research
+Cosmo Utils - Utitlities for LSS Research
 -----------------------------------------------
 
 .. image:: http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat
@@ -6,7 +6,7 @@ Repository with scripts used in my LSS research
     :alt: Powered by Astropy Badge
 
 
-
+Repository with scripts used in my LSS research
 
 License
 -------

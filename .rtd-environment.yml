@@ -2,8 +2,10 @@ name: cosmo_utils
 
 channels:
     - astropy
+    - conda-forge
 
 dependencies:
+    - python >= 3.5
     - astropy
     - Cython
     - matplotlib
