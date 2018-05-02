@@ -17,6 +17,7 @@ Set of test functions for the `stats_func` functions
 import os
 import numpy as np
 import pytest
+import cosmo_utils
 from cosmo_utils.utils import file_utils as fd
 from cosmo_utils.utils import work_paths as wp
 
@@ -32,8 +33,9 @@ def get_test_path():
         Path to the `test` directory
     """
     # Base path
-    test_path      = os.path.dirname('./')
-    test_data_path = './data/'
+    module_path    = cosmo_utils__path__[0]
+    test_path      = os.path.join(module_path,'utils','tests')
+    test_data_path = os.path.join(test_path, 'data')
     # test_path      = os.path.join(  base_path,
     #                                 'cosmo_utils',
     #                                 'utils',
