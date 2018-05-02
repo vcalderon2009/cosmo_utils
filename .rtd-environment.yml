@@ -10,5 +10,7 @@ dependencies:
     - Cython
     - matplotlib
     - numpy
+    - h5py
+    - pandas
 #   - pip:
 #       - dependency_from_pip
