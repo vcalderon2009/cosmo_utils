@@ -32,13 +32,13 @@ env:
         - ASTROPY_VERSION=stable
         - MAIN_CMD='python setup.py'
         - SETUP_CMD='test'
-        - PIP_DEPENDENCIES=''
+        - PIP_DEPENDENCIES='astropy, matplotlib, numpy, pandas, h5py, GitPython'
         - EVENT_TYPE='pull_request push'
 
         
         # List other runtime dependencies for the package that are available as
         # conda packages here.
-        - CONDA_DEPENDENCIES='matplotlib, numpy, pandas, h5py, GitPython'
+        - CONDA_DEPENDENCIES=''
         
         # List other runtime dependencies for the package that are available as
         # pip packages here.
