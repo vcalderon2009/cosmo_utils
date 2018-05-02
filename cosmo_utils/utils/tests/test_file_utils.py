@@ -18,6 +18,7 @@ import os
 import numpy as np
 import pytest
 from cosmo_utils.utils import file_utils as fd
+from cosmo_utils.utils import work_paths as wp
 
 ## Functions
 @pytest.fixture
@@ -30,7 +31,12 @@ def get_test_path():
     test_path : str
         Path to the `test` directory
     """
-    test_path      = os.path.dirname(os.path.abspath('.'))
+    # Base path
+    base_path      = wp.git_root_dir(__file__)
+    test_path      = os.path.join(  base_path,
+                                    'cosmo_utils',
+                                    'utils',
+                                    'tests')
     test_data_path = os.path.join(test_path, 'data')
 
     return test_path, test_data_path
