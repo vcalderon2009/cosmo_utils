@@ -22,7 +22,7 @@ Set of files to facilitate paths
 import os
 import git
 import socket
-import cosmo_utils.utils.file_utils as fd
+from   cosmo_utils.utils import file_utils as fd
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
 
 ## Functions
