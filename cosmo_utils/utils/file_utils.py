@@ -177,7 +177,12 @@ def File_Exists(filename):
     LSSUtils_Error : Exception
     """
     if os.path.exists(os.path.abspath(filename)):
-        pass
+        try:
+            assert(os.path.isfile(os.path.abspath(filename)))
+        except:
+            msg = '{0} `filename` {1} not found!'.format(Program_Msg(__file__),
+                filename)
+            raise LSSUtils_Error(msg)
     else:
         msg = '{0} `filename` {1} not found!'.format(Program_Msg(__file__),
             filename)
