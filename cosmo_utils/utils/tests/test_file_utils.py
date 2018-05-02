@@ -32,12 +32,13 @@ def get_test_path():
         Path to the `test` directory
     """
     # Base path
-    base_path      = wp.git_root_dir(__file__)
-    test_path      = os.path.join(  base_path,
-                                    'cosmo_utils',
-                                    'utils',
-                                    'tests')
-    test_data_path = os.path.join(test_path, 'data')
+    test_path      = os.path.dirname('./')
+    test_data_path = './data/'
+    # test_path      = os.path.join(  base_path,
+    #                                 'cosmo_utils',
+    #                                 'utils',
+    #                                 'tests')
+    # test_data_path = os.path.join(test_path, 'data')
 
     return test_path, test_data_path
 
