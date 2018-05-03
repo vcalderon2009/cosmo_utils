@@ -78,6 +78,81 @@ def test_Ang_Distance_comparison_astropy():
         ## Checking that arrays are the same or similar
         np.testing.assert_allclose(out_haversine, out_astropy)
 
-## Testing `Ang_Distance` for errors
+## Testing `Ang_Distance` for errors - Units
+Ang_Distance_test_unit_arr   = [ 'deg2' , 'nan'      ]
+@pytest.mark.parametrize('unit', Ang_Distance_test_unit_arr)
+def test_Ang_Distance_unit_errors(unit):
+    """
+    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and 
+    output parameters.
+
+    This function makes sure that errors are raised whenever a wrong 
+    input is given.
+
+    Parameters
+    -----------
+    unit : {'dec','rad'} str, optional
+        Unit of `ra1`, `ra2`, `dec1`, and `dec2`.
+        This will also determine the final unit that outputs this function.
+
+    method : {'haversine', 'astropy'} str, optional
+        Method to use in order to calculate angular separation.
+        This variable is to by default to the `haversine` method.
+        If `astropy`, it will use the astropy framework to determine the 
+        angular separation.
+    """
+    ## Producing set of Right Ascension and Declination arrays
+    ra_lim  = (  0, 360.)
+    dec_lim = (-90,  90.)
+    for ii in range(1, 1000):
+        ## Random array for RA and Dec
+        ra1  = ra_lim [0] + np.random.random_sample(ii) * (ra_lim [1]-ra_lim [0])
+        dec1 = dec_lim[0] + np.random.random_sample(ii) * (dec_lim[1]-dec_lim[0])
+        ra2  = ra_lim [0] + np.random.random_sample(ii) * (ra_lim [1]-ra_lim [0])
+        dec2 = dec_lim[0] + np.random.random_sample(ii) * (dec_lim[1]-dec_lim[0])
+        ## Testing outputs from different methods
+        # Haversine method
+        with pytest.raises(LSSUtils_Error):
+            out_astropy   = geometry.Ang_Distance(ra1, ra2, dec1, dec2,
+                method='astropy', unit=unit)
+
+## Testing `Ang_Distance` for errors - Method
+Ang_Distance_test_method_arr = [ 'meter', 'NotMethod']
+@pytest.mark.parametrize('method', Ang_Distance_test_method_arr)
+def test_Ang_Distance_method_errors(method):
+    """
+    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and 
+    output parameters.
+
+    This function makes sure that errors are raised whenever a wrong 
+    input is given.
+
+    Parameters
+    -----------
+    unit : {'dec','rad'} str, optional
+        Unit of `ra1`, `ra2`, `dec1`, and `dec2`.
+        This will also determine the final unit that outputs this function.
+
+    method : {'haversine', 'astropy'} str, optional
+        Method to use in order to calculate angular separation.
+        This variable is to by default to the `haversine` method.
+        If `astropy`, it will use the astropy framework to determine the 
+        angular separation.
+    """
+    ## Producing set of Right Ascension and Declination arrays
+    ra_lim  = (  0, 360.)
+    dec_lim = (-90,  90.)
+    for ii in range(1, 1000):
+        ## Random array for RA and Dec
+        ra1  = ra_lim [0] + np.random.random_sample(ii) * (ra_lim [1]-ra_lim [0])
+        dec1 = dec_lim[0] + np.random.random_sample(ii) * (dec_lim[1]-dec_lim[0])
+        ra2  = ra_lim [0] + np.random.random_sample(ii) * (ra_lim [1]-ra_lim [0])
+        dec2 = dec_lim[0] + np.random.random_sample(ii) * (dec_lim[1]-dec_lim[0])
+        ## Testing outputs from different methods
+        # Haversine method
+        with pytest.raises(LSSUtils_Error):
+            out_astropy   = geometry.Ang_Distance(ra1, ra2, dec1, dec2,
+                method=method, unit='deg')
+
 
 
