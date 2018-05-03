@@ -143,7 +143,7 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
 
     Examples
     -----------
-    >>> Ang_Distance(12.0, 25.0, 10.0, -5.0, unit='deg')
+    >>> np.round(Ang_Distance(12.0, 25.0, 10.0, -5.0, unit='deg'),4)
     19.8168
 
     Notes
