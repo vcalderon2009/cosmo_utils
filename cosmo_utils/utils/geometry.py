@@ -55,7 +55,7 @@ def flip_angles(ang, unit='deg'):
     110.0
 
     >>> flip_angles([-50, 110, -10], unit='deg')
-    array([-50.0, 110.0, 350.0])
+    array([310.0, 110.0, 350.0])
     """
     file_msg = fd.Program_Msg(__file__)
     # Checking type of `ang`
