@@ -179,7 +179,7 @@ test_return_perc_arr     = [(True , 1),
 arr_digit_expected_arr   = [('n'  , 4),
                             ('y'  , 6),
                             ('o'  , 2),]
-test_stats_one_nelem_arr = [100, 1000, 10000, 50, 2]
+test_stats_one_nelem_arr = [100, 1000, 10000, 50, 20]
 @pytest.mark.parametrize('return_perc, return_perc_val', test_return_perc_arr)
 @pytest.mark.parametrize('arr_digit, expected', arr_digit_expected_arr)
 @pytest.mark.parametrize('nelem', test_stats_one_nelem_arr)
