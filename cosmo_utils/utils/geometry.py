@@ -83,7 +83,7 @@ def flip_angles(ang, unit='deg'):
         if unit == 'rad':
             ang_final = np.radians(ang_converted)
         elif unit == 'deg':
-            ang_final = ang_converted
+            ang_final = float(ang_converted)
     else:
         try:
             ang = np.asarray(ang)
@@ -100,6 +100,8 @@ def flip_angles(ang, unit='deg'):
                 ang_final = np.radians(ang_converted)
             elif unit == 'deg':
                 ang_final = ang_converted
+            # Converting to float
+            ang_final = ang_final.astype(float)
         except:
             msg = '{0} `ang` could not be converted!'.format(file_msg)
             raise LSSUtils_Error(msg)
