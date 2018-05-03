@@ -298,8 +298,8 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
         msg = msg.format(file_msg)
         raise LSSUtils_Error(msg)
     # `arr_len`
-    if not (arr_len > 0):
-        msg = '{0} `arr_len` ({1}) must be greated than zero!'.format(
+    if not (arr_len >= 0):
+        msg = '{0} `arr_len` ({1}) must be greater or equal than zero!'.format(
             file_msg, arr_len)
         raise LSSUtils_Error(msg)
     # `bin_statval`
