@@ -93,7 +93,7 @@ def flip_angles(ang, unit='deg'):
             elif unit == 'deg':
                 ang_converted = ang
             # Checking the range of `ang`
-            ang_converted = np.asarray([xx if xx > 0 else x+360 for xx in 
+            ang_converted = np.asarray([xx if xx > 0 else xx+360 for xx in 
                 ang_converted])
             # Converting back to radians, if applicable
             if unit == 'rad':
