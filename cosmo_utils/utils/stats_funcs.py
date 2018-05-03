@@ -214,7 +214,7 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
 ## Main framework for `Stats_one_arr` and `Stats_two_arr`
 def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n', 
     weights=None, statfunc=np.nanmean, bin_statval='average', 
-    failval = np.nan):
+    return_perc=False, failval = np.nan):
     """
     Calculates statists for 2 arrays
 
@@ -232,8 +232,9 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     arr_digit : {'n', 'y', 'o'} str, optional
         Option for which elements to return.
         - 'n' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`
-        - 'n' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`, 
-        - 'n' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`
+        - 'y' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`,
+                        `x_bins_data`, `y_bins_data` 
+        - 'o' : Returns `x_bins_data`, `y_bins_data` 
 
     weights : array_like or NoneType, optional
         Array of weights for values in `y1`. This is set to None by default.
@@ -247,6 +248,11 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
         By default, this variable is set to `average`, which means 
         that the values are those of the averages of the bins in `x1` and 
         `y1`.
+
+    return_perc : boolean, optional
+        If true, it also returns the `percentiles` of the data.
+        Last item in the return list.
+        This variable is set to False by default.
 
     failval : int, float, NoneType, or NaN, optional
         This is the value used when no data is available for the bin.
@@ -285,6 +291,10 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     # Array dimensions
     if not ((len(x) > 0) and (len(y) > 0)):
         msg = '{0} The arrays `x1` and `y2` must have at least one value'
+        msg = msg.format(file_msg)
+        raise LSSUtils_Error(msg)
+    if not ((np.asarray(x).ndim == 1) and (np.asarray(y).ndim == 1)):
+        msg = '{0} The arrays `x1` and `y2` must have dimension of `1`'
         msg = msg.format(file_msg)
         raise LSSUtils_Error(msg)
     # `arr_len`

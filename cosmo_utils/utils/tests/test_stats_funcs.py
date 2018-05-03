@@ -32,7 +32,7 @@ myceil_test = [ (12  , 10, 20.0),
 @pytest.mark.parametrize('x, base, output', myceil_test)
 def test_myceil(x, base, output):
     """
-    Tests the function `lss_utils.utils.stats_funcs.myceil` for input and 
+    Tests the function `cosmo_utils.utils.stats_funcs.myceil` for input and 
     output parameters
 
     Parameters
@@ -62,7 +62,7 @@ myfloor_test = [(12   , 10 , 10.0 ),
 @pytest.mark.parametrize('x, base, output', myfloor_test)
 def test_myfloor(x, base, output):
     """
-    Tests the function `lss_utils.utils.stats_funcs.myceil` for input and 
+    Tests the function `cosmo_utils.utils.stats_funcs.myceil` for input and 
     output parameters
 
     Parameters
@@ -91,7 +91,7 @@ bins_arr_test = [   ([1,2,3,4,5], 2, [0., 2., 4, 6.]),
 @pytest.mark.parametrize('arr, base, output', bins_arr_test)
 def test_Bins_array_create(arr, base, output):
     """
-    Tests the function `lss_utils.utils.stats_funcs.Bins_array_create` for 
+    Tests the function `cosmo_utils.utils.stats_funcs.Bins_array_create` for 
     input and output parameters
 
     Parameters
@@ -121,7 +121,7 @@ sigma_calcs_test = [    (1, 100 , (1,100)),
 def test_sigma_calcs_shape(ndim, nelem, output, type_sigma,
     return_mean, out_type):
     """
-    Tests the function `lss_utils.utils.stats_funcs.sigma_calcs` for 
+    Tests the function `cosmo_utils.utils.stats_funcs.sigma_calcs` for 
     input and output parameters
 
     Parameters
@@ -171,4 +171,90 @@ def test_sigma_calcs_shape(ndim, nelem, output, type_sigma,
         assert(type(dict_test_all[0]) ==  dict)
         assert(type(dict_test_all[1]) == np.ndarray)
         assert(type(dict_test_all[2]) == np.ndarray)
+
+##
+## Testing `Stats_one_arr`
+test_return_perc_arr     = [(True , 1),
+                            (False, 0)]
+arr_digit_expected_arr   = [('n'  , 4),
+                            ('y'  , 6),
+                            ('o'  , 2),]
+test_stats_one_nelem_arr = [100, 1000, 10000, 50, 2]
+@pytest.mark.parametrize('return_perc, return_perc_val', test_return_perc_arr)
+@pytest.mark.parametrize('arr_digit, expected', arr_digit_expected_arr)
+@pytest.mark.parametrize('nelem', test_stats_one_nelem_arr)
+def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
+    expected, nelem, bins=10, base=10):
+    """
+    Tests the function `cosmo_utils.utils.stats_funcs.sigma_calcs` for 
+    input and output parameters
+
+    Parameters
+    ----------
+    return_perc : boolean, optional
+        If true, it also returns the `percentiles` of the data.
+        Last item in the return list.
+        This variable is set to False by default.
+
+    return_perc_val : int
+        Value to add to `expected`, given if returning the percentiles
+        of the bins or not.
+
+    arr_digit : {'n', 'y', 'o'} str, optional
+        Option for which elements to return.
+        - 'n' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`
+        - 'y' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`,
+                        `x_bins_data`, `y_bins_data` 
+        - 'o' : Returns `x_bins_data`, `y_bins_data` 
+    
+    expected : int
+        Expected number of elements in the tuple, based on the input 
+        arguments
+
+    nelem : int
+        Size of the array. It will test if all of the elements are 
+        being returned correctly
+    """
+    ## Creating random arrays
+    x = np.random.random(nelem) * 50.
+    y = np.random.random(nelem) * 100.
+    ##
+    ## Running function
+    output = stats_funcs.Stats_one_arr(x, y, base=base, 
+                arr_digit=arr_digit, statfunc=np.nanmean,
+                return_perc=return_perc)
+    ##
+    ## Testing number of elements returned
+    output_expected = expected + return_perc_val
+    assert(len(output) == output_expected)
+    ## Number of elements in array
+    # (   x_bins_data,
+    #     y_bins_data) = stats_funcs.Stats_one_arr(x, y, base=base, 
+    #                     arr_digit='o', statfunc=np.nanmean,
+    #                     return_perc=False)
+    # assert(len(x_bins_data.flatten()) == nelem)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
