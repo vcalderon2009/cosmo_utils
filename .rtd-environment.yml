@@ -12,5 +12,6 @@ dependencies:
     - numpy
     - h5py
     - pandas
-#   - pip:
-#       - dependency_from_pip
+    - scipy
+  - pip:
+      - GitPython
