@@ -28,7 +28,7 @@ seed = np.random.seed(0)
 
 ## Testing function `flip_angles`
 flip_angles_test_arr = [    (-50, 310.0),
-                            (130.5, 130.5)
+                            (130.5, 130.5),
                             (-0.5, 359.5),
                             ([-10., -20.5, 60.], np.array([350.0, 339.5, 60.0])),
                             (np.array([12., -10]), np.array([12.0, 350.0]))]
