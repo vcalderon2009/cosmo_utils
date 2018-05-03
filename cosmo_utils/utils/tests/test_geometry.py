@@ -50,6 +50,6 @@ def test_flip_angles(input_ang, output_ang):
     ## Checking that outputs from function are the ones to be expected
     output_func = geometry.flip_angles(input_ang)
     # Checking agains 
-    np.testing.assert_allclose(actual, desired)
+    np.testing.assert_allclose(output_func, output_ang)
 
 ## Testing function Ang_Distance
