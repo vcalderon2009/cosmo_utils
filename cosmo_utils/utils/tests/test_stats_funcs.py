@@ -18,6 +18,8 @@ import numpy as np
 import pytest
 from   cosmo_utils.utils import stats_funcs
 
+## Setting seed
+seed = np.random.seed(0)
 ## Functions
 
 ##
