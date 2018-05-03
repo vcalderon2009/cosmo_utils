@@ -228,11 +228,11 @@ def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
     output_expected = expected + return_perc_val
     assert(len(output) == output_expected)
     ## Number of elements in array
-    # (   x_bins_data,
-    #     y_bins_data) = stats_funcs.Stats_one_arr(x, y, base=base, 
-    #                     arr_digit='o', statfunc=np.nanmean,
-    #                     return_perc=False)
-    # assert(len(x_bins_data.flatten()) == nelem)
+    (   x_bins_data,
+        y_bins_data) = stats_funcs.Stats_one_arr(x, y, base=base, 
+                        arr_digit='o', statfunc=np.nanmean, arr_len=0,
+                        return_perc=False)
+    assert(len(x_bins_data.flatten()) == nelem)
 
 
 
