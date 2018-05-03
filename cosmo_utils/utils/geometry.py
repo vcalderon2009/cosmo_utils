@@ -106,6 +106,100 @@ def flip_angles(ang, unit='deg'):
 
     return ang_final
 
+## Calculates the Angular distance between 2 points
+def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
+    """
+    Calculates angular separation between two sets of points with given
+    right ascensions and declinations.
+
+    Taken from: https://en.wikipedia.org/wiki/Haversine_formula
+
+    Parameters
+    -----------
+    ra1, ra2 : float
+        Right Ascension of the 1st and 2nd points. Units in `degrees` 
+        by default.
+
+    dec1, dec2 : float
+        Declination of the 1st and 2nd points. Units in `degrees` by default.
+    
+    unit : {'dec','rad'} str, optional
+        Unit of `ra1`, `ra2`, `dec1`, and `dec2`.
+        This will also determine the final unit that outputs this function.
+
+    method : {'haversine', 'astropy'} str, optional
+        Method to use in order to calculate angular separation.
+        This variable is to by default to the `haversine` method.
+        If `astropy`, it will use the astropy framework to determine the 
+        angular separation.
+
+    Returns
+    -----------
+    ang_sep : float
+        Angular separation between 1st and 2nd point.
+        In units of `degrees`.
+
+    Examples
+    -----------
+    >>> Ang_Distance(12.0, 25.0, 10.0, -5.0, unit='deg')
+    19.8168
+
+    Notes
+    -----------
+    A = 90. - `dec2`
+    B = 90. - `dec1`
+    D = `ra1` - `ra2`
+    c = Angle between two points
+    """
+    file_msg = fd.Program_Msg(__file__)
+    ## Checking input arguments
+    # Units
+    if not ((unit == 'deg') or (unit == 'rad')):
+        msg = '{0} `unit` ({1}) is not a valid argument'.format(
+            file_msg, unit)
+        raise LSSUtils_Error(msg)
+    # Method
+    if not ((method == 'haversine') or (method == 'astropy')):
+        msg = '{0} `method` ({1}) is not a valid argument'.format(
+            file_msg, method)
+        raise LSSUtils_Error(msg)
+    ##
+    ## Flipping angles
+    ra1 = flip_angles(ra1, unit=unit, )
+    ra2 = flip_angles(ra2, unit=unit)
+    ##
+    ## Haversine Method
+    if method == 'haversine':
+        A = np.radians(90. - dec1)
+        B = np.radians(90. - dec2)
+        D = np.radians(ra1 - ra2 )
+        # Distance
+        ang_sep = (np.sin((A-B)*.5))**2. + np.sin(A)*np.sin(B)*(np.sin(D*.5))**2.
+        ang_sep = np.degrees(2 * np.arcsin(ang_sep**0.5))
+    ##
+    ## Astropy Method
+    if method == 'astropy':
+        # Imports
+        from astropy import coordinates as coord
+        from astropy.coordinates import SkyCoord
+        from astropy import units as u
+        # Converting to `units`
+        if unit == 'deg':
+            unit_opt = u.degree
+        elif unit == 'rad':
+            unit_opt = u.radians
+        # Calculations
+        P1    = SkyCoord(ra=ra1, dec=dec1, unit=(unit_opt, unit_opt))
+        P2    = SkyCoord(ra=ra2, dec=dec2, unit=(unit_opt, unit_opt))
+        ang_sep = P1.separation(P2)
+        # Converting to final units
+        if unit == 'deg':
+            ang_sep = ang_sep.degrees
+        elif unit == 'rad':
+            ang_sep = ang_sep.radians
+
+    return ang_sep
+
 
 
 
