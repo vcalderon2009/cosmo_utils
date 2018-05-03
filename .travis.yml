@@ -14,6 +14,13 @@ sudo: false
 #
 # https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
 
+notifications:
+  email:
+    recipients:
+      - victor.calderon90@gmail.com
+    on_success: change
+    on_failure: always
+
 addons:
     apt:
         packages:
