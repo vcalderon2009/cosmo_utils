@@ -3,13 +3,8 @@ Documentation
 
 This is the documentation for cosmo_utils.
 
-
 .. toctree::
-  :maxdepth: 2
+   :maxdepth: 1
 
-  cosmo_utils/index.rst
+   full_ref_api/cosmo_utils_full_api
 
-.. note:: The layout of this directory is simply a suggestion.  To follow
-          traditional practice, do *not* edit this page, but instead place
-          all documentation for the package inside ``cosmo_utils/``.
-          You can follow this practice or choose your own layout.
