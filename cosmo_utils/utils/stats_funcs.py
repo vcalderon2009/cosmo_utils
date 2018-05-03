@@ -44,7 +44,7 @@ def myceil(x, base=10):
     y : float
         Closest float number to `x`, i.e. upper-bound float
 
-    Example
+    Examples
     ----------
     >>> myceil(12, 10)
     20.0
@@ -77,7 +77,7 @@ def myfloor(x, base=10):
     y : float
         Closest float number to `x`, i.e. upper-bound float
 
-    Example
+    Examples
     ----------
     >>> myfloor(12, 10)
     10.0
@@ -143,20 +143,19 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
 
     Parameters
     -----------
-    data_arr: numpy.ndarray, shape( param_dict['nrpbins'], param_dict['itern_tot'])
+    data_arr : `numpy.ndarray`, shape( param_dict['nrpbins'], param_dict['itern_tot'])
         array of values, from which to calculate percentiles or St. Dev.
 
-    type_sigma: string, optional (default = 'std')
-        option for calculating either `percentiles` or `standard deviations`
-        Options:
+    type_sigma : {'perc', 'std'} string, optional (default = 'std')
+        Option for calculating either `percentiles` or `standard deviations`
             - 'perc': calculates percentiles
             - 'std' : uses standard deviations as 1-, 2-, and 3-sigmas
 
-    perc_arr: array_like, optional (default = [68., 95., 99.7])
-        array of percentiles to calculate
+    perc_arr : array_like, optional (default = [68., 95., 99.7])
+        Array of percentiles to calculate
 
-    return_mean_std: boolean, optional (default = False)
-        option for returning mean and St. Dev. along with `sigma_dict`
+    return_mean_std : boolean, optional (default = False)
+        Option for returning mean and St. Dev. along with `sigma_dict`
 
     Return
     ----------
