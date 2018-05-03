@@ -220,34 +220,34 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
 
     Parameters
     ----------
-    x1, y1 : array_like, shape(N,)
+    x, y : array_like, shape(N,)
         Sets of elements for the 1st and 2nd observable
 
     base : float, optional
-        Bin width in units of `x1`. This variable is set to 1. by default.
+        Bin width in units of `x`. This variable is set to 1. by default.
 
     arr_len : int, optional
-        Minimum number of elements in each bin of `x1`
+        Minimum number of elements in each bin of `x`
 
     arr_digit : {'n', 'y', 'o'} str, optional
         Option for which elements to return.
-        - 'n' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`
-        - 'y' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`,
+        - 'n' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`
+        - 'y' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`,
                         `x_bins_data`, `y_bins_data` 
         - 'o' : Returns `x_bins_data`, `y_bins_data` 
 
     weights : array_like or NoneType, optional
-        Array of weights for values in `y1`. This is set to None by default.
+        Array of weights for values in `y`. This is set to None by default.
 
     statfunc : {`numpy.nanmean`, `numpy.nanmedian`}statistical function, optional
         Numerical function used to calculate on bins of data.
         By default, this variable is set to `numpy.nanmean`
 
     bin_statval : {'average', 'left', 'right'} str, optional
-        Option for where to put the bin values of `x1` and `y1`.
+        Option for where to put the bin values of `x` and `y`.
         By default, this variable is set to `average`, which means 
-        that the values are those of the averages of the bins in `x1` and 
-        `y1`.
+        that the values are those of the averages of the bins in `x` and 
+        `y`.
 
     return_perc : boolean, optional
         If true, it also returns the `percentiles` of the data.
@@ -260,25 +260,25 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
 
     Returns
     ----------
-    x1_stat, y1_stat : array_like
-        Binned array of elements from `x1`
+    x_stat, y_stat : array_like
+        Binned array of elements from `x`
 
-    y1_std : array_like
-        Standard deviation of the binned array in `x1`
+    y_std : array_like
+        Standard deviation of the binned array in `x`
 
-    y1_std_err : array_like
-        Error in the `statfunc` of `y1`
+    y_std_err : array_like
+        Error in the `statfunc` of `y`
 
-    x1_bins_data : array_like, optional
-        Elements of `x1` in each bin with spacing of `base`.
+    x_bins_data : array_like, optional
+        Elements of `x` in each bin with spacing of `base`.
         Only returned if `arr_digit` == 'y' or 'o'
 
-    y1_bins_data : array_like, optional
-        Elements of `y1` in each bin with spacing of `base`.
+    y_bins_data : array_like, optional
+        Elements of `y` in each bin with spacing of `base`.
         Only returned if `arr_digit` == 'y' or 'o'
 
     perc_lims : array_like, shape(N,3)
-        Percentiles in each bin of `x1_stat`.
+        Percentiles in each bin of `x_stat`.
         Only returned if `arr_digit` == 'y' or 'o'
     """
     file_msg = fd.Program_Msg(__file__)
@@ -290,11 +290,11 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
         raise LSSUtils_Error(msg)
     # Array dimensions
     if not ((len(x) > 0) and (len(y) > 0)):
-        msg = '{0} The arrays `x1` and `y2` must have at least one value'
+        msg = '{0} The arrays `x` and `y` must have at least one value'
         msg = msg.format(file_msg)
         raise LSSUtils_Error(msg)
     if not ((np.asarray(x).ndim == 1) and (np.asarray(y).ndim == 1)):
-        msg = '{0} The arrays `x1` and `y2` must have dimension of `1`'
+        msg = '{0} The arrays `x` and `y` must have dimension of `1`'
         msg = msg.format(file_msg)
         raise LSSUtils_Error(msg)
     # `arr_len`
@@ -311,11 +311,11 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     ## Converting arrays to numpy arrays
     x       = np.asarray(x)
     y       = np.asarray(y)
-    nelem   = len(x1)
+    nelem   = len(x)
     arr_len = int(arr_len - 1.) if arr_len != 0 else int(arr_len)
     ##
     ## Statistics calculations
-    x_bins   = Bins_array_create(x1, base=base)
+    x_bins   = Bins_array_create(x, base=base)
     x_digits = np.digitize(x, x_bins)
     ##
     ## Elements in each bin
