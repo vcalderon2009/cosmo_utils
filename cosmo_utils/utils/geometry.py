@@ -9,7 +9,8 @@ __author__     =['Victor Calderon']
 __copyright__  =["Copyright 2018 Victor Calderon"]
 __email__      =['victor.calderon@vanderbilt.edu']
 __maintainer__ =['Victor Calderon']
-__all__        =[   "flip_angles"]
+__all__        =[   "flip_angles",
+                    "Ang_Distance"]
 """
 Set of geometrical definitions for translations, coordinate tranformations, 
 etc.
@@ -196,7 +197,7 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
         ang_sep = P1.separation(P2)
         # Converting to final units
         if unit == 'deg':
-            ang_sep = ang_sep.degrees
+            ang_sep = ang_sep.degree
         elif unit == 'rad':
             ang_sep = ang_sep.radians
 

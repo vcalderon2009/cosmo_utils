@@ -53,3 +53,31 @@ def test_flip_angles(input_ang, output_ang):
     np.testing.assert_allclose(output_func, output_ang)
 
 ## Testing function Ang_Distance
+def test_Ang_Distance_comparison_astropy():
+    """
+    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and 
+    output parameters.
+
+    This method compares the values obtained from the `haversine` to those 
+    using the `astropy` method.
+    """
+    ## Producing set of Right Ascension and Declination arrays
+    ra_lim  = (0, 360.)
+    dec_lim = (-90, 90.)
+    for ii in range(1, 1000):
+        ## Random array for RA and Dec
+        ra1  = ra_lim[0]  + np.random.random_sample(ii) * (ra_lim [1]-ra_lim [0])
+        dec1 = dec_lim[0] + np.random.random_sample(ii) * (dec_lim[1]-dec_lim[0])
+        ra2  = ra_lim[0]  + np.random.random_sample(ii) * (ra_lim [1]-ra_lim [0])
+        dec2 = dec_lim[0] + np.random.random_sample(ii) * (dec_lim[1]-dec_lim[0])
+        ## Testing outputs from different methods
+        out_haversine = geometry.Ang_Distance(ra1, ra2, dec1, dec2,
+            method='haversine', unit='deg')
+        out_astropy   = geometry.Ang_Distance(ra1, ra2, dec1, dec2,
+            method='astropy', unit='deg')
+        ## Checking that arrays are the same or similar
+        np.testing.assert_allclose(out_haversine, out_astropy)
+
+## Testing `Ang_Distance` for errors
+
+
