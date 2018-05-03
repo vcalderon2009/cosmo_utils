@@ -232,7 +232,9 @@ def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
         y_bins_data) = stats_funcs.Stats_one_arr(x, y, base=base, 
                         arr_digit='o', statfunc=np.nanmean, arr_len=0,
                         return_perc=False)
-    assert(len(x_bins_data.flatten()) == nelem)
+    assert(len(np.concatenate(x_bins_data).ravel()) == nelem)
+    assert(len(np.concatenate(y_bins_data).ravel()) == nelem)
+
 
 
 
