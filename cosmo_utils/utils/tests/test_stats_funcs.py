@@ -229,6 +229,10 @@ def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
     ## Testing number of elements returned
     output_expected = expected + return_perc_val
     assert(len(output) == output_expected)
+    ##
+    ## Checking type of all of the returned items
+    for ii in output:
+        assert(isinstance(ii, np.nadarray))
     ## Number of elements in array
     (   x_bins_data,
         y_bins_data) = stats_funcs.Stats_one_arr(x, y, base=base, 

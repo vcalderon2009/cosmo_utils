@@ -212,7 +212,7 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
 
 ## Main framework for `Stats_one_arr` and `Stats_two_arr`
 def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n', 
-    weights=None, statfunc=np.nanmean, bin_statval='average', 
+    weights=None, statfunc=np.nanmean, bin_statval='average',
     return_perc=False, failval = np.nan):
     """
     Calculates statists for 2 arrays
@@ -317,15 +317,15 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     x_bins   = Bins_array_create(x, base=base)
     x_digits = np.digitize(x, x_bins)
     ##
+    ## Determining which bins to use
+    ## These are the bins that meet the criteria of `arr_len`
+    x_digits_bins = np.array([int(ii) for ii in range(1, len(x_bins)) 
+        if len(x_digits[x_digits==ii]) > arr_len])
     ## Elements in each bin
     # X-values
-    x_bins_data = np.array([x[x_digits == ii] if
-        len(x[x_digits == ii]) > arr_len else failval for ii
-        in range(1, len(x_bins))])
+    x_bins_data = np.array([x[x_digits == ii] for ii in x_digits_bins])
     # Y-values
-    y_bins_data = np.array([y[x_digits == ii] if
-        len(y[x_digits == ii]) > arr_len else failval for ii
-        in range(1, len(x_bins))])
+    y_bins_data = np.array([y[x_digits == ii] for ii in x_digits_bins])
     ##
     ## Selecting data in bins
     # Centered around the average
@@ -348,20 +348,12 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     y_stat = np.array([statfunc(ii) if len(ii) > arr_len else failval
         for ii in y_bins_data])
     # Standard Deviation
-    y_std  = np.array(np.nanstd(ii) if len(ii) > arr_len else failval
-        for ii in y_bins_data)
+    y_std  = np.array([np.nanstd(ii) if len(ii) > arr_len else failval
+            for ii in y_bins_data])
     # Error in the mean/median
     y_std_err = np.array([
         np.nanstd(ii)/math.sqrt(len(ii)) if len(ii) > arr_len else failval
         for ii in y_bins_data])
-    ##
-    ## Removing `failval` elements
-    x_fail_idx  = np.where(x_stat != failval)[0]
-    x_stat      = x_stat     [x_fail_idx]
-    y_stat      = y_stat     [x_fail_idx]
-    y_std_err   = y_std_err  [x_fail_idx]
-    x_bins_data = x_bins_data[x_fail_idx]
-    y_bins_data = y_bins_data[x_fail_idx]
     ##
     ## Correcting error inf `statfunc` == `numpy.nanmedian`
     if statfunc == np.nanmedian:
