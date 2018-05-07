@@ -205,14 +205,108 @@ def test_Coord_Transformation_types(return_dict, return_type):
         for elem in expected_keys:
             assert(len(output[elem]) == ii)
 
-## Testing `Coord_Transformation` for errors
-Coord_test_unit_errors      = [ 'deg', 'rad', 'nan', 'NotDegree']
-Coord_test_trans_opt_errors = list(range(0,6))
-Coord_test_ra_cen_errors    = [ '1', 'String', 4, 2]
-@pytest.mark.parametrize('unit'     , Coord_test_unit_errors     )
+## Testing `Coord_Transformation` for errors - Units
+Coord_test_unit_errors = [ 'nan', 'NotDegree']
+@pytest.mark.parametrize('unit', Coord_test_unit_errors     )
+def test_Coord_Transformation_errors(unit):
+    """
+    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation` 
+    for input and output parameters.
+
+    This function makes sure that errors are raised whenever a wrong 
+    input is given.
+
+    Parameters
+    ----------
+    unit : {'dec','rad'} str, optional
+        Unit of `ra1`, `ra2`, `dec1`, and `dec2`.
+        This will also determine the final unit that outputs this function.
+        This variable is set to `deg` by default.
+
+
+    """
+    ## Producing set of Right Ascension and Declination arrays
+    ra_lim   = (  0, 360.)
+    dec_lim  = (-90,  90.)
+    dist_lim = (1e-2, 100.)
+    for ii in range(1000, 10000):
+        ## Random array for RA, DEC, and DIST
+        # Centre
+        ra_cen   = ra_lim  [0] + (ra_lim  [1]-ra_lim  [0]) * np.random.random_sample()
+        dec_cen  = dec_lim [0] + (dec_lim [1]-dec_lim [0]) * np.random.random_sample()
+        dist_cen = dist_lim[0] + (dist_lim[1]-dist_lim[0]) * np.random.random_sample()
+        # Rest of elements
+        ra   = ra_lim  [0] + (ra_lim  [1]-ra_lim  [0]) * np.random.random_sample(ii)
+        dec  = dec_lim [0] + (dec_lim [1]-dec_lim [0]) * np.random.random_sample(ii)
+        dist = dist_lim[0] + (dist_lim[1]-dist_lim[0]) * np.random.random_sample(ii)
+        ##
+        ## Generating outputs
+        with pytest.raises(LSSUtils_Error):
+            output = geometry.Coord_Transformation( ra,
+                                                    dec,
+                                                    dist,
+                                                    ra_cen,
+                                                    dec_cen,
+                                                    dist_cen,
+                                                    trans_opt=1,
+                                                    return_dict=True,
+                                                    unit=unit)
+
+## Testing `Coord_Transformation` for errors - trans_opt
+Coord_test_trans_opt_errors = list(range(5,10))
 @pytest.mark.parametrize('trans_opt', Coord_test_trans_opt_errors)
-@pytest.mark.parametrize('ra_cen'   , Coord_test_ra_cen_errors   )
-def test_Coord_Transformation_errors(ra_cen, trans_opt, unit):
+def test_Coord_Transformation_errors(trans_opt):
+    """
+    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation` 
+    for input and output parameters.
+
+    This function makes sure that errors are raised whenever a wrong 
+    input is given.
+
+    Parameters
+    ----------
+    trans_opt : {1, 2, 3, 4} int, optional
+        Option for cartesian translation/transformation for elements.
+        This variable ist set to `4` by default.
+
+        Options:
+            - 1 : No translation involved
+            - 2 : Translation to the center point.
+            - 3 : Translation `and` rotation to the center point.
+            - 4 : Translation and 2 rotaitons about the center point
+
+    """
+    ## Producing set of Right Ascension and Declination arrays
+    ra_lim   = (  0, 360.)
+    dec_lim  = (-90,  90.)
+    dist_lim = (1e-2, 100.)
+    for ii in range(1000, 10000):
+        ## Random array for RA, DEC, and DIST
+        # Centre
+        ra_cen   = ra_lim  [0] + (ra_lim  [1]-ra_lim  [0]) * np.random.random_sample()
+        dec_cen  = dec_lim [0] + (dec_lim [1]-dec_lim [0]) * np.random.random_sample()
+        dist_cen = dist_lim[0] + (dist_lim[1]-dist_lim[0]) * np.random.random_sample()
+        # Rest of elements
+        ra   = ra_lim  [0] + (ra_lim  [1]-ra_lim  [0]) * np.random.random_sample(ii)
+        dec  = dec_lim [0] + (dec_lim [1]-dec_lim [0]) * np.random.random_sample(ii)
+        dist = dist_lim[0] + (dist_lim[1]-dist_lim[0]) * np.random.random_sample(ii)
+        ##
+        ## Generating outputs
+        with pytest.raises(LSSUtils_Error):
+            output = geometry.Coord_Transformation( ra,
+                                                    dec,
+                                                    dist,
+                                                    ra_cen,
+                                                    dec_cen,
+                                                    dist_cen,
+                                                    trans_opt=trans_opt,
+                                                    return_dict=True,
+                                                    unit='deg')
+
+## Testing `Coord_Transformation` for errors - ra_cen type
+Coord_test_ra_cen_errors = [ '1', 'String']
+@pytest.mark.parametrize('ra_cen', Coord_test_ra_cen_errors     )
+def test_Coord_Transformation_errors(ra_cen):
     """
     Tests the function `cosmo_utils.utils.geometry.Coord_Transformation` 
     for input and output parameters.
@@ -226,22 +320,6 @@ def test_Coord_Transformation_errors(ra_cen, trans_opt, unit):
         Right Ascension, declination, and distance for the center of 
         the coordinates. These correspond to where the corodinates 
         `ra`, `dec`, and `dist` will be centered.
-
-    trans_opt : {1, 2, 3, 4} int, optional
-        Option for cartesian translation/transformation for elements.
-        This variable ist set to `4` by default.
-
-        Options:
-            - 1 : No translation involved
-            - 2 : Translation to the center point.
-            - 3 : Translation `and` rotation to the center point.
-            - 4 : Translation and 2 rotaitons about the center point
-
-    unit : {'dec','rad'} str, optional
-        Unit of `ra1`, `ra2`, `dec1`, and `dec2`.
-        This will also determine the final unit that outputs this function.
-        This variable is set to `deg` by default.
-
 
     """
     ## Producing set of Right Ascension and Declination arrays
@@ -266,9 +344,9 @@ def test_Coord_Transformation_errors(ra_cen, trans_opt, unit):
                                                     ra_cen,
                                                     dec_cen,
                                                     dist_cen,
-                                                    trans_opt=trans_opt,
-                                                    return_dict=return_dict,
-                                                    unit=unit)
+                                                    trans_opt=1,
+                                                    return_dict=True,
+                                                    unit='deg')
 
 
 

@@ -223,11 +223,10 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
         Arrays of Right Ascension, declination, and distance.
         Units are ['degrees', 'degrees', 'distance_units']
 
-    ra_cen, dec_cen, dist_cen : array_like, shape (N,)
-        Arrays of Right Ascension, declination, and distance for 
-        the center of the coordinates.
-        These correspond to where the corodinates `ra`, `dec`, and `dist`
-        will be centered.
+    ra_cen, dec_cen, dist_cen : float, int
+        Right Ascension, declination, and distance for the center of 
+        the coordinates. These correspond to where the corodinates 
+        `ra`, `dec`, and `dist` will be centered.
 
     trans_opt : {1, 2, 3, 4} int, optional
         Option for cartesian translation/transformation for elements.
@@ -277,6 +276,11 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     # Distance
     if not (isinstance(dist, valid_types)):
         msg = '{0} `dist` ({1}) is not a valid type!'.format(file_msg, type(dist))
+        raise LSSUtils_Error(msg)
+    # trans_opt
+    if not (trans_opt in list(range(1,5))):
+        msg = '{0} `trans_opt` ({1}) is not within valid range!'.format(
+            file_msg, trans_opt)
         raise LSSUtils_Error(msg)
     ##
     ## Centre's RA, DEC, DIST
