@@ -340,8 +340,8 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
         dec_cen_rad = np.radians(dec_cen)
     ##
     ## Initializing pandas DataFrame
-    dict_keys  = ['ra','dec','cz']
-    coord_dict = dict(zip(dict_keys, np.vstack([ra, dec, cz])))
+    dict_keys  = ['ra','dec','dist']
+    coord_dict = dict(zip(dict_keys, np.vstack([ra, dec, dist])))
     ##
     ## Spherical to Cartesian transformation
     ## 1st tranformation

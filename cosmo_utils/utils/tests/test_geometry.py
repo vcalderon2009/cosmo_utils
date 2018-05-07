@@ -154,5 +154,55 @@ def test_Ang_Distance_method_errors(method):
             out_astropy   = geometry.Ang_Distance(ra1, ra2, dec1, dec2,
                 method=method, unit='deg')
 
+## Testing `Coord_Transformation` for type of what it returns
+Coord_test_return = [   (True, dict),
+                        (False, pd.DataFrame)]
+@pytest.mark.parametrize('return_dict, return_type', Coord_test_return)
+def test_Coord_Transformation_types(return_dict, return_type):
+    """
+    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation` 
+    for input and output parameters.
 
+    This function makes sure that errors are raised whenever a wrong 
+    input is given.
+    """
+    ## Expected keys in dict/DataFrame
+    expected_keys = np.sort(['ra','dec','dist','x','y','z'])
+    ## Producing set of Right Ascension and Declination arrays
+    ra_lim   = (  0, 360.)
+    dec_lim  = (-90,  90.)
+    dist_lim = (1e-2, 100.)
+    for ii in range(1000, 10000):
+        ## Random array for RA, DEC, and DIST
+        # Centre
+        ra_cen   = ra_lim  [0] + (ra_lim  [1]-ra_lim  [0]) * np.random.random_sample()
+        dec_cen  = dec_lim [0] + (dec_lim [1]-dec_lim [0]) * np.random.random_sample()
+        dist_cen = dist_lim[0] + (dist_lim[1]-dist_lim[0]) * np.random.random_sample()
+        # Rest of elements
+        ra   = ra_lim  [0] + (ra_lim  [1]-ra_lim  [0]) * np.random.random_sample(ii)
+        dec  = dec_lim [0] + (dec_lim [1]-dec_lim [0]) * np.random.random_sample(ii)
+        dist = dist_lim[0] + (dist_lim[1]-dist_lim[0]) * np.random.random_sample(ii)
+        ##
+        ## Generating outputs
+        output = geometry.Coord_Transformation( ra,
+                                                dec,
+                                                dist,
+                                                ra_cen,
+                                                dec_cen,
+                                                dist_cen,
+                                                trans_opt=1,
+                                                return_dict=return_dict)
+        ## Checking return type
+        assert(isinstance(output, return_type))
+        ## Checking data returned
+        if return_dict:
+            output_keys = np.sort(list(output.keys()))
+        else:
+            output_keys = np.sort(output.columns.values)
+        assert(np.array_equal(expected_keys, output_keys))
+        ##
+        ## Checking sizes
+        for elem in expected_keys:
+            assert(len(output[elem]) == ii)
 
+## Testing `Coord_Transformation` for errors
