@@ -24,7 +24,7 @@ from   cosmo_utils.custom_exceptions import LSSUtils_Error
 ## Functions
 
 ## Apparent to Absolute magnitudes
-def apparent_to_absolute_magnitude(app_mag, lum_dist):
+def apparent_to_absolute_magnitude(app_mag, lum_dist, unit='mpc'):
     """
     Calculates the absolute magnitude based on luminosity and apparent
     magnitude.
@@ -36,6 +36,11 @@ def apparent_to_absolute_magnitude(app_mag, lum_dist):
 
     lum_dist : array_like
         Array of luminosity distnace to object. In units of `Mpc`.
+
+    unit : {'pc', 'kpc', 'mpc'} str, optional
+        Unit to use for `lum_dist`. This variable is set to `mpc` by
+        default. When `pc`, the units are in parsecs, while `mpc` is for 
+        distances in mega-parsecs, etc.
 
     Returns
     -----------
@@ -51,6 +56,11 @@ def apparent_to_absolute_magnitude(app_mag, lum_dist):
         msg = '{0} `app_mag` ({1}) is not a valid type!'.format(file_msg,
             type(app_mag))
         raise LSSUtils_Error(msg)
+    # Type for `unit`
+    unit_valid_arr = ['mpc', 'kpc', 'pc']
+    if not (unit in unit_valid_arr):
+        msg = '{0} `unit` ({1}) is not a valid input!'.format(file_msg, unit)
+        raise LSSUtils_Error(msg)
     ## Converting to array-type
     # `app_mag` object
     if (isinstance(app_mag, float) or isinstance(app_mag, int)):
@@ -62,14 +72,26 @@ def apparent_to_absolute_magnitude(app_mag, lum_dist):
         lum_dist = float(lum_dist)
     if (isinstance(lum_dist, list) or isinstance(lum_dist, np.ndarray)):
         lum_dist = np.asarray(lum_dist)
+    # Units - Conveting to Mpc
+    # This follows the formula:
+    #   app_mag - abs_mag = 5 * (np.log10(lum_dist) + a - 1)
+    #       Where a = 0 when [d] = parsecs
+    #       Where a = 3 when [d] = kiloparsecs
+    #       Where a = 6 when [d] = megaparsecs
+    if unit == 'pc':
+        a = 0
+    elif unit == 'kpc':
+        a = 3
+    elif unit == 'mpc':
+        a = 6
     ##
     ## Calcualtions
-    abs_mag = app_mag - 5. * (6. + np.log10(lum_dist)) + 5.
+    abs_mag = app_mag - 5 * (np.log10(lum_dist) - 1 + a)
 
     return abs_mag
 
 ## Absolute to Apparent magnitudes
-def absolute_to_apparent_magnitude(abs_mag, lum_dist):
+def absolute_to_apparent_magnitude(abs_mag, lum_dist, unit='mpc'):
     """
     Calculates the apparent magnitude using the luminosity and absolute
     magnitude.
@@ -81,6 +103,11 @@ def absolute_to_apparent_magnitude(abs_mag, lum_dist):
 
     lum_dist : array_like
         Array of luminosity distnace to object. In units of `Mpc`.
+
+    unit : {'pc', 'kpc', 'mpc'} str, optional
+        Unit to use for `lum_dist`. This variable is set to `mpc` by
+        default. When `pc`, the units are in parsecs, while `mpc` is for 
+        distances in mega-parsecs, etc.
 
     Returns
     -----------
@@ -96,6 +123,11 @@ def absolute_to_apparent_magnitude(abs_mag, lum_dist):
         msg = '{0} `abs_mag` ({1}) is not a valid type!'.format(file_msg,
             type(abs_mag))
         raise LSSUtils_Error(msg)
+    # Type for `unit`
+    unit_valid_arr = ['mpc', 'pc']
+    if not (unit in unit_valid_arr):
+        msg = '{0} `unit` ({1}) is not a valid input!'.format(file_msg, unit)
+        raise LSSUtils_Error(msg)
     ## Converting to array-type
     # `abs_mag` object
     if (isinstance(abs_mag, float) or isinstance(abs_mag, int)):
@@ -107,9 +139,21 @@ def absolute_to_apparent_magnitude(abs_mag, lum_dist):
         lum_dist = float(lum_dist)
     if (isinstance(lum_dist, list) or isinstance(lum_dist, np.ndarray)):
         lum_dist = np.asarray(lum_dist)
+    # Units - Conveting to Mpc
+    # This follows the formula:
+    #   app_mag - abs_mag = 5 * (np.log10(lum_dist) + a - 1)
+    #       Where a = 0 when [d] = parsecs
+    #       Where a = 3 when [d] = kiloparsecs
+    #       Where a = 6 when [d] = megaparsecs
+    if unit == 'pc':
+        a = 0
+    elif unit == 'kpc':
+        a = 3
+    elif unit == 'mpc':
+        a = 6
     ##
-    ## Calculations
-    app_mag = abs_mag + 5. * (6. + np.log10(lum_dist)) + 5.
+    ## Calcualtions
+    app_mag = abs_mag + 5. * (np.log10(lum_dist) - 1 + a)
 
     return app_mag
 
