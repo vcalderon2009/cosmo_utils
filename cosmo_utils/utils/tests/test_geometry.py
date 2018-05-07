@@ -15,6 +15,7 @@ Set of test functions for the `geometry` functions
 
 ## Import modules
 import numpy as np
+import pandas as pd
 import pytest
 from   cosmo_utils.utils import geometry
 from   cosmo_utils.utils import file_utils as fd
