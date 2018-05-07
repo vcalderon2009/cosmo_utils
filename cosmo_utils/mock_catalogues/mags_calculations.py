@@ -9,7 +9,12 @@ __author__     =['Victor Calderon']
 __copyright__  =["Copyright 2018 Victor Calderon"]
 __email__      =['victor.calderon@vanderbilt.edu']
 __maintainer__ =['Victor Calderon']
-__all__        =[   ""]
+__all__        =[   "apparent_to_absolute_magnitude",
+                    "absolute_to_apparent_magnitude",
+                    "get_sun_mag",
+                    "absolute_magnitude_to_luminosity",
+                    "luminosity_to_absolute_mag",
+                    "absolute_magnitude_lim"]
 
 ## Importing modules
 import numpy as np
@@ -71,7 +76,7 @@ def absolute_to_apparent_magnitude(abs_mag, lum_dist):
 
     Parameters
     -----------
-    abs_mag : array_like
+    abs_mag : float, int, or array_like
         Array of absolute magnitude(s)
 
     lum_dist : array_like
@@ -189,34 +194,158 @@ def get_sun_mag(filter_opt, system='SDSS_Blanton_2003_z0.1'):
     return abs_mag_sun
 
 ## Absolute magnitude to luminosity
+def absolute_magnitude_to_luminosity(abs_mag, filter_opt,
+    system='SDSS_Blanton_2003_z0.1'):
+    """
+    Calculates the luminosity of the object through `filter_opt` filter.
+
+    Parameters
+    -----------
+    abs_mag : float, int, or array_like
+        Absolute magnitude of one or multiple objects.
+
+    filter_opt : {'U', 'B', 'V', 'R', 'I', 'J', 'H', 'K'} str
+        Magnitude filter to use.
+
+    system : {'Binney_and_Merrifield_1998', 'SDSS_Blanton_2003_z0.1'} str
+        Kind of filter to use.
+
+        Options:
+            - 'Binney_and_Merrifield_1998' : See Binney and Merrifield, 1998
+            - 'SDSS_Blanton_2003_z0.1' : See Blanton et al. (2003) Eqn. 14.
+
+    Returns
+    -----------
+    log_L : float or array_like
+        Logarithmic value of the luminosity in the `filter_opt` band.
+
+    Raises
+    ----------
+    LSSUtils_Error : Exception
+        Program exception if input parameters are accepted
+    """
+    file_msg = fd.Program_Msg(__file__)
+    ## Checking input parameters
+    valid_types = (float, int, list, np.ndarray)
+    if not (isinstance(abs_mag, valid_types)):
+        msg = '{0} `abs_mag` ({1}) is not a valid type!'.format(file_msg,
+            abs_mag)
+        raise LSSUtils_Error(msg)
+    ## Obtaining Sun's absolute magnitude
+    abs_mag_sun = get_sun_mag(filter_opt, system=system)
+    ## Luminosity calculations
+    log_L = (abs_mag_sun - abs_mag) * 0.4
+
+    return log_L
 
 ## Luminosity to Absolute magnitude
+def luminosity_to_absolute_mag(lum, filter_opt,
+    system='SDSS_Blanton_2003_z0.1'):
+    """
+    Calculates the absolute magnitude of object through the `filter_opt`
+    filter.
+
+    Parameters
+    -----------
+    lum : float, int, array_like
+        Luminosity of 1 or more objects. In units of `solar luminosities`.
+
+    filter_opt : {'U', 'B', 'V', 'R', 'I', 'J', 'H', 'K'} str
+        Magnitude filter to use.
+
+    system : {'Binney_and_Merrifield_1998', 'SDSS_Blanton_2003_z0.1'} str
+        Kind of filter to use.
+
+        Options:
+            - 'Binney_and_Merrifield_1998' : See Binney and Merrifield, 1998
+            - 'SDSS_Blanton_2003_z0.1' : See Blanton et al. (2003) Eqn. 14.
+
+    Returns
+    -----------
+    abs_mag : float, int, or array_like
+        Absolute magnitude of one or multiple objects. Same type as `lum`
+
+    Raises
+    ----------
+    LSSUtils_Error : Exception
+        Program exception if input parameters are accepted
+    """
+    file_msg = fd.Program_Msg(__file__)
+    ## Checking input parameters
+    valid_types = (float, int, list, np.ndarray)
+    if not (isinstance(abs_mag, valid_types)):
+        msg = '{0} `abs_mag` ({1}) is not a valid type!'.format(file_msg,
+            abs_mag)
+        raise LSSUtils_Error(msg)
+    ## Obtaining Sun's absolute magnitude
+    abs_mag_sun = get_sun_mag(filter_opt, system=system)
+    ## Absolute magnitude calculation
+    lum_sun = 1.0 # In units of solar luminosities
+    # Absolute magnitude of objects
+    abs_mag = abs_mag_sun - 2.5 * np.log10(lum / lum_sun)
+
+    return abs_mag
 
 ## Absolute magnitude limits
+def absolute_magnitude_lim(z, mag_lim, cosmo=None, H0=100.):
+    """
+    Calculates the absolute magnitude limit as function of redshift `z` for 
+    a flux-limited survey.
 
+    Parameters
+    -----------
+    z : float, int, or array_like
+        Maximum redshift for a given flux-limited survey.
 
+    mag_lim : float
+        Apparent magnitude limit of the flux-limited survey.
 
+    cosmo : `astropy.cosmology` object
+        Cosmology object from Astropy.
 
+    H0 : float, optional
+        Hubble parameters value used to estimate distances.
+        This variable is set to 100 km/s/Mpc by default.
 
+    Returns
+    -----------
+    abs_mag : float, int, or array_like
+        Absolute magnitude limit in units of `abs_mag` + 5*log10(h),
+        where `h` is the little Hubble parameter.
 
+    Raises
+    ----------
+    LSSUtils_Error : Exception
+        Program exception if input parameters are accepted
+    """
+    file_msg = fd.Program_Msg(__file__)
+    ## Checking input parameters
+    # Redshift
+    z_valid_types = (float, int, list, np.ndarray)
+    if not (isinstance(z, z_valid_types)):
+        msg = '{0} `z` ({1}) is not a valid type!'.format(file_msg, type(z))
+        raise LSSUtils_Error(msg)
+    # Magnitude limit
+    mag_lim_valid_types = (float, int)
+    if not (isinstance(mag_lim, mag_lim_valid_types)):
+        msg = '{0} `mag_lim` ({1}) is not a valid type!'.format(file_msg,
+            type(mag_lim))
+        raise LSSUtils_Error(msg)
+    # Hubble parameter value
+    H0_valid_types = (float, int)
+    if not (isinstance(H0, H0_valid_types)):
+        msg = '{0} `H0` ({1}) is not a valid type!'.format(file_msg,
+            type(H0))
+        raise LSSUtils_Error(msg)
+    ##
+    ## Calculations
+    if not cosmo:
+        from astropy.cosmology import FlatLambdaCDM
+        cosmo = FlatLambdaCDM(H0=H0, Om0=0.316)
+        print(">> Warning: No cosmology was specified. Using default:", cosmo)
+    ## Luminosity distance
+    lum_dist = cosmo.luminosity_distance(z).value
+    ## Absolute magnitude
+    abs_mag = apparent_to_absolute_magnitude(mag_lim, lum_dist)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return abs_mag
