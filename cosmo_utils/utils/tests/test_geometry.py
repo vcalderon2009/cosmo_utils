@@ -65,7 +65,7 @@ def test_Ang_Distance_comparison_astropy():
     ## Producing set of Right Ascension and Declination arrays
     ra_lim  = (0, 360.)
     dec_lim = (-90, 90.)
-    for ii in range(1, 1000):
+    for ii in range(1, 1000, 10):
         ## Random array for RA and Dec
         ra1  = ra_lim[0]  + np.random.random_sample(ii) * (ra_lim [1]-ra_lim [0])
         dec1 = dec_lim[0] + np.random.random_sample(ii) * (dec_lim[1]-dec_lim[0])
@@ -105,7 +105,7 @@ def test_Ang_Distance_unit_errors(unit):
     ## Producing set of Right Ascension and Declination arrays
     ra_lim  = (  0, 360.)
     dec_lim = (-90,  90.)
-    for ii in range(1, 1000):
+    for ii in range(1, 1000, 10):
         ## Random array for RA and Dec
         ra1  = ra_lim [0] + np.random.random_sample(ii) * (ra_lim [1]-ra_lim [0])
         dec1 = dec_lim[0] + np.random.random_sample(ii) * (dec_lim[1]-dec_lim[0])
@@ -143,7 +143,7 @@ def test_Ang_Distance_method_errors(method):
     ## Producing set of Right Ascension and Declination arrays
     ra_lim  = (  0, 360.)
     dec_lim = (-90,  90.)
-    for ii in range(1, 1000):
+    for ii in range(1, 1000, 10):
         ## Random array for RA and Dec
         ra1  = ra_lim [0] + np.random.random_sample(ii) * (ra_lim [1]-ra_lim [0])
         dec1 = dec_lim[0] + np.random.random_sample(ii) * (dec_lim[1]-dec_lim[0])
@@ -173,7 +173,7 @@ def test_Coord_Transformation_types(return_dict, return_type):
     ra_lim   = (  0, 360.)
     dec_lim  = (-90,  90.)
     dist_lim = (1e-2, 100.)
-    for ii in range(1000, 10000):
+    for ii in range(1000, 10000, 100):
         ## Random array for RA, DEC, and DIST
         # Centre
         ra_cen   = ra_lim  [0] + (ra_lim  [1]-ra_lim  [0]) * np.random.random_sample()
@@ -230,7 +230,7 @@ def test_Coord_Transformation_errors(unit):
     ra_lim   = (  0, 360.)
     dec_lim  = (-90,  90.)
     dist_lim = (1e-2, 100.)
-    for ii in range(1000, 10000):
+    for ii in range(1000, 10000, 100):
         ## Random array for RA, DEC, and DIST
         # Centre
         ra_cen   = ra_lim  [0] + (ra_lim  [1]-ra_lim  [0]) * np.random.random_sample()
@@ -281,7 +281,7 @@ def test_Coord_Transformation_errors(trans_opt):
     ra_lim   = (  0, 360.)
     dec_lim  = (-90,  90.)
     dist_lim = (1e-2, 100.)
-    for ii in range(1000, 10000):
+    for ii in range(1000, 10000, 100):
         ## Random array for RA, DEC, and DIST
         # Centre
         ra_cen   = ra_lim  [0] + (ra_lim  [1]-ra_lim  [0]) * np.random.random_sample()
@@ -327,7 +327,7 @@ def test_Coord_Transformation_errors(ra_cen):
     ra_lim   = (  0, 360.)
     dec_lim  = (-90,  90.)
     dist_lim = (1e-2, 100.)
-    for ii in range(1000, 10000):
+    for ii in range(1000, 10000, 100):
         ## Random array for RA, DEC, and DIST
         # Centre
         dec_cen  = dec_lim [0] + (dec_lim [1]-dec_lim [0]) * np.random.random_sample()
