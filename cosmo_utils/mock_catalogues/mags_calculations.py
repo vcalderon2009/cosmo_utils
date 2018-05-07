@@ -331,7 +331,7 @@ def luminosity_to_absolute_mag(lum, filter_opt,
     return abs_mag
 
 ## Absolute magnitude limits
-def absolute_magnitude_lim(z, mag_lim, cosmo=None, H0=100.):
+def absolute_magnitude_lim(z, mag_lim, cosmo=None, H0=100., verbose=True):
     """
     Calculates the absolute magnitude limit as function of redshift `z` for 
     a flux-limited survey.
@@ -350,6 +350,9 @@ def absolute_magnitude_lim(z, mag_lim, cosmo=None, H0=100.):
     H0 : float, optional
         Hubble parameters value used to estimate distances.
         This variable is set to 100 km/s/Mpc by default.
+
+    verbose : boolean, optional
+        If True, a message will appear when the default cosmology is used.
 
     Returns
     -----------
@@ -386,7 +389,8 @@ def absolute_magnitude_lim(z, mag_lim, cosmo=None, H0=100.):
     if not cosmo:
         from astropy.cosmology import FlatLambdaCDM
         cosmo = FlatLambdaCDM(H0=H0, Om0=0.316)
-        print(">> Warning: No cosmology was specified. Using default:", cosmo)
+        if verbose:
+            print(">> Warning: No cosmology was specified. Using default:", cosmo)
     ## Luminosity distance
     lum_dist = cosmo.luminosity_distance(z).value
     ## Absolute magnitude
