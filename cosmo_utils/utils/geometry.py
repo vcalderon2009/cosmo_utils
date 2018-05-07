@@ -10,7 +10,8 @@ __copyright__  =["Copyright 2018 Victor Calderon"]
 __email__      =['victor.calderon@vanderbilt.edu']
 __maintainer__ =['Victor Calderon']
 __all__        =[   "flip_angles",
-                    "Ang_Distance"]
+                    "Ang_Distance",
+                    "Coord_Transformation"]
 """
 Set of geometrical definitions for translations, coordinate tranformations, 
 etc.
@@ -18,6 +19,7 @@ etc.
 
 ## Import modules
 import numpy as np
+import pandas as pd
 from   cosmo_utils.utils import file_utils as fd
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
 
@@ -60,14 +62,16 @@ def flip_angles(ang, unit='deg'):
     """
     file_msg = fd.Program_Msg(__file__)
     # Checking type of `ang`
-    if not ((type(ang) == float) or (type(ang) == int) or 
-            (type(ang) == list ) or (type(ang) == np.ndarray)):
+    valid_types = (float, int, list, np.ndarray)
+    if not (isinstance(ang, valid_types)):
         msg = '{0} `ang` ({1}) is not a number! Exiting!'.format(
             file_msg, ang)
+        raise LSSUtils_Error(msg)
     # Checking `unit`
     if not (unit.lower() in ['deg', 'rad']):
         msg = '{0} `unit` ({1}) is not a valid option! Exiting!'.format(
             file_msg, unit)
+        raise LSSUtils_Error(msg)
     ##
     ## Converting angle
     if isinstance(ang, float) or isinstance(ang, int):
@@ -156,13 +160,16 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
     """
     file_msg = fd.Program_Msg(__file__)
     ## Checking input arguments
+    # Valid options
+    units_valid   = ['deg', 'rad']
+    methods_valid = ['haversine', 'astropy']
     # Units
-    if not ((unit == 'deg') or (unit == 'rad')):
+    if not (unit in units_valid):
         msg = '{0} `unit` ({1}) is not a valid argument'.format(
             file_msg, unit)
         raise LSSUtils_Error(msg)
     # Method
-    if not ((method == 'haversine') or (method == 'astropy')):
+    if not (method in methods_valid):
         msg = '{0} `method` ({1}) is not a valid argument'.format(
             file_msg, method)
         raise LSSUtils_Error(msg)
@@ -203,10 +210,192 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
 
     return ang_sep
 
+## Coordinate Transformation function
+def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
+    trans_opt=4, return_dict=False, unit='deg'):
+    """
+    Transforms spherical coordinates (ra, dec, dist) into cartesian 
+    coordinates.
 
+    Parameters
+    -----------
+    ra, dec, dist : array_like, shape (N,)
+        Arrays of Right Ascension, declination, and distance.
+        Units are ['degrees', 'degrees', 'distance_units']
 
+    ra_cen, dec_cen, dist_cen : array_like, shape (N,)
+        Arrays of Right Ascension, declination, and distance for 
+        the center of the coordinates.
+        These correspond to where the corodinates `ra`, `dec`, and `dist`
+        will be centered.
 
+    trans_opt : {1, 2, 3, 4} int, optional
+        Option for cartesian translation/transformation for elements.
+        This variable ist set to `4` by default.
 
+        Options:
+            - 1 : No translation involved
+            - 2 : Translation to the center point.
+            - 3 : Translation `and` rotation to the center point.
+            - 4 : Translation and 2 rotaitons about the center point
 
+    return_dict : {True, False}, boolean, optional
+        If `True`, this functions returns 2 dictionaries with `spherical` 
+        and `cartesian` coordinates. 
+        If `False`, it returns a `pandas.DataFrame` with the columns.
+        This variable is set to `False` by default.
 
+    unit : {'dec','rad'} str, optional
+        Unit of `ra1`, `ra2`, `dec1`, and `dec2`.
+        This will also determine the final unit that outputs this function.
+        This variable is set to `deg` by default.
 
+    Returns
+    -----------
+    coord_dict (coord_pd) : python dictionary
+        Dictionary with spherical and cartesian dictionary of elements 
+        based on `trans_opt` value. This value is returned if 
+        `return_dict` is set to `True`. If not, a `pandas.DataFrame` is 
+        return.
+    """
+    file_msg = fd.Program_Msg(__file__)
+    ## Check types of elements
+    # Units
+    unit_arr = ['deg', 'rad']
+    if not (unit in unit_arr):
+        '{0} `unit` ({1}) is not a valid input!'.format(file_msg, unit)
+    # Valid types
+    valid_types = (float, int, np.ndarray, list)
+    # Right Ascension
+    if not (isinstance(ra, valid_types)):
+        msg = '{0} `ra` ({1}) is not a valid type!'.format(file_msg, type(ra))
+        raise LSSUtils_Error(msg)
+    # Declination
+    if not (isinstance(dec, valid_types)):
+        msg = '{0} `dec` ({1}) is not a valid type!'.format(file_msg, type(dec))
+        raise LSSUtils_Error(msg)
+    # Distance
+    if not (isinstance(dist, valid_types)):
+        msg = '{0} `dist` ({1}) is not a valid type!'.format(file_msg, type(dist))
+        raise LSSUtils_Error(msg)
+    ##
+    ## Centre's RA, DEC, DIST
+    # Right Ascension
+    if (isinstance(ra_cen, float)):
+        ra_cen = flip_angles(ra_cen)
+    else:
+        msg = '{0} `ra_cen` ({1}) is not a float!'.format(file_msg, type(ra_cen))
+        raise LSSUtils_Error(msg)
+    # Declination
+    if (isinstance(dec_cen, float)):
+        dec_cen = flip_angles(dec_cen)
+    else:
+        msg = '{0} `dec_cen` ({1}) is not a float!'.format(file_msg, type(dec_cen))
+        raise LSSUtils_Error(msg)
+    # Distance
+    if (isinstance(dist_cen, float)):
+        dist_cen = float(dist_cen)
+    else:
+        msg = '{0} `dist_cen` ({1}) is not a float!'.format(file_msg, type(dist_cen))
+        raise LSSUtils_Error(msg)
+    ##
+    ## Check type of elements
+    # Right Ascension
+    if (isinstance(ra, float) or isinstance(ra, int)):
+        ra = np.array([ra])
+    else:
+        ra = np.array(ra)
+    # Declination
+    if (isinstance(dec, float) or isinstance(dec, int)):
+        dec = np.array([dec])
+    else:
+        dec = np.array(dec)
+    # Distance
+    if (isinstance(dist, float) or isinstance(dist, int)):
+        dist = np.array([dist])
+    else:
+        dist = np.array(dist)
+    ##
+    ## Converting to desired units
+    if unit == 'rad':
+        # Right Ascension
+        ra_deg     = np.degrees(ra)
+        ra_rad     = ra
+        ra_cen_deg = np.degrees(ra_cen)
+        ra_cen_rad = ra_cen
+        # Declination
+        dec_deg     = np.degrees(dec)
+        dec_rad     = dec
+        dec_cen_deg = np.degrees(dec_cen)
+        dec_cen_rad = dec_cen
+    elif unit == 'deg':
+        ra_deg     = ra
+        ra_rad     = np.radians(ra)
+        ra_cen_deg = ra_cen
+        ra_cen_rad = np.radians(ra_cen)
+        # Declination
+        dec_deg     = dec
+        dec_rad     = np.radians(dec)
+        dec_cen_deg = dec_cen
+        dec_cen_rad = np.radians(dec_cen)
+    ##
+    ## Initializing pandas DataFrame
+    dict_keys  = ['ra','dec','cz']
+    coord_dict = dict(zip(dict_keys, np.vstack([ra, dec, cz])))
+    ##
+    ## Spherical to Cartesian transformation
+    ## 1st tranformation
+    # Centre
+    x_cen = dist_cen * np.cos(ra_cen_rad) * np.cos(dec_cen_rad)
+    y_cen = dist_cen * np.sin(ra_cen_rad) * np.cos(dec_cen_rad)
+    z_cen = dist_cen * np.sin(dec_cen_rad)
+    # All galaxies
+    x = dist * np.cos(ra_rad) * np.cos(dec_rad)
+    y = dist * np.sin(ra_rad) * np.cos(dec_rad)
+    z = dist * np.sin(dec_rad)
+    ##
+    ## Rotations about z- and x-axis by `tau` and `Omega`
+    ## Rotating the points, not the axes
+    x1 = x - x_cen
+    y1 = y - y_cen
+    z1 = z - z_cen
+    # Angles
+    omega = np.radians(90. - ra_cen_deg )
+    tau   = np.radians(90. - dec_cen_deg)
+    # Rotations about z-axis by `omega`
+    x2 = x1 * np.cos(omega) - y1 * np.sin(omega)
+    y2 = x1 * np.sin(omega) + y1 * np.cos(omega)
+    z2 = z1.copy()
+    # Rotations about X-axis by `tau`
+    x3 = x2.copy()
+    y3 = y2 * np.cos(tau) - z2 * np.sin(tau)
+    z3 = z2 * np.sin(tau) + z2 * np.cos(tau)
+    ##
+    ## Definining which variables to return
+    # No Translation
+    if trans_opt == 1:
+        coord_dict['x'] = x
+        coord_dict['y'] = y
+        coord_dict['z'] = z
+    # Translation
+    if trans_opt == 2:
+        coord_dict['x'] = x1
+        coord_dict['y'] = y1
+        coord_dict['z'] = z1
+    # Translation + Rotation
+    if trans_opt == 3:
+        coord_dict['x'] = x2
+        coord_dict['y'] = y2
+        coord_dict['z'] = z2
+    # Translation + 2 Rotation (centered about the centre)
+    if trans_opt == 4:
+        coord_dict['x'] = x3
+        coord_dict['y'] = y3
+        coord_dict['z'] = z3
+    ##
+    ## Checking what object to return, i.e. DataFrame or python dictionary
+    if return_dict:
+        return coord_dict
+    else:
+        coord_pd = pd.DataFrame(coord_dict)
+        return coord_pd

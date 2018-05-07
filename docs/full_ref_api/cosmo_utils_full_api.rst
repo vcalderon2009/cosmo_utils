@@ -14,4 +14,6 @@ Comprehensive Cosmo Utils Reference/API
 
 .. automodapi:: cosmo_utils.utils.work_paths
 
+.. automodapi:: cosmo_utils.utils.geometry
+
 .. automodapi:: cosmo_utils.custom_exceptions
