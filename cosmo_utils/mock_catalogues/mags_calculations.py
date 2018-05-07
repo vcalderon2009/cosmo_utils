@@ -193,8 +193,8 @@ def get_sun_mag(filter_opt, system='SDSS_Blanton_2003_z0.1'):
     >>> get_sun_mag('V', 'Binney_and_Merrifield_1998')
     4.83
 
-    >>> get_sun_mag('u', 'SDSS_Blanton_2003_z0.1')
-    6.80
+    >>> get_sun_mag('g', 'SDSS_Blanton_2003_z0.1')
+    5.45
     """
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters

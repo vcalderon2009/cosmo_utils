@@ -59,10 +59,45 @@ def test_apparent_to_absolute_magnitude(app_mag, abs_mag, lum_dist, unit):
     np.testing.assert_almost_equal(abs_mag, out_abs_mag, decimal=2)
 
 ## Getting Sun's magnitudes
-# get_sun_mag_test_arr = [    ('U', 'Binney_and_Merrifield_1998', 5.61),
-#                             ()]
+get_sun_mag_test_arr = [    ('U', 'Binney_and_Merrifield_1998', 5.61),
+                            ('B', 'Binney_and_Merrifield_1998', 5.48),
+                            ('V', 'Binney_and_Merrifield_1998', 4.83),
+                            ('R', 'Binney_and_Merrifield_1998', 4.42),
+                            ('I', 'Binney_and_Merrifield_1998', 4.08),
+                            ('J', 'Binney_and_Merrifield_1998', 3.64),
+                            ('H', 'Binney_and_Merrifield_1998', 3.32),
+                            ('K', 'Binney_and_Merrifield_1998', 3.28),
+                            ('u', 'SDSS_Blanton_2003_z0.1', 6.80),
+                            ('g', 'SDSS_Blanton_2003_z0.1', 5.45),
+                            ('r', 'SDSS_Blanton_2003_z0.1', 4.76),
+                            ('i', 'SDSS_Blanton_2003_z0.1', 4.58),
+                            ('z', 'SDSS_Blanton_2003_z0.1', 4.51)]
+@pytest.mark.parametrize('filter_opt, system, expected', get_sun_mag_test_arr)
+def test_get_sun_abs_mag(filter_opt, system, expected):
+    """
+    Tests the function 
+    `cosmo_utils.mock_catalogues.mags_calculations.apparent_to_absolute_magnitude`
+    for input and output parameters.
 
-# def test_get_sun_abs_mag(filter_opt, system):
-#     """
-#     """
+    This function tests whether or not the function recovers the 
+    expected absolute magnitude.
+
+    Parameters
+    ----------
+    filter: string
+        magnitude filter to use.
+    
+    system: string
+        Kind of filter to use. (default = `SDSS_Blanton_2003_z0.1`)
+        Options: 
+        - `Binney_and_Merrifield_1998`: See Binney and Merrifield 1998
+        - `SDSS_Blanton_2003_z0.1`: See Blanton et al. 2003 equation 14
+
+    expected : float
+        Expected solar absolute magnitude in `filter` using `system`.
+    """
+    # Output from function
+    out_sun_abs_mag = mags_calculations.get_sun_mag(filter_opt, system=system)
+    # Comparing to expected absolute magnitude
+    np.testing.assert_almost_equal(expected, out_sun_abs_mag)
 
