@@ -26,6 +26,8 @@ catl_keys_types_arr = [     ('data' , 'list', 3, list),
                             ('data' , 'dict', 3, dict),
                             ('mocks', 'list', 3, list),
                             ('mocks', 'dict', 3, dict) ]
+@pytest.mark.parametrize('catl_kind, return_type, nelem, expected',
+    catl_keys_types_arr)
 def test_catl_keys_types_nelem(catl_kind, return_type, nelem, expected):
     """
     Tests the function:
