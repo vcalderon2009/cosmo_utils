@@ -56,7 +56,7 @@ def test_apparent_to_absolute_magnitude(app_mag, abs_mag, lum_dist, unit):
     out_abs_mag = mags_calculations.apparent_to_absolute_magnitude(
         app_mag, lum_dist, unit=unit)
     ## Comparing to expected absolute distance
-    np.testing.assert_almost_equal(abs_mag, out_abs_mag, decimal=2)
+    np.testing.assert_almost_equal(abs_mag, out_abs_mag, decimal=1)
 
 ## Getting Sun's magnitudes
 get_sun_mag_test_arr = [    ('U', 'Binney_and_Merrifield_1998', 5.61),
