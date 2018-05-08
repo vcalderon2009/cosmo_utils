@@ -224,7 +224,7 @@ def test_catl_keys_types_nelem(catl_kind, catl_info, return_type, nelem,
     expected):
     """
     Tests the function:
-        cosmo_utils.mock_catalogues.catls_utils.catl_keys` for input and 
+        cosmo_utils.mock_catalogues.catls_utils.catl_keys_prop` for input and 
     output variables.
 
     It verifies the `type` of the output returned by the function.
@@ -253,7 +253,7 @@ def test_catl_keys_types_nelem(catl_kind, catl_info, return_type, nelem,
         Expected number of elements inside the object returned by the function.
 
     expected : str
-        Expected type of element from the `catl_keys` function
+        Expected type of element from the `catl_keys_prop` function
     """
     ## Running element
     output = catls_utils.catl_keys_prop(catl_kind, catl_info=catl_info,
@@ -266,7 +266,7 @@ def test_catl_keys_types_nelem(catl_kind, catl_info, return_type, nelem,
     elif isinstance(output, dict):
         assert(len(output.keys()) == nelem)
 
-## Test `catl_keys` function - Outputs
+## Test `catl_keys_prop` function - Outputs
 catl_keys_return_arr = [ 'list' , 'dict']
 catl_keys_output_arr = [('data' , 'members', ['logssfr'    , 'logMstar_JHU']),
                         ('data' , 'groups' , ['logssfr_tot', 'logMstar_tot']),
@@ -277,7 +277,7 @@ catl_keys_output_arr = [('data' , 'members', ['logssfr'    , 'logMstar_JHU']),
 def test_catl_keys_outputs(catl_kind, catl_info, return_type, expected):
     """
     Tests the function:
-        cosmo_utils.mock_catalogues.catls_utils.catl_keys` for input and 
+        cosmo_utils.mock_catalogues.catls_utils.catl_keys_prop` for input and 
     output variables.
 
     It verifies the output returned by the function.
@@ -303,10 +303,10 @@ def test_catl_keys_outputs(catl_kind, catl_info, return_type, expected):
             - 'dict' : Returns the values as part of a python dictionary
 
     expected : str
-        Expected type of element from the `catl_keys` function
+        Expected type of element from the `catl_keys_prop` function
     """
     ## Running element
-    output = catls_utils.catl_keys(catl_kind, catl_info=catl_info, 
+    output = catls_utils.catl_keys_prop(catl_kind, catl_info=catl_info, 
         return_type=return_type)
     ## Comparing against `expected` value - Output
     if isinstance(output, list):
@@ -316,7 +316,7 @@ def test_catl_keys_outputs(catl_kind, catl_info, return_type, expected):
         out_vals = [output[xx] for xx in out_keys]
         np.testing.assert_equal(out_vals, expected)
 
-## Test `catl_keys` function - Errors - `catl_kind`
+## Test `catl_keys_prop` function - Errors - `catl_kind`
 catl_keys_catl_kind_arr = [ 'data1', 'mocks1', 'NoMethod']
 catl_keys_catl_info_arr = [ 'members', 'groups']
 catl_keys_return_arr    = [ 'list' , 'dict']
@@ -326,7 +326,7 @@ catl_keys_return_arr    = [ 'list' , 'dict']
 def test_catl_keys_catl_kind_errors(catl_kind, catl_info, return_type):
     """
     Tests the function:
-        cosmo_utils.mock_catalogues.catls_utils.catl_keys` for input and 
+        cosmo_utils.mock_catalogues.catls_utils.catl_keys_prop` for input and 
     output variables.
 
     It verifies if errors are raised when `catl_kind` is incorrect
@@ -342,10 +342,10 @@ def test_catl_keys_catl_kind_errors(catl_kind, catl_info, return_type):
     """
     ## Running function
     with pytest.raises(LSSUtils_Error):
-        output = catls_utils.catl_keys(catl_kind, catl_info=catl_info,
+        output = catls_utils.catl_keys_prop(catl_kind, catl_info=catl_info,
             return_type=return_type)
 
-## Test `catl_keys` function - Errors - `catl_info`
+## Test `catl_keys_prop` function - Errors - `catl_info`
 catl_keys_catl_kind_arr = [ 'data', 'mocks']
 catl_keys_catl_info_arr = [ 'members_no', 'groups_Invalid', 1, 1.2]
 catl_keys_return_arr    = [ 'list' , 'dict']
@@ -355,7 +355,7 @@ catl_keys_return_arr    = [ 'list' , 'dict']
 def test_catl_keys_catl_kind_errors(catl_kind, catl_info, return_type):
     """
     Tests the function:
-        cosmo_utils.mock_catalogues.catls_utils.catl_keys` for input and 
+        cosmo_utils.mock_catalogues.catls_utils.catl_keys_prop` for input and 
     output variables.
 
     It verifies if errors are raised when `catl_info` is incorrect
@@ -371,10 +371,10 @@ def test_catl_keys_catl_kind_errors(catl_kind, catl_info, return_type):
     """
     ## Running function
     with pytest.raises(LSSUtils_Error):
-        output = catls_utils.catl_keys(catl_kind, catl_info=catl_info,
+        output = catls_utils.catl_keys_prop(catl_kind, catl_info=catl_info,
             return_type=return_type)
 
-## Test `catl_keys` function - Errors - `return_type`
+## Test `catl_keys_prop` function - Errors - `return_type`
 catl_keys_catl_kind_arr = [ 'data', 'mocks']
 catl_keys_catl_info_arr = [ 'members', 'groups']
 catl_keys_return_arr    = [ 'list_no' , 'dict1', 'NoMethod']
@@ -384,7 +384,7 @@ catl_keys_return_arr    = [ 'list_no' , 'dict1', 'NoMethod']
 def test_catl_keys_catl_kind_errors(catl_kind, catl_info, return_type):
     """
     Tests the function:
-        cosmo_utils.mock_catalogues.catls_utils.catl_keys` for input and 
+        cosmo_utils.mock_catalogues.catls_utils.catl_keys_prop` for input and 
     output variables.
 
     It verifies if errors are raised when `return_type` is incorrect
@@ -400,7 +400,7 @@ def test_catl_keys_catl_kind_errors(catl_kind, catl_info, return_type):
     """
     ## Running function
     with pytest.raises(LSSUtils_Error):
-        output = catls_utils.catl_keys(catl_kind, catl_info=catl_info,
+        output = catls_utils.catl_keys_prop(catl_kind, catl_info=catl_info,
             return_type=return_type)
 
 
