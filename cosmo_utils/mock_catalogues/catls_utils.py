@@ -23,7 +23,7 @@ from   cosmo_utils.custom_exceptions import LSSUtils_Error
 
 ## Functions
 
-## Catalogue Keys
+## Catalogue Keys - Main
 def catl_keys(catl_kind, perf_opt=False, return_type='list'):
     """
     Dictionary keys for the different types of catalogues
@@ -54,6 +54,17 @@ def catl_keys(catl_kind, perf_opt=False, return_type='list'):
         Dictionary with the proper keys for the catalogue(s).
 
         Order : 1) `gm_key`, 2) `id_key`, 3) `galtype_key`
+
+    Examples
+    ----------
+    >>> catl_keys('data', perf_opt=False, return_type='list')
+    ['M_h', 'groupid', 'galtype']
+
+    >>> catl_keys('mocks', perf_opt=True, return_type='list')
+    ['M_h', 'haloid', 'galtype']
+
+    >>> catl_keys('mocks', perf_opt=True, return_type='dict')
+    {'galtype_key': 'galtype', 'gm_key': 'M_h', 'id_key': 'haloid'}
     """
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters
@@ -96,7 +107,7 @@ def catl_keys(catl_kind, perf_opt=False, return_type='list'):
 
     return catl_objs
 
-
+## Catalogue Keys - Properties
 
 
 
