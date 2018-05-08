@@ -349,8 +349,8 @@ def test_catl_keys_prop_catl_kind_errors(catl_kind, catl_info, return_type):
 catl_keys_prop_catl_kind_arr = [ 'data', 'mocks']
 catl_keys_prop_return_arr    = [ 'list' , 'dict']
 catl_keys_prop_catl_info_arr = [ 'members_no', 'groups_Invalid', 1, 1.2]
-@pytest.mark.parametrize('catl_kind', catl_keys_catl_kind_arr)
-@pytest.mark.parametrize('return_type', catl_keys_return_arr)
+@pytest.mark.parametrize('catl_kind', catl_keys_prop_catl_kind_arr)
+@pytest.mark.parametrize('return_type', catl_keys_prop_return_arr)
 @pytest.mark.parametrize('catl_info', catl_keys_prop_catl_info_arr)
 def test_catl_keys_prop_catl_info_errors(catl_kind, catl_info, return_type):
     """
@@ -378,8 +378,8 @@ def test_catl_keys_prop_catl_info_errors(catl_kind, catl_info, return_type):
 catl_keys_prop_catl_kind_arr = [ 'data', 'mocks']
 catl_keys_prop_return_arr    = [ 'list_no' , 'dict1', 'NoMethod']
 catl_keys_prop_catl_info_arr = [ 'members', 'groups']
-@pytest.mark.parametrize('catl_kind', catl_keys_catl_kind_arr)
-@pytest.mark.parametrize('return_type', catl_keys_return_arr)
+@pytest.mark.parametrize('catl_kind', catl_keys_prop_catl_kind_arr)
+@pytest.mark.parametrize('return_type', catl_keys_prop_return_arr)
 @pytest.mark.parametrize('catl_info', catl_keys_prop_catl_info_arr)
 def test_catl_keys_prop_return_type_errors(catl_kind, catl_info, return_type):
     """
