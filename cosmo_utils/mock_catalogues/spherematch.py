@@ -13,8 +13,9 @@ __all__        =[   "spherematch"]
 
 ## Import modules
 import numpy as np
+import numexpr as ne
 import math
-from scipy.spatial import cKDTree as KDT
+from   scipy.spatial import cKDTree as KDT
 from   cosmo_utils.utils import file_utils as fd
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
 
@@ -68,8 +69,6 @@ def _spherical_to_cartesian_fast(ra, dec, nthreads):
     This is a `fast` version of converting between spherical and 
     cartesian coordinates.
     """
-    # Importing modules
-    import numexpr as ne
     # Constants
     pi = math.pi
     # Setting number of Threads
@@ -166,8 +165,6 @@ def _great_circle_distance_fast(ra1, dec1, ra2, dec2, nthreads):
 
     It is a bit slower than others, but numerically stable.
     """
-    # Importing modules
-    import numexpr as ne
     ##
     ## Terminology from the Vincenty Formula - `lambda` and `phi` and 
     ## `standpoint` and `forepoint`
