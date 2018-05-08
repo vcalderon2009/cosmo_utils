@@ -217,40 +217,9 @@ def catl_keys_prop(catl_kind, catl_info='members', return_type='list'):
 
     return catl_objs
 
-## Output SDSS dir
-# def output_sdss_dir(catl_kind='data', catl_type='mr', sample='19'):
-#     """
-#     Output for SDSS directory, either for `data` or `mock` catalogues.
 
-#     Parameters
-#     -----------
-#     catl_kind : {'data', 'mocks'} str, optional
-#         Type of catalogue to use. This variable is set to `data` by default.
 
-#         Options:
-#             - `data` : catalogues come from SDSS `real` catalogue
-#             - `mocks` : catalogue come from SDSS `mock` catalogues
 
-#     catl_type : {'mr', 'mstar'} str, optional
-#         Type of catalogue to use. It shows which abundance matching method
-#         was used for the CLF, when assigning halo masses. This variable 
-#         is set to `mr` by default.
-
-#         Options:
-#             - `mr` : Uses r-band absolute magnitudes.
-#             - `mstar` : Uses stellar masses.
-
-#     sample : {'19', '20', '21'} str, optional
-#         Volume-limited sample to use. This value is set to `19` by default.
-
-#     Returns
-#     -----------
-
-#     Raises
-#     -----------
-#     LSSUtils_Error : Exception from `LSSUtils_Error`
-#         Program exception if input parameters are accepted.
-    """
 
 
 
