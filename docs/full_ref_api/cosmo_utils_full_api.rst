@@ -25,3 +25,5 @@ Comprehensive Cosmo Utils Reference/API
 .. automodapi:: cosmo_utils.mock_catalogues.spherematch
 
 .. automodapi:: cosmo_utils.mock_catalogues.abundance_matching
+
+.. automodapi:: cosmo_utils.mock_catalogues.catls_utils
