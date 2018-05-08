@@ -9,7 +9,8 @@ __author__     =['Victor Calderon']
 __copyright__  =["Copyright 2018 Victor Calderon"]
 __email__      =['victor.calderon@vanderbilt.edu']
 __maintainer__ =['Victor Calderon']
-__all__        =[   "catl_keys"]
+__all__        =[   "catl_keys",
+                    "catl_keys_prop"]
 
 ## Import modules
 import os
@@ -50,10 +51,15 @@ def catl_keys(catl_kind, perf_opt=False, return_type='list'):
 
     Returns
     ----------
-    catl_keys : python dictionary
-        Dictionary with the proper keys for the catalogue(s).
+    catl_keys : python dictionary or array_like
+        Dictionary/array with the proper keys for the catalogue(s).
 
         Order : 1) `gm_key`, 2) `id_key`, 3) `galtype_key`
+
+    Raises
+    ------------
+    LSSUtils_Error : Exception from `LSSUtils_Error`
+        Program exception if input parameters are accepted.
 
     Examples
     ----------
@@ -108,6 +114,108 @@ def catl_keys(catl_kind, perf_opt=False, return_type='list'):
     return catl_objs
 
 ## Catalogue Keys - Properties
+def catl_keys_prop(catl_kind, catl_info='members', return_type='list'):
+    """
+    Dictionary keys for the diffeent galaxy and group properties of 
+    catalogues.
+
+    Parameters
+    ------------
+    catl_kind : {'data', 'mocks'} str, optional
+        Type of catalogue to use. This variable is set to `data` by default.
+
+        Options:
+            - `data` : catalogues come from SDSS `real` catalogue
+            - `mocks` : catalogue come from SDSS `mock` catalogues
+
+    catl_info : {'members', 'groups'} str, optional
+        Option for which kind of catalogues to use.
+
+        Options:
+            - 'members' : Member galaxies of group catalogues
+            - 'groups' : Catalogues with `group` information.
+
+    return_type : {'list', 'dict'} str, optional
+        Type of output to the be returned. This variable is set to `list`
+        by default.
+
+        Options:
+            - 'list' : Returns the values as part of a list
+            - 'dict' : Returns the values as part of a python dictionary
+
+    Return
+    ------------
+    catl_objs : python dictionary or array_like
+        Dictionary/array with the proper keys for the catalogue(s).
+
+        Order : 1) `ssfr_key`, 2) `mstar_key`
+
+    Raises
+    ------------
+    LSSUtils_Error : Exception from `LSSUtils_Error`
+        Program exception if input parameters are accepted.
+    
+    Examples
+    ------------
+    >>> catl_keys_prop('data')
+    ['logssfr', 'logMstar_JHU']
+
+    >>> catl_keys_prop('mocks', catl_info='groups', return_type='list')
+    ['logssfr', 'logMstar']
+    """
+    file_msg = fd.Program_Msg(__file__)
+    ## Checking input parameters
+    catl_kind_valid   = ['data'   , 'mocks' ]
+    catl_info_valid   = ['members', 'groups']
+    return_type_valid = ['list'   , 'dict'  ]
+    # `catl_kind`
+    if not (catl_kind in catl_kind_valid):
+        msg = '{0} `catl_kind` ({1}) is not a valid input!'.format(
+            file_msg, catl_kind)
+        raise LSSUtils_Error(msg)
+    # `catl_info`
+    if not (catl_info in catl_info_valid):
+        msg = '{0} `catl_info` ({1}) is not a valid input!'.format(
+            file_msg, catl_info)
+        raise LSSUtils_Error(msg)
+    # `return_type`
+    if not (return_type in return_type_valid):
+        msg = '{0} `return_type` ({1}) is not a valid input!'.format(
+            file_msg, return_type)
+        raise LSSUtils_Error(msg)
+    ##
+    ## Property keys
+    ##
+    ## Data
+    if (catl_kind == 'data'):
+        ## Members
+        if catl_info == 'members':
+            # SSFR and Stellar mass
+            logssfr_key, logmstar_key = ['logssfr', 'logMstar_JHU']
+        ## Groups
+        if catl_info == 'groups':
+            # SSFR and Stellar mass
+            logssfr_key, logmstar_key = ['logssfr_tot', 'logMstar_tot']
+    ##
+    ## Mocks
+    if (catl_kind == 'mocks'):
+        ## Members
+        if catl_info == 'members':
+            # SSFR and Stellar mass
+            logssfr_key, logmstar_key = ['logssfr', 'logMstar']
+        ## Groups
+        if catl_info == 'groups':
+            # SSFR and Stellar mass
+            logssfr_key, logmstar_key = ['logssfr', 'logMstar']
+    ##
+    ## Saving values
+    if return_type == 'dict':
+        catl_objs = {   'logssfr_key' : logssfr_key ,
+                        'logmstar_key': logmstar_key}
+    elif return_type == 'list':
+        catl_objs = [   logssfr_key, logmstar_key]
+
+    return catl_objs
 
 
 
