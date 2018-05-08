@@ -219,7 +219,7 @@ def spherematch(ra1, dec1, ra2, dec2, tol=None, nnearest=1, nthreads=1):
         the nearest *non-self* neighbor of a catalogue.
         To do this use:
             ``spherematch(ra, dec, ra, dec, nnearest=2)``
-        if `nnearest == 0``, all matches are returned.
+        if `nnearest == 0`, all matches are returned.
 
     nthreads : int, optional
         Number of threads to use for calculation. This variable is set to 
