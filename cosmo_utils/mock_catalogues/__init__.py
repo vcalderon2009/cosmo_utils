@@ -7,3 +7,4 @@ from __future__ import absolute_import
 
 from cosmo_utils.mock_catalogues import mags_calculations
 from cosmo_utils.mock_catalogues import spherematch
+from cosmo_utils.mock_catalogues import abundance_matching
