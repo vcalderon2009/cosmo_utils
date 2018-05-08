@@ -45,7 +45,7 @@ env:
         
         # List other runtime dependencies for the package that are available as
         # conda packages here.
-        - CONDA_DEPENDENCIES='Cython scipy h5py pandas'
+        - CONDA_DEPENDENCIES='Cython scipy h5py pandas numexpr'
         
         # List other runtime dependencies for the package that are available as
         # pip packages here.

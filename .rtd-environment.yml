@@ -13,5 +13,6 @@ dependencies:
     - h5py
     - pandas
     - scipy
+    - numexpr
     - pip:
       - GitPython
