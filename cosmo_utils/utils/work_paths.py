@@ -31,9 +31,10 @@ from   cosmo_utils.custom_exceptions import LSSUtils_Error
 def git_root_dir(path='./'):
     """
     Determines the path to the main .git folder of the project.
+    
     Taken from:
         - https://goo.gl/46y9v1
-
+    
     Parameters
     ----------
     path : str, optional

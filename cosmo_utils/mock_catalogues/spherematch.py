@@ -25,12 +25,12 @@ from   cosmo_utils.custom_exceptions import LSSUtils_Error
 def _spherical_to_cartesian(ra, dec):
     """
     Converts spherical coordinates (ra, dec) to cartesian coordinates (x,y,z).
-
+    
     Parameters
     ----------
     ra, dec : array_like
-        Right Ascension and Declination of the object. Units in `degrees`
-
+        Right Ascension and Declination of the object. Units in `degrees`.
+    
     Returns
     ----------
     x, y, z : array_like
@@ -197,7 +197,7 @@ def _great_circle_distance_fast(ra1, dec1, ra2, dec2, nthreads):
 def spherematch(ra1, dec1, ra2, dec2, tol=None, nnearest=1, nthreads=1):
     """
     Determines the matches between two catalogues of sources with 
-    <ra, dec> coordinates
+    <ra, dec> coordinates.
 
     Parameters
     ----------
@@ -217,7 +217,7 @@ def spherematch(ra1, dec1, ra2, dec2, tol=None, nnearest=1, nthreads=1):
         The nth neighbor to find. E.g. 1 for the nearest nearby, 2 for the 
         second nearest neighbor, etc. Partcularly useful if you want to get
         the nearest *non-self* neighbor of a catalogue.
-        To do this use:
+        To do this use::
             ``spherematch(ra, dec, ra, dec, nnearest=2)``
         if `nnearest == 0`, all matches are returned.
 

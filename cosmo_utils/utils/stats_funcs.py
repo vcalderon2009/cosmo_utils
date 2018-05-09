@@ -222,15 +222,16 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
 
     arr_digit : {'n', 'y', 'o'} str, optional
         Option for which elements to return.
-        - 'n' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`
-        - 'y' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`,
-                        `x_bins_data`, `y_bins_data` 
-        - 'o' : Returns `x_bins_data`, `y_bins_data` 
+
+        Options:
+            - 'n' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`
+            - 'y' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`, `x_bins_data`, `y_bins_data` 
+            - 'o' : Returns `x_bins_data`, `y_bins_data` 
 
     weights : array_like or NoneType, optional
         Array of weights for values in `y`. This is set to None by default.
 
-    statfunc : {`numpy.nanmean`, `numpy.nanmedian`}statistical function, optional
+    statfunc : {`numpy.nanmean`, `numpy.nanmedian`} statistical function, optional
         Numerical function used to calculate on bins of data.
         By default, this variable is set to `numpy.nanmean`
 
@@ -240,7 +241,7 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
         that the values are those of the averages of the bins in `x` and 
         `y`.
 
-    return_perc : boolean, optional
+    return_perc : `bool`, optional
         If true, it also returns the `percentiles` of the data.
         Last item in the return list.
         This variable is set to False by default.
