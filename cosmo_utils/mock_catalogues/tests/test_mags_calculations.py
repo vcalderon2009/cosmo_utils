@@ -22,9 +22,9 @@ from   cosmo_utils.custom_exceptions import LSSUtils_Error
 ## Functions
 
 ## Testing `apparent_to_absolute_magnitude` function
-app_abs_test_arr = [    (-0.72, -3.10 , 30.1      , 'pc'),
-                        ( 0.14, -7.20 , 0.2761    , 'kpc'),
-                        ( 1.26, -7.10 , 0.4908    , 'kpc')]
+app_abs_test_arr = [    (-0.72,  -3.1128 , 30.1      , 'pc'),
+                        ( 0.14,  -7.0653 , 0.2761    , 'kpc'),
+                        ( 1.26,  -7.1945 , 0.4908    , 'kpc')]
 @pytest.mark.parametrize('app_mag, abs_mag, lum_dist, unit', app_abs_test_arr)
 def test_apparent_to_absolute_magnitude(app_mag, abs_mag, lum_dist, unit):
     """
