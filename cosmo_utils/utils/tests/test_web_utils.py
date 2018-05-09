@@ -59,3 +59,20 @@ def test_url_checker(url_str):
     ## Running function
     with pytest.raises(LSSUtils_Error):
         web_utils.url_checker(url_str)
+
+## Testing URLS - Errors - Input type
+urls_test_types_err_arr = [ 1, 2, [1,2,3]]
+@pytest.mark.parametrize('url_str', urls_test_types_err_arr)
+def test_url_checker(url_str):
+    """
+    Tests the function `cosmo_utils.utils.web_utils.url_checker` for input and 
+    output parameters
+
+    Parameters
+    -----------
+    url_str : `str`
+        URL of the website to evaluate.
+    """
+    ## Running function
+    with pytest.raises(LSSUtils_Error):
+        web_utils.url_checker(url_str)

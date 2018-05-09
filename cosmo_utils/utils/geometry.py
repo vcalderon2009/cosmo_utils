@@ -57,8 +57,8 @@ def flip_angles(ang, unit='deg'):
     >>> flip_angles(110, unit='deg')
     110.0
 
-    >>> flip_angles([-50, 110, -10], unit='deg')
-    array([310., 110., 350.])
+    >>> list(flip_angles([-50, 110, -10], unit='deg'))
+    [310., 110., 350.]
     """
     file_msg = fd.Program_Msg(__file__)
     # Checking type of `ang`
@@ -145,11 +145,6 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
     ang_sep : float
         Angular separation between 1st and 2nd point.
         In units of `degrees`.
-
-    Examples
-    -----------
-    >>> np.round(Ang_Distance(12.0, 25.0, 10.0, -5.0, unit='deg'),4)
-    19.8168
 
     Notes
     -----------

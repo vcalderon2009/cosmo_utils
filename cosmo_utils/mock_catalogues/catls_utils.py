@@ -816,7 +816,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     ------------
     catl_pd_ii : int
         Index of the catalogue to match, 
-        from :func:~cosmo_utils.mock_catalogues.catls_utils.extract_catls`
+        from :func:`~cosmo_utils.mock_catalogues.catls_utils.extract_catls`
         function.
 
     catl_kind : {'data', 'mocks'} str, optional
