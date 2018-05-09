@@ -3,6 +3,4 @@
 # This sub-module is destined for common non-package specific utility
 # functions.
 
-from __future__ import absolute_import
-
-from cosmo_utils.mock_catalogues.pair_counters import pair_counter_rp
+from .pair_counter_rp import *
