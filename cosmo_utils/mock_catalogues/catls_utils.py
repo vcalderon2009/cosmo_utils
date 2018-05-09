@@ -73,9 +73,6 @@ def catl_keys(catl_kind, perf_opt=False, return_type='list'):
 
     >>> catl_keys('mocks', perf_opt=True, return_type='list')
     ['M_h', 'haloid', 'galtype']
-
-    >>> catl_keys('mocks', perf_opt=True, return_type='dict')
-    {'gm_key': 'M_h', 'id_key': 'haloid', 'galtype_key': 'galtype'}
     """
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters

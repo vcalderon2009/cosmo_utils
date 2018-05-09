@@ -56,9 +56,6 @@ def flip_angles(ang, unit='deg'):
     
     >>> flip_angles(110, unit='deg')
     110.0
-
-    >>> list(flip_angles([-50, 110, -10], unit='deg'))
-    [310., 110., 350.]
     """
     file_msg = fd.Program_Msg(__file__)
     # Checking type of `ang`

@@ -110,14 +110,6 @@ def Bins_array_create(arr, base=10):
     ----------
     bins_arr : `numpy.ndarray`
         Array of elements separated in intervals of `base`
-
-    Examples
-    --------
-    >>> list(Bins_array_create([1,2,3,4], base=2))
-    [0., 2., 4.]
-
-    >>> list(Bins_array_create([5, 7, 13, 12], base=5))
-    [ 5., 10., 15.]
     """
     file_msg = fd.Program_Msg(__file__)
     # Transforming input data
