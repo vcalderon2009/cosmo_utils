@@ -9,6 +9,7 @@ from cosmo_utils.utils import file_utils
 from cosmo_utils.utils import work_paths
 from cosmo_utils.utils import file_readers
 from cosmo_utils.utils import geometry
+from cosmo_utils.utils import web_utils
 
 # from . import stats_funcs
 # from . import file_readers
