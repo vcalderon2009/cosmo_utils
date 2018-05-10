@@ -1,4 +1,4 @@
-Cosmo Utils - Utitlities for LSS Research
+Cosmo Utils - Utilities for LSS Research
 -----------------------------------------------
 
 .. image:: http://img.shields.io/badge/powered%20by-AstroPy-orange.svg?style=flat
