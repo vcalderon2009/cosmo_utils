@@ -1,4 +1,4 @@
-# corrfunc config for landscape.io code quality check
+# cosmo_utils config for landscape.io code quality check
 
 doc-warnings: false
 test-warnings: false
