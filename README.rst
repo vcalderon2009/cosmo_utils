@@ -15,6 +15,9 @@ Cosmo Utils - Utitlities for LSS Research
 .. image:: https://coveralls.io/repos/github/vcalderon2009/cosmo_utils/badge.svg?branch=master
     :target: https://coveralls.io/github/vcalderon2009/cosmo_utils?branch=master
 
+.. image:: https://badge.fury.io/py/cosmo-utils.svg
+    :target: https://badge.fury.io/py/cosmo-utils
+
 
 
 Repository with scripts used in my LSS research
