@@ -126,16 +126,17 @@ def get_code_c():
     return c_path
 
 ## Directory for SDSS Catalogues
-def get_sdss_catl_dir(path):
+def get_sdss_catl_dir(path='./'):
     """
     Extracts the path to the set of SDSS catalogues
 
     Parameters
     ----------
-    path : str
+    path : str, optional
         Path of the repository that would contain the set of SDSS catalogues.
         This path is only used if the environment variable `sdss_catl_path`
         is not available to the system.
+        This variable is set to './' by default.
     
     Returns
     ----------
