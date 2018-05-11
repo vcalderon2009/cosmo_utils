@@ -1,4 +1,4 @@
-|Astropy| |PyPI| |Travis_Build| |Issues| |RTD|
+|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |Coverage|
 
 Cosmo Utils - Utilities for LSS Research
 -----------------------------------------------
@@ -34,3 +34,6 @@ This project is Copyright (c) Victor Calderon and licensed under the terms of th
    :target: http://cosmo-utils.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
+.. |Coverage| image:: https://coveralls.io/repos/github/vcalderon2009/cosmo_utils/badge.svg?branch=master
+   :target: https://coveralls.io/github/vcalderon2009/cosmo_utils?branch=master
+   :alt: Coveralls Status
