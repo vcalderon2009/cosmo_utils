@@ -1,9 +1,9 @@
 
-0.1.1 
+0.1.1 (2018-05-11)
 -----------------------
 
-Changed paths and fixed bugs.
-
+* Changed paths and fixed bugs.
+* Added documentation
 
 0.1.0 (2018-05-10)
 -----------------------
