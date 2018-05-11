@@ -34,7 +34,7 @@ The first step is to clone the `Cosmo-Utils` repository::
     cd cosmo_utils
 
 Installing one of the official relases
-======================================
+--------------------------------------
 
 All official releases of the code are tagged with their version name, 
 e.g. v0.1.0. To install a particular release::
@@ -46,7 +46,7 @@ This will install the v0.1.0 release of the code. Other official release
 versions (e.g. 0.1.1) can be installed similarly.
 
 Installing the most recent master branch
-========================================
+-----------------------------------------
 
 If you prefer to use the most recent version of the code::
 
