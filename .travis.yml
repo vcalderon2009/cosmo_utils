@@ -116,6 +116,9 @@ matrix:
         # Do a PEP8 test with pycodestyle
         - os: linux
           env: MAIN_CMD='pycodestyle cosmo_utils --count' SETUP_CMD=''
+        ## Allow failure from MacOS X
+        - os: osx
+          env: SETUP_CMD='test'
 
     allow_failures:
         # Do a PEP8 test with pycodestyle
@@ -124,7 +127,7 @@ matrix:
           env: MAIN_CMD='pycodestyle cosmo_utils --count' SETUP_CMD=''
         ## Allow failure from MacOS X
         - os: osx
-          env: env: SETUP_CMD='test'
+          env: SETUP_CMD='test'
 
 install:
 
