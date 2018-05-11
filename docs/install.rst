@@ -1,0 +1,66 @@
+.. _step_by_step_install:
+
+********************
+Package Installation
+********************
+
+To install Cosmo-Utils, you can use `pip` or clone the repository from 
+Github and build the source code.
+
+Using pip
+=========
+
+The simplest way to install `Cosmo-Utils` is with pip. To install it with 
+pip ::
+    
+    pip install cosmo-utils
+
+This will install the latest official release of the code.
+
+Building from Source
+======================
+
+If you don't install the latest relases using pip,
+you can instead clone the source code and call the setup file.
+This is the most common way to install `Cosmo-Utils` if you want 
+versions of the code that have been updaed since the latest official
+release. In this case, after installation it is particularly important
+that you follow the instructions in :ref:`verifying_your_installation` 
+section below.
+
+The first step is to clone the `Cosmo-Utils` repository::
+
+    git clone https://github.com/vcalderon2009/cosmo_utils
+    cd cosmo_utils
+
+
+.. _verifying_your_installation:
+
+Verifying your installation
+==============================
+
+After installing the code and its dependencies, fire up a Python interpreter
+and check that the version number matches what you expect:
+
+.. code-block:: python
+
+    import cosmo_utils
+    print(cosmo_utils.__version__)
+
+If the version number is not what it should be, this likely means you have a 
+previous installation that is superseding the version you tried to install.
+This *should* be accomplished by doing `pip uninstall cosmo-utils`
+before your new installation, but you may need to uninstall the previous 
+build "manually". Like all python packages, you can find the installation 
+location as follows:
+
+.. code-block:: python
+
+    import cosmo_utils
+    print(cosmo_utils.__file__)
+
+This wil show where your active version is located on your machine. You 
+can manually delete this copy of `Cosmo-Utils` prior to your new installation
+to avoid version conflicts. (There may be multiple copies of `Cosmo-Utils` in 
+this location, depending on how many times you have previously installed 
+the code - all such copies my be deleted prior to reinstallation).

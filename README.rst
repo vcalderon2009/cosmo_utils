@@ -18,8 +18,6 @@ Cosmo Utils - Utilities for LSS Research
 .. image:: https://badge.fury.io/py/cosmo-utils.svg
     :target: https://badge.fury.io/py/cosmo-utils
 
-
-
 Repository with scripts used in my LSS research
 
 License
