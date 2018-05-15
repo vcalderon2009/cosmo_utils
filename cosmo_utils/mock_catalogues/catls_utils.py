@@ -595,7 +595,7 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
         return catl_arr
 
 ## Cleaning the catalogue removing `failed` values
-def sdss_catl_clean(catl_pd, catl_kind, catl_info='member', reindex=True):
+def sdss_catl_clean(catl_pd, catl_kind, catl_info='members', reindex=True):
     """
     Cleans the catalogue removing `failed` values.
 
