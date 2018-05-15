@@ -188,7 +188,7 @@ test_stats_one_nelem_arr = [100, 1000, 10000, 50, 20]
 def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
     expected, nelem, bins=10, base=10):
     """
-    Tests the function `cosmo_utils.utils.stats_funcs.sigma_calcs` for 
+    Tests the function `cosmo_utils.utils.stats_funcs.Stats_one_arr` for 
     input and output parameters
 
     Parameters

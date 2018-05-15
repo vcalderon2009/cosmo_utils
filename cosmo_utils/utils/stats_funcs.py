@@ -163,6 +163,25 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
         array of the St. Dev. value of `data_arr`.
         Only returned if `return_mean_std == True`
     """
+    file_msg = fd.Program_Msg(__file__)
+    ## Checking input variables
+    # `data_arr`
+    data_arr_valid_types = (np.ndarray, list)
+    if not (isinstance(data_arr, data_arr_valid_types)):
+        msg = '{0} `data_arr` ({1}) is not a valid type!'.format(
+            file_msg, type(data_arr))
+        raise LSSUtils_Error(msg)
+    else:
+        data_arr = np.asarray(data_arr)
+    # `type_sigma`
+    type_sigma_valid = ['perc', 'std']
+    if not (isinstance(type_sigma, str)):
+        msg = '{0} `type_sigma` ({1}) is not a valid type!'.format(
+            file_msg, type(type_sigma))
+        raise LSSUtils_Error(msg)
+    if not (type_sigma in type_sigma_valid):
+        msg = '{0} `type_sigma` ({1}) is not a valid input choice!'.format(
+            file_msg, type_sigma)
     ## Determining shape of `data_arr`
     if data_arr.ndim == 1:
         axis = 0
