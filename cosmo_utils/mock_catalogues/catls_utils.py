@@ -779,7 +779,7 @@ def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
     # Member galaxies
     if catl_info == 'members':
         # Centrals
-        catl_pd_cens = catl_pd_clean_all.loc[(catl_pd_clean_all[galtype_key] == Cens), id_key]
+        catl_pd_cens = catl_pd_clean_all.loc[(catl_pd_clean_all[galtype_key] == cens), id_key]
         catl_pd_cl   = catl_pd_clean_all[(catl_pd_clean_all[id_key].isin(catl_pd_cens))]
         # Group counts
         group_counts = Counter(catl_pd_cl[id_key])
