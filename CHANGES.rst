@@ -1,4 +1,4 @@
-0.1.23 (unreleased)
+0.1.23 (2018-05-16)
 -----------------------
 
 - Checking for input parameters (:py:func:`~cosmo_utils.utils.stats_funcs.sigma_calcs`)
