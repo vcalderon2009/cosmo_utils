@@ -17,6 +17,16 @@ pip ::
 
 This will install the latest official release of the code.
 
+Upgrading via pip
+-----------------
+
+Whenever there is a new release, you can upgrade your current version by 
+running ::
+
+    pip install --upgrade cosmo-utils
+
+This will ensure that you have the most up-to-date version of `Cosmo-Utils`.
+
 Building from Source
 ======================
 
