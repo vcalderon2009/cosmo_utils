@@ -2,6 +2,7 @@
 -----------------------
 
 - Checking for input parameters (:py:func:`~cosmo_utils.utils.stats_funcs.sigma_calcs`)
+- Fixed issue with galaxy type (:py:func:`~cosmo_utils.mock_catalogues.catls_utils.sdss_catl_clean_nmin`)
 
 0.1.22 (2018-05-15)
 -----------------------

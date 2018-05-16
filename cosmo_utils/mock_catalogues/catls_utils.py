@@ -760,7 +760,6 @@ def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
     ##
     ## Types of galaxies
     cens = int(1)
-    sats = int(0)
     nmin = int(nmin)
     ##
     ## Getting keys for catalogue
