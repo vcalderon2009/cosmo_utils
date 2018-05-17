@@ -1,7 +1,8 @@
 0.1.25 (unreleased)
 -----------------------
 
-- No changes yet
+- Introduced `pairwise` counting again.
+- Fixed bug in :py:func:`~cosmo_utils.mock_catalogues.shmr_funcs.Behroozi_relation`
 
 0.1.24 (2018-05-17)
 -----------------------
