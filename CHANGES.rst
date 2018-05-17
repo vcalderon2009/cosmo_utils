@@ -1,7 +1,8 @@
-0.1.24 (unreleased)
+0.1.24 (2018-05-17)
 -----------------------
 
-- No changes yet
+- Importing modules in a different way
+- Temporarily disabled the function for `pairwise` counting.
 
 0.1.23 (2018-05-16)
 -----------------------
