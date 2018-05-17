@@ -8,7 +8,7 @@ from . import catls_utils
 from . import mags_calculations
 from . import shmr_funcs
 from . import spherematch
-# from . import pair_counters
+from . import pair_counters
 
 # from __future__ import absolute_import
 
