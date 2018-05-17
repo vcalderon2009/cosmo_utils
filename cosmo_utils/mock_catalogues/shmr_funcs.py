@@ -140,12 +140,12 @@ def Behroozi_relation(log_mstar, z=0., return_mhalo_h0=False, mstar_h0=False):
     term3_numerator    = (stellar_mass_by_m0)**delta
     term3_denominator  = 1. + (stellar_mass_by_m0)**(-gamma)
 
-    log_halo_mass = logm1 + beta*num.log10(stellar_mass_by_m0)
+    log_halo_mass = logm1 + beta*np.log10(stellar_mass_by_m0)
     log_halo_mass += (term3_numerator/term3_denominator) - 0.5
 
     # convert back from h=0.7 to h=1 and return the result
     if return_mhalo_h0:
-        return num.log10((10.**log_halo_mass)*little_h)
+        return np.log10((10.**log_halo_mass)*little_h)
     else:
         return log_halo_mass
 
