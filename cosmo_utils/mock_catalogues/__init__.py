@@ -3,11 +3,18 @@
 # This sub-module is destined for common non-package specific utility
 # functions.
 
-from __future__ import absolute_import
+from . import abundance_matching
+from . import catls_utils
+from . import mags_calculations
+from . import shmr_funcs
+from . import spherematch
+from . import pair_counters
 
-from cosmo_utils.mock_catalogues import abundance_matching
-from cosmo_utils.mock_catalogues import catls_utils
-from cosmo_utils.mock_catalogues import mags_calculations
-from cosmo_utils.mock_catalogues import shmr_funcs
-from cosmo_utils.mock_catalogues import spherematch
-from cosmo_utils.mock_catalogues import pair_counters
+# from __future__ import absolute_import
+
+# from cosmo_utils.mock_catalogues import abundance_matching
+# from cosmo_utils.mock_catalogues import catls_utils
+# from cosmo_utils.mock_catalogues import mags_calculations
+# from cosmo_utils.mock_catalogues import shmr_funcs
+# from cosmo_utils.mock_catalogues import spherematch
+# from cosmo_utils.mock_catalogues import pair_counters
