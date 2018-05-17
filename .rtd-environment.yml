@@ -15,6 +15,7 @@ dependencies:
     - scipy
     - numexpr
     - cython
+    - scikit-learn>=0.19.1
     - pip:
       - GitPython
       - Cython
