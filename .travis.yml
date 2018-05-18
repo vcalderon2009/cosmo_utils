@@ -125,9 +125,6 @@ matrix:
         # (allow to fail unless your code completely compliant)
         - os: linux
           env: MAIN_CMD='pycodestyle cosmo_utils --count' SETUP_CMD=''
-        ## Allow failure from MacOS X
-        - os: osx
-          env: SETUP_CMD='test'
 
 install:
 
