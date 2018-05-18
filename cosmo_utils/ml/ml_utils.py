@@ -214,7 +214,7 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
         raise LSSUtils_Error(msg)
     ##
     ## Rescaling Dataset
-    feat_arr_scaled  data_preprocessing( feat_arr, pre_opt=pre_opt )
+    feat_arr_scaled = data_preprocessing( feat_arr, pre_opt=pre_opt )
     ##
     ## Splitting into `Training` and `Testing` datasets.
     # Scaled

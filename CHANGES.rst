@@ -1,7 +1,7 @@
 0.1.26 (unreleased)
 -----------------------
 
-- No changes yet
+- Added some useful functions related to machine learning
 
 0.1.25 (2018-05-17)
 -----------------------
