@@ -1,7 +1,8 @@
-0.1.26 (unreleased)
+0.1.26 (2018-05-17)
 -----------------------
 
-- Added some useful functions related to machine learning
+- Added some useful functions related to machine learning.
+- Fixed bugs in testing.
 
 0.1.25 (2018-05-17)
 -----------------------
