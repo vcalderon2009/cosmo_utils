@@ -21,5 +21,6 @@ if not _ASTROPY_SETUP_:
 
     from . import utils
     from . import mock_catalogues
+    from . import ml
     from . import custom_exceptions
 
