@@ -25,7 +25,6 @@ import sklearn.model_selection  as skms
 import sklearn.ensemble         as skem
 import sklearn.neural_network   as skneuro
 import sklearn.preprocessing    as skpre
-import xgboost
 import scipy
 
 # Extra modules
