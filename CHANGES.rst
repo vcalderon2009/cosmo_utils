@@ -1,7 +1,7 @@
-0.1.27 (unreleased)
+0.1.28 (2018-05-21)
 -----------------------
 
-- No changes yet.
+- Fixed bug with :py:func:`~cosmo_utils.utils.file_utils.Path_Folder`
 
 0.1.27 (2018-05-21)
 -----------------------
