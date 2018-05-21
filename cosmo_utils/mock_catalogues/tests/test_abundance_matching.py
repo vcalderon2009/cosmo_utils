@@ -43,7 +43,7 @@ def test_reversed_arrays(x, y, expected):
     y : `numpy.ndarray`
         Array containing the 2nd set of values.
 
-    expected : boolean
+    expected : `bool`
         If True, `x` increases monotonically with increasing `y`.
         If False, `x` decreases monotonically with increasing `y`.
     """
