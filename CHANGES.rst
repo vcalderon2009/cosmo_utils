@@ -1,7 +1,7 @@
-0.1.27 (unreleased)
+0.1.27 (2018-05-21)
 -----------------------
 
-- No changes yet
+- Modified the modules imported in :py:module:`~cosmo_utils.mock_catalogues.spherematch`
 
 0.1.26 (2018-05-17)
 -----------------------
