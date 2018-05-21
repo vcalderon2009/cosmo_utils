@@ -6,14 +6,12 @@ strictness: medium
 max-line-length: 80
 
 ignore-paths:
-    - dev
-    - examples
     - docs/conf.py
-    - imageutils/extern
-    - imageutils/version.py
-    - imageutils/conftest.py
-    - imageutils/_astropy_init.py
-    - imageutils/cython_version.py
+    - cosmo_utils/extern
+    - cosmo_utils/version.py
+    - cosmo_utils/conftest.py
+    - cosmo_utils/_astropy_init.py
+    - cosmo_utils/cython_version.py
     - ah_bootstrap.py
     - ez_setup.py
 
