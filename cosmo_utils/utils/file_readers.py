@@ -169,7 +169,7 @@ def read_pandas_hdf5(hdf5_file, key=None, ret=False):
         If provided, it will extract the `key` value as a pandas DataFrame.
         This value is set to `None` by default.
 
-    ret : boolean, optional
+    ret : `bool`, optional
         If True, it returns the value of the `key`.
         By default, it is set to False.
 
@@ -333,7 +333,7 @@ def concatenate_pd_df(directory, filetype='hdf5', foutput=None, outonly=True):
     foutput : str or NoneType
         If not `None`, it is the basename of the output file in HDF5 format
 
-    outonly : boolean, optional
+    outonly : `bool`, optional
         If True, it returns the pandas DataFrame.
         If False, it only saved the concatenated `pandas.DataFrame`.
 

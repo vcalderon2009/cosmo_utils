@@ -230,7 +230,7 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
             - 3 : Translation `and` rotation to the center point.
             - 4 : Translation and 2 rotaitons about the center point
 
-    return_dict : {True, False}, boolean, optional
+    return_dict : {True, False}, `bool`, optional
         If `True`, this functions returns 2 dictionaries with `spherical` 
         and `cartesian` coordinates. 
         If `False`, it returns a `pandas.DataFrame` with the columns.

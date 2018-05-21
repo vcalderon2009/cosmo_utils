@@ -97,7 +97,7 @@ def test_catl_keys_outputs(catl_kind, perf_opt, return_type, expected):
             - `data` : catalogues come from SDSS `real` catalogue
             - `mocks` : catalogue come from SDSS `mock` catalogues
 
-    perf_opt : boolean, optional
+    perf_opt : `bool`, optional
         Option for using a `perfect` mock catalogue.
 
     return_type : {'list', 'dict'} str

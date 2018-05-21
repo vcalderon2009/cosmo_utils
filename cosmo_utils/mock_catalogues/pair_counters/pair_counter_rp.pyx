@@ -44,18 +44,18 @@ def pairwise_distance_rp(coord_1, coord_2, rpmin=0.01, rpmax=10,
     coord_2 : array_like, shape (N,3)
         Cartesian corodinates <x, y, z> of `sample 2`.
 
-    rpmin : float, optional
+    rpmin : `float`, optional
         Minimum `rp` (perpendicular distance) to search for and return pairs.
         This variable is set to `0.01` by default.
 
-    rpmax : float, optional
+    rpmax : `float`, optional
         Maximum `rp` (perpendicular distance) to search for and return pairs.
         This variable is set to `10` by default.
 
-    nrpbins : int, optional
+    nrpbins : `int`, optional
         Total number of `rp` bins. This variable is set to `10` by default.
 
-    pimax : float, optional
+    pimax : `float`, optional
         Maximum parallel separation distance to search for and return pairs.
         This variable is set to `20` by default.
 
@@ -65,7 +65,7 @@ def pairwise_distance_rp(coord_1, coord_2, rpmin=0.01, rpmax=10,
 
     Returns
     -----------
-    rp_ith_arr : array_like, shape (M, 3)
+    rp_ith_arr : `numpy.ndarray`, shape (M, 3)
         Three-dimensional array of M-elements containing:
             - `rp` : bin number to which galaxy pair belongs.
             - `i_ind` : indices of 0-indexed indices in `sample 1`.

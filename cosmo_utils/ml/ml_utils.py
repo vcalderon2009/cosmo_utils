@@ -112,13 +112,13 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
 
     Parameters
     -----------
-    pred_arr : `np.ndarray` or array-like, shape (n_samples, n_outcomes)
+    pred_arr : `numpy.ndarray` or array-like, shape (n_samples, n_outcomes)
         Array consisting of the `predicted values`. The dimensions of 
         `pred_arr` are `n_samples` by `n_outcomes`, where `n_samples` is the 
         number of observations, and `n_outcomes` the number of predicted 
         outcomes.
 
-    feat_arr : `np.ndarray` or array-like, shape (n_samples, n_features)
+    feat_arr : `numpy.ndarray` or array-like, shape (n_samples, n_features)
         Array consisting of the `predicted values`. The dimensions of 
         `feat_arr` are `n_samples` by `n_features`, where `n_samples` 
         is the number of observations, and `n_features` the number of 
@@ -248,13 +248,13 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
 
     Parameters
     -----------
-    feat_arr : `np.ndarray` or array-like, shape (n_samples, n_features)
+    feat_arr : `numpy.ndarray` or array-like, shape (n_samples, n_features)
         Array consisting of the `predicted values`. The dimensions of 
         `feat_arr` are `n_samples` by `n_features`, where `n_samples` 
         is the number of observations, and `n_features` the number of 
         features used.
 
-    truth_arr : `np.ndarray` or array-like, shape (n_samples, n_outcomes)
+    truth_arr : `numpy.ndarray` or array-like, shape (n_samples, n_outcomes)
         Array consisting of the `true` values for the `n_samples` 
         observations. The dimensions of `truth_arr` are 
         `n_samples` by `n_outcomes`, where `n_samples` is the 
@@ -265,7 +265,7 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
         Model used to estimate the score if ``score_method == 'model_score'``
         This variable is set to `None` by default.
 
-    pred_arr : `np.ndarray`, array-like, or `NoneType`, shape (n_samples, n_outcomes)
+    pred_arr : `numpy.ndarray`, array-like, or `NoneType`, shape (n_samples, n_outcomes)
         Array of predicted values from `feat_arr`. If ``model == None``,
         this variable must be an array-like object. If ``model != None``,
         this variable will not be used, and will be calculated using 

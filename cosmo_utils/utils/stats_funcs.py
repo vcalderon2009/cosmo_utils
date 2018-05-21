@@ -146,7 +146,7 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
     perc_arr : array_like, optional (default = [68., 95., 99.7])
         Array of percentiles to calculate
 
-    return_mean_std : boolean, optional (default = False)
+    return_mean_std : `bool`, optional (default = False)
         Option for returning mean and St. Dev. along with `sigma_dict`
 
     Return

@@ -70,10 +70,10 @@ def Index(pathdir, datatype, sort=True, basename=False):
     datatype : string
         Type of documents to look for.
 
-    sort : boolean, optional (default = True)
+    sort : `bool`, optional (default = True)
         If this is set to True, the output list is sorted by name
 
-    basename : boolean, optional
+    basename : `bool`, optional
         If this is set to True, the output list will contain only the 
         basename of the files in `pathdir`
 
@@ -116,7 +116,7 @@ def get_immediate_subdirectories(pathdir, sort=True):
     subdir_arr : array_like or array of strings
         Array of paths of subdirectories of `pathdir`
 
-    sort : boolean, optional (default = True)
+    sort : `bool`, optional (default = True)
         If this is set to True, the output list is sorted by name
     """
     if os.path.exists(pathdir):

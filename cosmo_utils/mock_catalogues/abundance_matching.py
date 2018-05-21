@@ -35,7 +35,7 @@ def reversed_arrays(x, y):
 
     Return
     -----------
-    mono_opt : boolean
+    mono_opt : `bool`
         If True, `x` increases monotonically with increasing `y`.
         If False, `x` decreases monotonically with increasing `y`.
 
@@ -107,10 +107,10 @@ def abundance_matching_f(dict1, dict2, volume1=1., volume2=1., reverse=True,
     volume1 : float
         Corresponding volume to `dict1`.
 
-    reverse : boolean, optional
+    reverse : `bool`, optional
         Determines the relation between `var1` and `var2`.
 
-    dens1_opt : boolean, optional
+    dens1_opt : `bool`, optional
         If True, `density` must be calculated.
 
         Options :

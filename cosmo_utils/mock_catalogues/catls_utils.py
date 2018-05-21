@@ -43,7 +43,7 @@ def catl_keys(catl_kind, perf_opt=False, return_type='list'):
             - `data` : catalogues come from SDSS `real` catalogue
             - `mocks` : catalogue come from SDSS `mock` catalogues
 
-    perf_opt : boolean, optional
+    perf_opt : `bool`, optional
         Option for using a `perfect` mock catalogue.
 
     return_type : {'list', 'dict'} str, optional
@@ -285,11 +285,11 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
         Seed used for the `CLF` random seed. This variable is set to `1235` 
         by default.
 
-    perf_opt : boolean, optional
+    perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
         catalogues. This variable is set to `False` by default.
 
-    print_filedir : boolean, optional
+    print_filedir : `bool`, optional
         If True, the output directory is printed onto the screen.
     
     Returns
@@ -483,15 +483,15 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
         Seed used for the `CLF` random seed. This variable is set to `1235` 
         by default.
 
-    perf_opt : boolean, optional
+    perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
         catalogues. This variable is set to `False` by default.
     
-    return_len : boolean, optional
+    return_len : `bool`, optional
         If True, the function returns the total number of elements in 
         the folder that match the criteria.
 
-    print_filedir : boolean, optional
+    print_filedir : `bool`, optional
         If True, the output directory is printed onto the screen.
 
     Returns
@@ -618,7 +618,7 @@ def sdss_catl_clean(catl_pd, catl_kind, catl_info='members', reindex=True):
             - `members` : Member galaxies of group catalogues
             - `groups` : Catalogues with `group` information.
 
-    reindex : boolean, optional
+    reindex : `bool`, optional
         If True, the output catalogue is re-indexed.
 
     Return
@@ -713,7 +713,7 @@ def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
         Minimum group richness to have in the (galaxy) group catalogue.
         This variable is set to `1` by default.
 
-    perf_opt : boolean, optional
+    perf_opt : `bool`, optional
         Option for using a `perfect` mock catalogue.
 
     Return
@@ -865,7 +865,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
         Seed used for the `CLF` random seed. This variable is set to `1235` 
         by default.
 
-    perf_opt : boolean, optional
+    perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
         catalogues. This variable is set to `False` by default.
 
@@ -874,7 +874,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
         along with the merged catalogue.
         It returns ``<memb_group_pd, memb_pd, group_pd>``
 
-    print_filedir : boolean, optional
+    print_filedir : `bool`, optional
         If True, the output directory is printed onto the screen.
 
     Return

@@ -351,7 +351,7 @@ def absolute_magnitude_lim(z, mag_lim, cosmo=None, H0=100., verbose=True):
         Hubble parameters value used to estimate distances.
         This variable is set to 100 km/s/Mpc by default.
 
-    verbose : boolean, optional
+    verbose : `bool`, optional
         If True, a message will appear when the default cosmology is used.
 
     Returns

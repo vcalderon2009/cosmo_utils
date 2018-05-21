@@ -140,7 +140,7 @@ def test_sigma_calcs_shape(ndim, nelem, output, type_sigma,
     type_sigma : {'std', 'perc'} str
         Type of statistics to use for the different sigmas/St. Dev.
 
-    return_mean : boolean
+    return_mean : `bool`
         If true, it returns `mean`, `std` and `sigmas`.
         If False, it only return `sigmas`.
 
@@ -193,7 +193,7 @@ def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
 
     Parameters
     ----------
-    return_perc : boolean, optional
+    return_perc : `bool`, optional
         If true, it also returns the `percentiles` of the data.
         Last item in the return list.
         This variable is set to False by default.
