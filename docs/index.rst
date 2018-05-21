@@ -8,7 +8,7 @@ astrophysics, and the `Sloan Digital Sky Survey <http://www.sdss.org/>`_.
 The source code is freely availabe at
 `https://github.com/vcalderon2009/cosmo_utils <https://github.com/vcalderon2009/cosmo_utils>`_.
 
-|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |Coverage|
+|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |Coverage| |License|
 
 Getting Started
 ===============
@@ -64,3 +64,7 @@ Reference
 .. |Coverage| image:: https://coveralls.io/repos/github/vcalderon2009/cosmo_utils/badge.svg?branch=master
    :target: https://coveralls.io/github/vcalderon2009/cosmo_utils?branch=master
    :alt: Coveralls Status
+
+.. |License| image:: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
+   :target: https://opensource.org/licenses/BSD-3-Clause
+   :alt: Project License 

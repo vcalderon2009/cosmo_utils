@@ -1,4 +1,4 @@
-|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |Coverage|
+|Astropy| |PyPI| |Travis_Build| |Issues| |RTD| |Coverage| |License|
 
 Cosmo Utils - Utilities for LSS Research
 -----------------------------------------------
@@ -37,3 +37,7 @@ This project is Copyright (c) Victor Calderon and licensed under the terms of th
 .. |Coverage| image:: https://coveralls.io/repos/github/vcalderon2009/cosmo_utils/badge.svg?branch=master
    :target: https://coveralls.io/github/vcalderon2009/cosmo_utils?branch=master
    :alt: Coveralls Status
+
+.. |License| image:: https://img.shields.io/badge/License-BSD%203--Clause-blue.svg
+   :target: https://opensource.org/licenses/BSD-3-Clause
+   :alt: Project License 
