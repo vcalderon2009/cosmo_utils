@@ -1,7 +1,8 @@
-0.1.29 (unreleased)
+0.1.29 (2018-05-23)
 -----------------------
 
 - Added decorator to loop over different set of values (:py:func:`~cosmo_utils.utils.file_utils.mark_parametrize`).
+- Fixed docstrings.
 
 0.1.28 (2018-05-21)
 -----------------------
