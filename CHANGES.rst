@@ -1,7 +1,7 @@
-0.1.30 (unreleased)
+0.1.30 (2018-05-23)
 -----------------------
 
-- No changes yet.
+- Minor bug in :py:func:`~cosmo_utils.utils.file_utils.mark_parametrize` fixed.
 
 0.1.29 (2018-05-23)
 -----------------------
