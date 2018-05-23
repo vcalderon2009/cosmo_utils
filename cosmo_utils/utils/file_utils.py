@@ -14,7 +14,8 @@ __all__        =[   "Program_Msg",
                     "get_immediate_subdirectories",
                     "Path_Folder",
                     "File_Exists",
-                    "File_Download_needed"]
+                    "File_Download_needed",
+                    "mark_parametrize"]
 """
 Utilities for verifying file existence, directory paths, etc.
 """
@@ -238,3 +239,89 @@ def File_Download_needed(localpath, remotepath):
     ## Checking that file exists
     File_Exists(localpath)
 
+## Parametrize set of inputs to a function
+class mark_parametrize(object):
+    """
+    Parametrizes a set of values and changes the input variables 
+    of a function.
+    """
+    def __init__(self, argname, argvalues):
+        """
+        Initializes class object.
+
+        Parameters
+        ----------
+        argname : `str`
+            Key of the element to change in main dictionary.
+            It can only contain 1 word at a time.
+
+        argvalues : array-like
+            List of argvalues for each of the `argnames`.
+            This list will be used to loop over the values and 
+            replace them into the main dictionary.
+        
+        Note
+        ----------
+        This function loops over the many different elements in `argvalues`.
+        This function is meant to be used as a `decorator` for some 
+        function whose input a dictionary.
+        """
+        file_msg = fd.Program_Msg(__file__)
+        ## Check input parameters
+        # `argname`
+        if not (isinstance(argname, str)):
+            msg = '{0} `argname` ({1}) must be a string'.format(
+                file_msg, type(argname))
+            raise TypeError(msg)
+        # `argvalues`
+        if not (isinstance(argvalues, (tuple, list))):
+            msg = '{0} `argvalues` ({1}) must be a tuple or list'.format(
+                file_msg, type(argvalues))
+            raise TypeError(msg)
+        ## Assigning to class variables
+        self.argname   = argname
+        self.argvalues = argvalues
+        self.file_msg  = file_msg
+    ##
+    ## Decorator
+    def __call__(self, func):
+        """
+        This function gets executed when calling the function.
+        This functions changes the value of arguments in `p_dict`, and
+        runs the function `func` with the given parameters.
+
+        Parameters
+        ----------
+        func : `function`
+            Function that will be decorated.
+        """
+        def wrapped_func(*args, **kwargs):
+            """
+            This function changes the elements in `kwargs`
+            """
+            # Extracting main dictionary
+            try:
+                p_dict = kwargs['p_dict']
+            except KeyError:
+                try:
+                    p_dict = args[0]
+                except IndexError:
+                    msg  = '{0} Could not read the input dictionary `p_dict`.'
+                    msg += 'Please check your function!'
+                    msg  = msg.format(self.file_msg)
+                    raise LSSUtils_Error(msg)
+            # Checking if `p_dict` is a dictionary
+            if not (isinstance(p_dict, dict)):
+                msg = '{0} `p_dict` must be a dictionary!'.format(
+                    self.file_msg, type(p_dict))
+                raise TypeError(msg)
+            ## Parsing elements
+            # `argvalues`
+            argvalues = np.asarray(self.argvalues)
+            ##
+            ## Looping over elements
+            for argval in argvalues:
+                p_dict[self.argname] = argval
+                func(p_dict=p_dict)
+
+        return wrapped_func
