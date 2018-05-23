@@ -28,6 +28,7 @@ import time
 import traceback
 import numpy as np
 from   pathlib import Path
+from   cosmo_utils.utils import file_utils as fd
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
 
 ## Functions
