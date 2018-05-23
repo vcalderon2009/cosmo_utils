@@ -30,7 +30,7 @@ def _retrieve_Behroozi_default_dict():
         Dictionary containing default parameters for the Stellar-Halo 
         Mass relation of Behroozi et al. (2013)
 
-    Note
+    Notes
     ----------
     All calculations are done internally ising the same h=0.7 units as 
     in Behroozi ete al. (2010), ['arXiv:1001.0015'] so the parameter values 
@@ -82,7 +82,7 @@ def Behroozi_relation(log_mstar, z=0., return_mhalo_h0=False, mstar_h0=False):
         Array or float containing 10-base logarithm of halo mass in ``h=1``
         solar mass units.
 
-    Note
+    Notes
     ----------
     The parameter values in Behroozi+10 were fit to data assuming ``h=0.7``,
     but all halotools inputs are in ``h=1`` units. Thus we will transform

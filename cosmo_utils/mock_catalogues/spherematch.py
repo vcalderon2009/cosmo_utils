@@ -63,7 +63,7 @@ def _spherical_to_cartesian_fast(ra, dec, nthreads):
     x, y, z : array_like
         Cartesian coordinates of the object
 
-    Note
+    Notes
     ----------
     This is a `fast` version of converting between spherical and 
     cartesian coordinates.
@@ -105,7 +105,7 @@ def _great_circle_distance(ra1, dec1, ra2, dec2):
     great_circle_dist : float
         Great Circle distance between the 1st and 2nd location
 
-    Note
+    Notes
     ----------
     This function uses a vincenty distance.
     For more information see:
@@ -158,7 +158,7 @@ def _great_circle_distance_fast(ra1, dec1, ra2, dec2, nthreads):
     great_circle_dist : float
         Great Circle distance between the 1st and 2nd location
 
-    Note
+    Notes
     ----------
     This function uses a vincenty distance.
     For more information see:

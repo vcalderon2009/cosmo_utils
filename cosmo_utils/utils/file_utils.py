@@ -260,7 +260,7 @@ class mark_parametrize(object):
             This list will be used to loop over the values and 
             replace them into the main dictionary.
         
-        Note
+        Notes
         ----------
         This function loops over the many different elements in `argvalues`.
         This function is meant to be used as a `decorator` for some 

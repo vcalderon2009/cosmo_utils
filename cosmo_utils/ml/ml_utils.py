@@ -59,7 +59,7 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
     feat_arr_scaled : `numpy.ndarray`
         Rescaled version of `feat_arr` based on the choice of `pre_opt`.
 
-    Note
+    Notes
     -----------
     For more information on how to pre-process your data, see 
     `http://scikit-learn.org/stable/modules/preprocessing.html`_.
@@ -294,7 +294,7 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     method_score : float
         Overall score from `pred_arr` to predict `truth_arr`.
 
-    Note
+    Notes
     -----------
     For more information on how to pre-process your data, see 
     `http://scikit-learn.org/stable/modules/model_evaluation.html`_.
