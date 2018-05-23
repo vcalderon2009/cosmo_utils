@@ -17,7 +17,7 @@
 0.1.27 (2018-05-21)
 -----------------------
 
-- Modified the modules imported in :module:`~cosmo_utils.mock_catalogues.spherematch`
+- Modified the modules imported in :py:func:`~cosmo_utils.mock_catalogues.spherematch.spherematch`
 
 0.1.26 (2018-05-17)
 -----------------------
