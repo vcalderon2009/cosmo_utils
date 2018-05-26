@@ -222,7 +222,7 @@ def catl_keys_prop(catl_kind, catl_info='members', return_type='list'):
 ## Extracting path of synthetic catalogues
 def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
     catl_info='members', halotype='fof', clf_method=3, hod_n=0, clf_seed=1235,
-    perf_opt=False, print_filedir=True):
+    dv=1.0, perf_opt=False, print_filedir=True):
     """
     Extracts the path to the synthetic catalogues.
 
@@ -284,6 +284,10 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
     clf_seed : int, optional
         Seed used for the `CLF` random seed. This variable is set to `1235` 
         by default.
+
+    dv : float, optional
+        Difference between galaxy and mass velocity profiles (v_g-v_c)/(v_m-v_c).
+        This value is set to `1.0` by default.
 
     perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
@@ -356,6 +360,10 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
         msg = '{0} `print_filedir` ({1}) is not a valid type!'.format(file_msg,
             type(print_filedir))
         raise LSSUtils_Error(msg)
+    # `dv`
+    if not (dv > 0):
+        msg = '{0} `dv` ({1}) must be larger than 0!'.format(file_msg, dv)
+        raise LSSUtils_Error(msg)
     ##
     ## Type of catalogue
     if catl_info == 'members':
@@ -393,6 +401,7 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
                                 'SDSS',
                                 catl_kind,
                                 'halos_{0}'.format(halotype),
+                                'dv_{0}'.format(dv),
                                 'hod_model_{0}'.format(hod_n),
                                 'clf_seed_{0}'.format(clf_seed),
                                 'clf_method_{0}'.format(clf_method),
@@ -415,7 +424,7 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
 ## Extracting list of synthetic catalogues given input parameters
 def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
     datatype='.hdf5', catl_info='members', halotype='fof', clf_method=3,
-    hod_n=0, clf_seed=1235, perf_opt=False, return_len=False,
+    hod_n=0, clf_seed=1235, dv=1.0, perf_opt=False, return_len=False,
     print_filedir=True):
     """
     Extracts a list of synthetic catalogues given input parameters
@@ -482,6 +491,10 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
     clf_seed : int, optional
         Seed used for the `CLF` random seed. This variable is set to `1235` 
         by default.
+    
+    dv : float, optional
+        Difference between galaxy and mass velocity profiles (v_g-v_c)/(v_m-v_c).
+        This value is set to `1.0` by default.
 
     perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
@@ -558,6 +571,10 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
         msg = '{0} `print_filedir` ({1}) is not a valid type!'.format(file_msg,
             type(print_filedir))
         raise LSSUtils_Error(msg)
+    # `dv`
+    if not (dv > 0):
+        msg = '{0} `dv` ({1}) must be larger than 0!'.format(file_msg, dv)
+        raise LSSUtils_Error(msg)
     # `return_len`
     if not (isinstance(return_len, bool)):
         msg = '{0} `return_len` ({1}) is not a valid type!'.format(file_msg,
@@ -578,6 +595,7 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
                                 clf_method=clf_method,
                                 hod_n=hod_n,
                                 clf_seed=clf_seed,
+                                dv=dv,
                                 perf_opt=perf_opt,
                                 print_filedir=print_filedir)
     ##
@@ -802,7 +820,7 @@ def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
 ## Merges the member and group catalogues for a given set of input parameters
 def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     sample_s='19', halotype='fof', clf_method=3, hod_n=0, clf_seed=1235,
-    perf_opt=False, return_memb_group=False, print_filedir=False):
+    dv=1.0, perf_opt=False, return_memb_group=False, print_filedir=False):
     """
     Merges the member and group catalogues for a given set of input parameters,
     and returns a modified version of the galaxy group catalogues with added
@@ -864,6 +882,10 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     clf_seed : int, optional
         Seed used for the `CLF` random seed. This variable is set to `1235` 
         by default.
+
+    dv : float, optional
+        Difference between galaxy and mass velocity profiles (v_g-v_c)/(v_m-v_c).
+        This value is set to `1.0` by default.
 
     perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
@@ -938,6 +960,10 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
         msg = '{0} `clf_method` ({1}) is not a valid input!'.format(file_msg,
             clf_method)
         raise LSSUtils_Error(msg)
+    # `dv`
+    if not (dv > 0):
+        msg = '{0} `dv` ({1}) must be larger than 0!'.format(file_msg, dv)
+        raise LSSUtils_Error(msg)
     # `hod_n`
     if not (hod_n in hod_n_valid):
         msg = '{0} `hod_n` ({1}) is not a valid input!'.format(file_msg,
@@ -968,6 +994,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
                                     clf_method=clf_method,
                                     hod_n=hod_n,
                                     clf_seed=clf_seed,
+                                    dv=dv,
                                     perf_opt=perf_opt,
                                     catl_info='members',
                                     return_len=True,
@@ -987,6 +1014,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
                                 sample_s=sample_s,
                                 halotype=halotype,
                                 clf_method=clf_method,
+                                dv=dv,
                                 hod_n=hod_n,
                                 clf_seed=clf_seed,
                                 perf_opt=perf_opt,
