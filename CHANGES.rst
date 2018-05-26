@@ -1,7 +1,7 @@
-0.1.31 (unreleased)
+0.1.31 (2018-05-26)
 -----------------------
 
-- No changes yet.
+- Added path and more for *velocity bias*
 
 0.1.30 (2018-05-23)
 -----------------------
