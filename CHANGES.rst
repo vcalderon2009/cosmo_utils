@@ -2,6 +2,7 @@
 -----------------------
 
 - Modified paths in :py:func:`~cosmo_utils.utils.work_paths.cookiecutter_paths`
+- Fixed path in :py:func:`cosmo_utils.mock_catalogues.catls_utils.catl_sdss_merge`.
 
 0.1.31 (2018-05-26)
 -----------------------
