@@ -1057,9 +1057,9 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
         group_pd.sort_values(by=id_key, inplace=True)
         group_pd.reset_index(inplace=True, drop=True)
         ## Renaming columns
-        g_colnames_dict = {ii:'GG' + ii for ii in group_colnames}
+        g_colnames_dict = {ii:'GG_' + ii for ii in group_colnames}
         group_pd.rename(columns=g_colnames_dict, inplace=True)
-        group_pd.rename(columns={'GG' + id_key : id_key}, inplace=True)
+        group_pd.rename(columns={'GG_' + id_key : id_key}, inplace=True)
         ##
         ## Merging the 2 DataFrames
         memb_group_pd = pd.merge(   left=memb_pd   ,
