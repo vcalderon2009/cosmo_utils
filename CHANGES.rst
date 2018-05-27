@@ -1,4 +1,4 @@
-0.1.32 (unreleased)
+0.1.32 (2018-05-27)
 -----------------------
 
 - Modified paths in :py:func:`~cosmo_utils.utils.work_paths.cookiecutter_paths`
