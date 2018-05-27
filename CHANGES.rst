@@ -1,13 +1,13 @@
-0.1.34 (unreleased)
+0.1.35 (2018-05-27)
 -----------------------
 
-- No changes yet
+- Fixed issue with path in :py:func:`~cosmo_utils.mock_catalogues.catls_utils.catl_sdss_merge`
 
 0.1.32 (2018-05-27)
 -----------------------
 
 - Modified paths in :py:func:`~cosmo_utils.utils.work_paths.cookiecutter_paths`
-- Fixed path in :py:func:`cosmo_utils.mock_catalogues.catls_utils.catl_sdss_merge`.
+- Fixed path in :py:func:`~cosmo_utils.mock_catalogues.catls_utils.catl_sdss_merge`.
 
 0.1.31 (2018-05-26)
 -----------------------
