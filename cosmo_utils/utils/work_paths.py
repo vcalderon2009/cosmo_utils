@@ -85,6 +85,14 @@ def cookiecutter_paths(path='./'):
         src_dir  = os.path.join(base_dir, 'src', 'data')
         # Data path
         data_dir = os.path.join(base_dir, 'data/')
+        # External path
+        ext_dir  = os.path.join(data_dir, 'external/')
+        # Processed path
+        proc_dir = os.path.join(data_dir, 'processed/')
+        # External path
+        int_dir  = os.path.join(data_dir, 'interim/')
+        # External path
+        raw_dir  = os.path.join(data_dir, 'raw/')
         # Creating files
         for dir_ii in [plot_dir, src_dir, data_dir]:
             fd.Path_Folder(dir_ii)
@@ -94,6 +102,10 @@ def cookiecutter_paths(path='./'):
         param_dict['plot_dir'] = plot_dir
         param_dict['src_dir' ] = src_dir
         param_dict['data_dir'] = data_dir
+        param_dict['ext_dir' ] = ext_dir
+        param_dict['proc_dir'] = proc_dir
+        param_dict['int_dir' ] = int_dir
+        param_dict['raw_dir' ] = raw_dir
     else:
         msg = '{0} `base_dir` ({1}) is not a Git directory! Exiting'.format(
             fd.Program_Msg(__file__), base_dir)
