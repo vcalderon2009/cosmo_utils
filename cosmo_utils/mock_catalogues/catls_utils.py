@@ -1024,10 +1024,12 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     ## Paths to catalogue
     # Mocks
     if catl_kind == 'mocks':
-        group_path += os.path.basename(memb_path).replace('memb', 'group')
+        group_path  = os.path.join(group_path, 
+                        os.path.basename(memb_path).replace('memb', 'group'))
     # Data
     if catl_kind == 'data':
-        group_path += os.path.basename(memb_path).replace('Gals', 'Group')
+        group_path = os.path.join(group_path,
+                        os.path.basename(memb_path).replace('Gals', 'Group'))
     # Checking that file exists
     fd.File_Exists(group_path)
     ##
@@ -1078,29 +1080,3 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
         return_obj = memb_group_pd
 
     return return_obj
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
