@@ -1,7 +1,7 @@
-0.1.36 (unreleased)
+0.1.36 (2018-05-27)
 -----------------------
 
-- No changes yet.
+- A change in the path in :py:func:`~cosmo_utils.utils.work_paths.get_sdss_catl_dir` and :py:func:`~cosmo_utils.utils.work_paths.get_output_path`
 
 0.1.35 (2018-05-27)
 -----------------------
