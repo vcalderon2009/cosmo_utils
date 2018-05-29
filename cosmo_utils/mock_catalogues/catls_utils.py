@@ -314,7 +314,7 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
     catl_info_valid  = ['members', 'groups']
     halotype_valid   = ['fof', 'so']
     clf_method_valid = [1, 2, 3]
-    hod_n_valid      = [0, 1]
+    hod_n_valid      = np.arange(0, 20)
     # `catl_kind`
     if not (catl_kind in catl_kind_valid):
         msg = '{0} `catl_kind` ({1}) is not a valid input!'.format(file_msg,
@@ -525,7 +525,7 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
     catl_info_valid  = ['members', 'groups']
     halotype_valid   = ['fof', 'so']
     clf_method_valid = [1, 2, 3]
-    hod_n_valid      = [0, 1]
+    hod_n_valid      = np.arange(0, 20)
     # `catl_kind`
     if not (catl_kind in catl_kind_valid):
         msg = '{0} `catl_kind` ({1}) is not a valid input!'.format(file_msg,
@@ -927,7 +927,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     catl_info_valid  = ['members', 'groups']
     halotype_valid   = ['fof', 'so']
     clf_method_valid = [1, 2, 3]
-    hod_n_valid      = [0, 1]
+    hod_n_valid      = np.arange(0, 20)
     # `catl_pd_ii`
     if (isinstance(catl_pd_ii, catl_pd_ii_valid)):
         catl_pd_ii = int(catl_pd_ii)

@@ -1,7 +1,9 @@
 0.1.37 (unreleased)
 -----------------------
 
-- No changes yet.
+- Changed range for `hod_n_valid` in :py:func:`~cosmo_utils.mock_catalogues.catls_utils.catl_sdss_merge`
+  , :py:func:`~cosmo_utils.mock_catalogues.catls_utils.catl_sdss_dir` and 
+  , :py:func:`~cosmo_utils.mock_catalogues.catls_utils.extract_catls`.
 
 0.1.36 (2018-05-27)
 -----------------------
