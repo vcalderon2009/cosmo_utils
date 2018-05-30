@@ -1,7 +1,7 @@
-0.1.39 (unreleased)
+0.1.39 (2018-05-30)
 -----------------------
 
-- No changes yet.
+- Used Flake8 Lint to go over the style of the code, and fixed bugs along the way
 
 0.1.38 (2018-05-30)
 -----------------------
@@ -18,12 +18,15 @@
 0.1.36 (2018-05-27)
 -----------------------
 
-- A change in the path in :py:func:`~cosmo_utils.utils.work_paths.get_sdss_catl_dir` and :py:func:`~cosmo_utils.utils.work_paths.get_output_path`
+- A change in the path in 
+  :py:func:`~cosmo_utils.utils.work_paths.get_sdss_catl_dir` and
+  :py:func:`~cosmo_utils.utils.work_paths.get_output_path`
 
 0.1.35 (2018-05-27)
 -----------------------
 
-- Fixed issue with path in :py:func:`~cosmo_utils.mock_catalogues.catls_utils.catl_sdss_merge`
+- Fixed issue with path in 
+  :py:func:`~cosmo_utils.mock_catalogues.catls_utils.catl_sdss_merge`
 
 0.1.32 (2018-05-27)
 -----------------------
