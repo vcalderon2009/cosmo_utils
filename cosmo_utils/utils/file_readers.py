@@ -309,7 +309,7 @@ def pandas_df_to_hdf5_file(df, hdf5_file, key=None, mode='w', complevel=8):
     file_msg = fd.Program_Msg(__file__)
     # Saving DataFrame to `hdf5_file`
     try:
-        data.to_hdf(hdf5_file, key, mode=mode, complevel=complevel)
+        df.to_hdf(hdf5_file, key, mode=mode, complevel=complevel)
         msg = '{0} HDF5 file created: {1}'.format(file_msg, hdf5_file)
         print(msg)
     except:
