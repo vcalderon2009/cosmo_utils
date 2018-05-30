@@ -1,7 +1,7 @@
-0.1.38 (unreleased)
+0.1.38 (2018-05-30)
 -----------------------
 
-- No changes yet.
+- Fixed bug found in :py:func:`~cosmo_utils.utils.file_readers.pandas_df_to_hdf5_file`
 
 0.1.37 (2018-05-29)
 -----------------------
