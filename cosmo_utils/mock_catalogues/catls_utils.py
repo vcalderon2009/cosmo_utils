@@ -921,7 +921,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     """
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters
-    catl_pd_ii_valid = (float, int)
+    catl_pd_ii_valid = (float, int, np.int64, np.int32)
     catl_kind_valid  = ['data', 'mocks']
     catl_type_valid  = ['mr', 'mstar']
     sample_s_valid   = ['19', '20', '21']
