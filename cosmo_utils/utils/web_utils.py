@@ -4,12 +4,12 @@
 # Victor Calderon
 # Created      : 2018-05-09
 # Last Modified: 2018-05-09
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "url_checker"]
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "url_checker"]
 
 """
 Tools used to interact with web-related objects
@@ -49,4 +49,3 @@ def url_checker(url_str):
     if (request_url.status_code != 200):
         msg = '{0} `url_str` ({1}) does not exist!'.format(file_msg, url_str)
         raise LSSUtils_Error(msg)
-

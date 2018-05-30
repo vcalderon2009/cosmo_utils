@@ -4,11 +4,11 @@
 # Victor Calderon
 # Created      : 2018-04-28
 # Last Modified: 2018-04-28
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
 """
 Set of test functions for the `stats_func` functions
 """
@@ -34,7 +34,7 @@ myceil_test = [ (12  , 10, 20.0),
 @pytest.mark.parametrize('x, base, output', myceil_test)
 def test_myceil(x, base, output):
     """
-    Tests the function `cosmo_utils.utils.stats_funcs.myceil` for input and 
+    Tests the function `cosmo_utils.utils.stats_funcs.myceil` for input and
     output parameters
 
     Parameters
@@ -64,7 +64,7 @@ myfloor_test = [(12   , 10 , 10.0 ),
 @pytest.mark.parametrize('x, base, output', myfloor_test)
 def test_myfloor(x, base, output):
     """
-    Tests the function `cosmo_utils.utils.stats_funcs.myceil` for input and 
+    Tests the function `cosmo_utils.utils.stats_funcs.myceil` for input and
     output parameters
 
     Parameters
@@ -84,16 +84,16 @@ def test_myfloor(x, base, output):
 
 ##
 ## Testing `Bins_array_create` function
-bins_arr_test = [   ([1,2,3,4,5], 2, [0., 2., 4, 6.]),
+bins_arr_test = [   ([1, 2, 3, 4, 5], 2, [0., 2., 4, 6.]),
                     ([1.2, 2.5, 3, 4], 0.8, [0.8, 1.6, 2.4, 3.2, 4.0]),
                     ([2.25, 3.4, 4.2, 4.3, 2.6], 2, [2., 4, 6.]),
                     ([-6, 2, -8.5, 3.], 3, [-9, -6, -3, 0, 3]),
-                    ([1,2,3.5, 4], 2, [0., 2, 4.]),
+                    ([1, 2, 3.5, 4], 2, [0., 2, 4.]),
                     ([-100, 200, 0. -12.5], 50., [-100, -50, 0., 50, 100, 150, 200])]
 @pytest.mark.parametrize('arr, base, output', bins_arr_test)
 def test_Bins_array_create(arr, base, output):
     """
-    Tests the function `cosmo_utils.utils.stats_funcs.Bins_array_create` for 
+    Tests the function `cosmo_utils.utils.stats_funcs.Bins_array_create` for
     input and output parameters
 
     Parameters
@@ -123,7 +123,7 @@ sigma_calcs_test = [    (1, 100 , (1,100)),
 def test_sigma_calcs_shape(ndim, nelem, output, type_sigma,
     return_mean, out_type):
     """
-    Tests the function `cosmo_utils.utils.stats_funcs.sigma_calcs` for 
+    Tests the function `cosmo_utils.utils.stats_funcs.sigma_calcs` for
     input and output parameters
 
     Parameters
@@ -170,7 +170,7 @@ def test_sigma_calcs_shape(ndim, nelem, output, type_sigma,
     assert(type(dict_test_all) == out_type)
     # Testing types for when `return_mean` == 'True'
     if return_mean:
-        assert(type(dict_test_all[0]) ==  dict)
+        assert(type(dict_test_all[0]) == dict)
         assert(type(dict_test_all[1]) == np.ndarray)
         assert(type(dict_test_all[2]) == np.ndarray)
 
@@ -178,9 +178,9 @@ def test_sigma_calcs_shape(ndim, nelem, output, type_sigma,
 ## Testing `Stats_one_arr`
 test_return_perc_arr     = [(True , 1),
                             (False, 0)]
-arr_digit_expected_arr   = [('n'  , 4),
-                            ('y'  , 6),
-                            ('o'  , 2),]
+arr_digit_expected_arr   = [('n', 4),
+                            ('y', 6),
+                            ('o', 2)]
 test_stats_one_nelem_arr = [100, 1000, 10000, 50, 20]
 @pytest.mark.parametrize('return_perc, return_perc_val', test_return_perc_arr)
 @pytest.mark.parametrize('arr_digit, expected', arr_digit_expected_arr)
@@ -188,7 +188,7 @@ test_stats_one_nelem_arr = [100, 1000, 10000, 50, 20]
 def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
     expected, nelem, bins=10, base=10):
     """
-    Tests the function `cosmo_utils.utils.stats_funcs.Stats_one_arr` for 
+    Tests the function `cosmo_utils.utils.stats_funcs.Stats_one_arr` for
     input and output parameters
 
     Parameters
@@ -206,15 +206,15 @@ def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
         Option for which elements to return.
         - 'n' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`
         - 'y' : Returns `x1_stat`, `y1_stat`, `y1_std`, `y1_std_err`,
-                        `x_bins_data`, `y_bins_data` 
-        - 'o' : Returns `x_bins_data`, `y_bins_data` 
-    
+                        `x_bins_data`, `y_bins_data`
+        - 'o' : Returns `x_bins_data`, `y_bins_data`
+
     expected : int
-        Expected number of elements in the tuple, based on the input 
+        Expected number of elements in the tuple, based on the input
         arguments
 
     nelem : int
-        Size of the array. It will test if all of the elements are 
+        Size of the array. It will test if all of the elements are
         being returned correctly
     """
     ## Creating random arrays
@@ -222,7 +222,7 @@ def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
     y = np.random.random(nelem) * 100.
     ##
     ## Running function
-    output = stats_funcs.Stats_one_arr(x, y, base=base, 
+    output = stats_funcs.Stats_one_arr(x, y, base=base,
                 arr_digit=arr_digit, statfunc=np.nanmean,
                 return_perc=return_perc)
     ##
@@ -240,34 +240,8 @@ def test_Stats_one_arr_outputs(return_perc, return_perc_val, arr_digit,
             assert(isinstance(ii, np.ndarray))
     ## Number of elements in array
     (   x_bins_data,
-        y_bins_data) = stats_funcs.Stats_one_arr(x, y, base=base, 
+        y_bins_data) = stats_funcs.Stats_one_arr(x, y, base=base,
                         arr_digit='o', statfunc=np.nanmean, arr_len=0,
                         return_perc=False)
     assert(len(np.concatenate(x_bins_data).ravel()) == nelem)
     assert(len(np.concatenate(y_bins_data).ravel()) == nelem)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

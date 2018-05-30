@@ -4,16 +4,16 @@
 # Victor Calderon
 # Created      : 2018-05-07
 # Last Modified: 2018-05-07
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "spherematch"]
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "spherematch"]
 
 ## Import modules
-import numpy as np
 import math
+import numpy as np
 from   scipy.spatial import cKDTree as KDT
 from   cosmo_utils.utils import file_utils as fd
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
@@ -24,12 +24,12 @@ from   cosmo_utils.custom_exceptions import LSSUtils_Error
 def _spherical_to_cartesian(ra, dec):
     """
     Converts spherical coordinates (ra, dec) to cartesian coordinates (x,y,z).
-    
+
     Parameters
     ----------
     ra, dec : array_like
         Right Ascension and Declination of the object. Units in `degrees`.
-    
+
     Returns
     ----------
     x, y, z : array_like
@@ -65,7 +65,7 @@ def _spherical_to_cartesian_fast(ra, dec, nthreads):
 
     Notes
     ----------
-    This is a `fast` version of converting between spherical and 
+    This is a `fast` version of converting between spherical and
     cartesian coordinates.
     """
     # Importing 'numexpr'
@@ -116,7 +116,7 @@ def _great_circle_distance(ra1, dec1, ra2, dec2):
     # Importing modules
     from numpy import degrees, sin, cos, arctan2, hypot
     ##
-    ## Terminology from the Vincenty Formula - `lambda` and `phi` and 
+    ## Terminology from the Vincenty Formula - `lambda` and `phi` and
     ## `standpoint` and `forepoint`
     lambs = np.radians(ra1 )
     phis  = np.radians(dec1)
@@ -131,7 +131,7 @@ def _great_circle_distance(ra1, dec1, ra2, dec2):
     numer  = hypot(numera, numerb)
     denom  = sin(phis) * sin(phif) + cos(phis) * cos(phif) * cos(dlamb)
     # Great Circle Distance
-    great_circle_dist = degrees(np.arctan2(numer, denom))
+    great_circle_dist = degrees(arctan2(numer, denom))
 
     return great_circle_dist
 
@@ -168,7 +168,7 @@ def _great_circle_distance_fast(ra1, dec1, ra2, dec2, nthreads):
     """
     import numexpr as ne
     ##
-    ## Terminology from the Vincenty Formula - `lambda` and `phi` and 
+    ## Terminology from the Vincenty Formula - `lambda` and `phi` and
     ## `standpoint` and `forepoint`
     lambs = np.radians(ra1 )
     phis  = np.radians(dec1)
@@ -198,7 +198,7 @@ def _great_circle_distance_fast(ra1, dec1, ra2, dec2, nthreads):
 ## Sphere Match
 def spherematch(ra1, dec1, ra2, dec2, tol=None, nnearest=1, nthreads=1):
     """
-    Determines the matches between two catalogues of sources with 
+    Determines the matches between two catalogues of sources with
     <ra, dec> coordinates.
 
     Parameters
@@ -216,7 +216,7 @@ def spherematch(ra1, dec1, ra2, dec2, tol=None, nnearest=1, nthreads=1):
         If None, all nearest neighbors for the 1st catalogue will be returned.
 
     nnearest : int, optional
-        The nth neighbor to find. E.g. 1 for the nearest nearby, 2 for the 
+        The nth neighbor to find. E.g. 1 for the nearest nearby, 2 for the
         second nearest neighbor, etc. Partcularly useful if you want to get
         the nearest *non-self* neighbor of a catalogue.
         To do this use::
@@ -226,13 +226,13 @@ def spherematch(ra1, dec1, ra2, dec2, tol=None, nnearest=1, nthreads=1):
         if `nnearest == 0`, all matches are returned.
 
     nthreads : int, optional
-        Number of threads to use for calculation. This variable is set to 
+        Number of threads to use for calculation. This variable is set to
         1 by default. Must be larger than 1.
 
     Returns
     ----------
     idx1 : int `numpy.ndarray`
-        Indices of the 1st catalogue of the matches. Will never be larger 
+        Indices of the 1st catalogue of the matches. Will never be larger
         than `ra1`/`dec1`.
 
     idx2 : int `numpy.ndarray`
@@ -247,28 +247,34 @@ def spherematch(ra1, dec1, ra2, dec2, tol=None, nnearest=1, nthreads=1):
     valid_types = (list, np.ndarray)
     # `ra1`
     if not (isinstance(ra1, valid_types)):
-        msg = '{0} `ra1` ({1}) is not a valid type!'.format(file_msg, type(ra1))
+        msg = '{0} `ra1` ({1}) is not a valid type!'.format(
+            file_msg, type(ra1))
         raise LSSUtils_Error(msg)
     # `dec1`
     if not (isinstance(dec1, valid_types)):
-        msg = '{0} `dec1` ({1}) is not a valid type!'.format(file_msg, type(dec1))
+        msg = '{0} `dec1` ({1}) is not a valid type!'.format(
+            file_msg, type(dec1))
         raise LSSUtils_Error(msg)
     # `ra2`
     if not (isinstance(ra2, valid_types)):
-        msg = '{0} `ra2` ({1}) is not a valid type!'.format(file_msg, type(ra2))
+        msg = '{0} `ra2` ({1}) is not a valid type!'.format(
+            file_msg, type(ra2))
         raise LSSUtils_Error(msg)
     # `dec2`
     if not (isinstance(dec2, valid_types)):
-        msg = '{0} `dec2` ({1}) is not a valid type!'.format(file_msg, type(dec2))
+        msg = '{0} `dec2` ({1}) is not a valid type!'.format(
+            file_msg, type(dec2))
         raise LSSUtils_Error(msg)
     # `nnearest`
     if nnearest < 0:
-        msg = '{0} `nnearest` ({1}) must be larger than `0`!'.format(file_msg,
+        msg = '{0} `nnearest` ({1}) must be larger than `0`!'.format(
+            file_msg,
             nnearest)
         raise LSSUtils_Error(msg)
     # `threads`
     if nthreads < 1:
-        msg = '{0} `nthreads` ({1}) must be larger than `1`!'.format(file_msg,
+        msg = '{0} `nthreads` ({1}) must be larger than `1`!'.format(
+            file_msg,
             nthreads)
         raise LSSUtils_Error(msg)
     ##

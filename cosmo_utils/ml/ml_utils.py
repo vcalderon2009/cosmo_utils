@@ -4,16 +4,16 @@
 # Victor Calderon
 # Created      : 2018-05-17
 # Last Modified: 2018-05-17
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "data_preprocessing",
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "data_preprocessing",
                     "train_test_dataset",
                     "scoring_methods"]
 
-## Importing modules
+# Importing modules
 import numpy as np
 from   cosmo_utils.utils import file_utils as fd
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
@@ -33,7 +33,7 @@ import copy
 
 ## Functions
 
-## Data preprocessing
+# Data preprocessing
 def data_preprocessing(feat_arr, pre_opt='min_max'):
     """
     Preprocess the data used, in order to clean and make the data more
@@ -42,7 +42,7 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
     Parameters
     -----------
     feat_arr : `numpy.ndarray`
-        Array of feature values. This array is used for training a 
+        Array of feature values. This array is used for training a
         ML algorithm.
 
     pre_opt : {'min_max', 'standard', 'normalize', 'no'} `str`, optional
@@ -50,7 +50,7 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
 
         Options:
             - 'min_max' : Turns `feat_arr` to values between (0,1)
-            - 'standard' : Uses the `~sklearn.preprocessing.StandardScaler` method
+            - 'standard' : Uses `~sklearn.preprocessing.StandardScaler` method
             - 'normalize' : Uses the `~sklearn.preprocessing.Normalizer` method
             - 'no' : No preprocessing on `feat_arr`
 
@@ -61,7 +61,7 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
 
     Notes
     -----------
-    For more information on how to pre-process your data, see 
+    For more information on how to pre-process your data, see
     `http://scikit-learn.org/stable/modules/preprocessing.html`_.
     """
     file_msg = fd.Program_Msg(__file__)
@@ -82,7 +82,7 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
     ## Scaling `feat_arr`
     if (pre_opt == 'min_max'):
         # Scaler
-        scaler = skpre.MinMaxScaler(feature_range=(0,1))
+        scaler = skpre.MinMaxScaler(feature_range=(0, 1))
         # Rescaling
         feat_arr_scaled = scaler.fit_transform(feat_arr)
     ## Standardize Data
@@ -103,25 +103,25 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
 
     return feat_arr_scaled
 
-## Train-Test Data Split
+# Train-Test Data Split
 def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
     shuffle_opt=True, random_state=0, test_size=0.25):
     """
-    Function to create the training and testing datasets for a given set 
+    Function to create the training and testing datasets for a given set
     of features array and predicted array.
 
     Parameters
     -----------
     pred_arr : `numpy.ndarray` or array-like, shape (n_samples, n_outcomes)
-        Array consisting of the `predicted values`. The dimensions of 
-        `pred_arr` are `n_samples` by `n_outcomes`, where `n_samples` is the 
-        number of observations, and `n_outcomes` the number of predicted 
+        Array consisting of the `predicted values`. The dimensions of
+        `pred_arr` are `n_samples` by `n_outcomes`, where `n_samples` is the
+        number of observations, and `n_outcomes` the number of predicted
         outcomes.
 
     feat_arr : `numpy.ndarray` or array-like, shape (n_samples, n_features)
-        Array consisting of the `predicted values`. The dimensions of 
-        `feat_arr` are `n_samples` by `n_features`, where `n_samples` 
-        is the number of observations, and `n_features` the number of 
+        Array consisting of the `predicted values`. The dimensions of
+        `feat_arr` are `n_samples` by `n_features`, where `n_samples`
+        is the number of observations, and `n_features` the number of
         features used.
 
     pre_opt : {'min_max', 'standard', 'normalize', 'no'} `str`, optional
@@ -129,21 +129,21 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
 
         Options:
             - 'min_max' : Turns `feat_arr` to values between (0,1)
-            - 'standard' : Uses the `sklearn.preprocessing.StandardScaler` method
+            - 'standard' : Uses `sklearn.preprocessing.StandardScaler` method
             - 'normalize' : Uses the `sklearn.preprocessing.Normalizer` method
             - 'no' : No preprocessing on `feat_arr`
 
     shuffle_opt : `bool`, optional
-        If True, the data is shuffled before splitting into testing and 
+        If True, the data is shuffled before splitting into testing and
         training datasets. This variable is set to True by default.
 
     random_state : int, optional
-        Random state number used for when splitting into training and 
-        testing datasets. If set, it will always have the same seed 
+        Random state number used for when splitting into training and
+        testing datasets. If set, it will always have the same seed
         `random_state`. This variable is set to `0` by default.
 
     test_size : float, optional
-        Percentage of the catalogue that represents the `test` size of 
+        Percentage of the catalogue that represents the `test` size of
         the testing dataset. This variable must be between (0,1).
         This variable is set to `0.25` by default.
 
@@ -213,7 +213,7 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
         raise LSSUtils_Error(msg)
     ##
     ## Rescaling Dataset
-    feat_arr_scaled = data_preprocessing( feat_arr, pre_opt=pre_opt )
+    feat_arr_scaled = data_preprocessing(feat_arr, pre_opt=pre_opt)
     ##
     ## Splitting into `Training` and `Testing` datasets.
     # Scaled
@@ -233,13 +233,13 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
     ##
     ## Assigning `training` and `testing` datasets to dictionaries
     train_dict = {  'X_train': X_train, 'Y_train': Y_train,
-                    'X_train_ns':X_train_ns, 'Y_train_ns':Y_train_ns}
-    test_dict  = {'X_test' : X_test , 'Y_test' : Y_test,
-                    'X_test_ns':X_test_ns, 'Y_test_ns':Y_test_ns}
+                    'X_train_ns': X_train_ns, 'Y_train_ns': Y_train_ns}
+    test_dict  = {'X_test': X_test, 'Y_test': Y_test,
+                    'X_test_ns': X_test_ns, 'Y_test_ns': Y_test_ns}
 
     return train_dict, test_dict
 
-## Scoring methods
+# Scoring methods
 def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     score_method='perc', threshold=0.1, perc=0.9):
     """
@@ -249,16 +249,16 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     Parameters
     -----------
     feat_arr : `numpy.ndarray` or array-like, shape (n_samples, n_features)
-        Array consisting of the `predicted values`. The dimensions of 
-        `feat_arr` are `n_samples` by `n_features`, where `n_samples` 
-        is the number of observations, and `n_features` the number of 
+        Array consisting of the `predicted values`. The dimensions of
+        `feat_arr` are `n_samples` by `n_features`, where `n_samples`
+        is the number of observations, and `n_features` the number of
         features used.
 
     truth_arr : `numpy.ndarray` or array-like, shape (n_samples, n_outcomes)
-        Array consisting of the `true` values for the `n_samples` 
-        observations. The dimensions of `truth_arr` are 
-        `n_samples` by `n_outcomes`, where `n_samples` is the 
-        number of observations, and `n_outcomes` the number of predicted 
+        Array consisting of the `true` values for the `n_samples`
+        observations. The dimensions of `truth_arr` are
+        `n_samples` by `n_outcomes`, where `n_samples` is the
+        number of observations, and `n_outcomes` the number of predicted
         outcomes.
 
     model : scikit-learn model object or `NoneType`
@@ -268,16 +268,16 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     pred_arr : `numpy.ndarray`, array-like, or `NoneType`, shape (n_samples, n_outcomes)
         Array of predicted values from `feat_arr`. If ``model == None``,
         this variable must be an array-like object. If ``model != None``,
-        this variable will not be used, and will be calculated using 
+        this variable will not be used, and will be calculated using
         the `model` object. This variable is set to `None` by default.
 
     score_method : {'perc', 'threshold', 'model_score', 'r2'} `str`, optional
-        Type of scoring to use when determining how well an algorithm 
+        Type of scoring to use when determining how well an algorithm
         is performing.
 
         Options:
             - 'perc' : Use percentage and rank-ordering of the values
-            - 'threshold' : Score based on diffs of `threshold` or less from tru value
+            - 'threshold' : Score based on diffs of `threshold` or less from true value.
             - 'model_score' : Out-of-the-box metod from `sklearn` to determine success.
             - 'r2': R-squared statistic for error calcuation.
 
@@ -286,7 +286,7 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
         from the truth. This variable is set to `0.1` by default.
 
     perf : float, optional
-        Value used when determining score within some `perc_val` percentile
+        Value used when determining score within some `perc` percentile
         value form [0,1].
 
     Returns
@@ -296,7 +296,7 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
 
     Notes
     -----------
-    For more information on how to pre-process your data, see 
+    For more information on how to pre-process your data, see
     `http://scikit-learn.org/stable/modules/model_evaluation.html`_.
     """
     file_msg = fd.Program_Msg(__file__)
@@ -363,7 +363,7 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
             pred_arr = np.asarray(pred_arr)
         # Error calcualtion
         pred_err     = np.abs(pred_arr - truth_arr)
-        method_score = scipy.stats.scoreatpercentile(pred_err, 100.*perc_val)
+        method_score = scipy.stats.scoreatpercentile(pred_err, 100. * perc)
     # Threshold method
     if (score_method == 'threshold'):
         # Checking for `pred_arr`

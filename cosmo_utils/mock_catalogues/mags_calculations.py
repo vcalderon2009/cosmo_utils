@@ -4,12 +4,12 @@
 # Victor Calderon
 # Created      : 2018-05-07
 # Last Modified: 2018-05-07
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "apparent_to_absolute_magnitude",
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "apparent_to_absolute_magnitude",
                     "absolute_to_apparent_magnitude",
                     "get_sun_mag",
                     "absolute_magnitude_to_luminosity",
@@ -39,13 +39,13 @@ def apparent_to_absolute_magnitude(app_mag, lum_dist, unit='mpc'):
 
     unit : {'pc', 'kpc', 'mpc'} str, optional
         Unit to use for `lum_dist`. This variable is set to `mpc` by
-        default. When `pc`, the units are in parsecs, while `mpc` is for 
+        default. When `pc`, the units are in parsecs, while `mpc` is for
         distances in mega-parsecs, etc.
 
     Returns
     -----------
     abs_mag : np.ndarray
-        Array of absolute magnitudes. `abs_mag` is a float if 
+        Array of absolute magnitudes. `abs_mag` is a float if
         `app_mag` is a float or int.
     """
     file_msg = fd.Program_Msg(__file__)
@@ -106,13 +106,13 @@ def absolute_to_apparent_magnitude(abs_mag, lum_dist, unit='mpc'):
 
     unit : {'pc', 'kpc', 'mpc'} str, optional
         Unit to use for `lum_dist`. This variable is set to `mpc` by
-        default. When `pc`, the units are in parsecs, while `mpc` is for 
+        default. When `pc`, the units are in parsecs, while `mpc` is for
         distances in mega-parsecs, etc.
 
     Returns
     -----------
     app_mag : array_like, or float
-        Array of apparent magnitude(s). `app_mag` is a float if 
+        Array of apparent magnitude(s). `app_mag` is a float if
         `abs_mag` is a float or int.
     """
     file_msg = fd.Program_Msg(__file__)
@@ -213,19 +213,19 @@ def get_sun_mag(filter_opt, system='SDSS_Blanton_2003_z0.1'):
         raise LSSUtils_Error
     ##
     ## Input parameters
-    abs_mag_sun_dict = {'Binney_and_Merrifield_1998' : {'U' : 5.61,
-                                                        'B' : 5.48,
-                                                        'V' : 4.83,
-                                                        'R' : 4.42,
-                                                        'I' : 4.08,
-                                                        'J' : 3.64,
-                                                        'H' : 3.32,
-                                                        'K' : 3.28},
-                        'SDSS_Blanton_2003_z0.1'    : { 'u' : 6.80,
-                                                        'g' : 5.45,
-                                                        'r' : 4.76,
-                                                        'i' : 4.58,
-                                                        'z' : 4.51}}
+    abs_mag_sun_dict = {'Binney_and_Merrifield_1998' : {'U': 5.61,
+                                                        'B': 5.48,
+                                                        'V': 4.83,
+                                                        'R': 4.42,
+                                                        'I': 4.08,
+                                                        'J': 3.64,
+                                                        'H': 3.32,
+                                                        'K': 3.28},
+                        'SDSS_Blanton_2003_z0.1'    : { 'u': 6.80,
+                                                        'g': 5.45,
+                                                        'r': 4.76,
+                                                        'i': 4.58,
+                                                        'z': 4.51}}
     ## Checking if key exists in dictionary
     ## and assigning magnitude
     if (filter_opt in abs_mag_sun_dict[system].keys()):
@@ -317,14 +317,15 @@ def luminosity_to_absolute_mag(lum, filter_opt,
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters
     valid_types = (float, int, list, np.ndarray)
-    if not (isinstance(abs_mag, valid_types)):
-        msg = '{0} `abs_mag` ({1}) is not a valid type!'.format(file_msg,
-            abs_mag)
+    if not (isinstance(lum, valid_types)):
+        msg = '{0} `lum` ({1}) is not a valid type!'.format(file_msg,
+            lum)
         raise LSSUtils_Error(msg)
     ## Obtaining Sun's absolute magnitude
     abs_mag_sun = get_sun_mag(filter_opt, system=system)
     ## Absolute magnitude calculation
-    lum_sun = 1.0 # In units of solar luminosities
+    # In units of solar luminosities
+    lum_sun = 1.0
     # Absolute magnitude of objects
     abs_mag = abs_mag_sun - 2.5 * np.log10(lum / lum_sun)
 
@@ -333,7 +334,7 @@ def luminosity_to_absolute_mag(lum, filter_opt,
 ## Absolute magnitude limits
 def absolute_magnitude_lim(z, mag_lim, cosmo=None, H0=100., verbose=True):
     """
-    Calculates the absolute magnitude limit as function of redshift `z` for 
+    Calculates the absolute magnitude limit as function of redshift `z` for
     a flux-limited survey.
 
     Parameters
@@ -390,7 +391,8 @@ def absolute_magnitude_lim(z, mag_lim, cosmo=None, H0=100., verbose=True):
         from astropy.cosmology import FlatLambdaCDM
         cosmo = FlatLambdaCDM(H0=H0, Om0=0.316)
         if verbose:
-            print(">> Warning: No cosmology was specified. Using default:", cosmo)
+            print(">> Warning: No cosmology was specified. Using default:",
+                cosmo)
     ## Luminosity distance
     lum_dist = cosmo.luminosity_distance(z).value
     ## Absolute magnitude

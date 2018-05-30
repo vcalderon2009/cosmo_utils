@@ -4,12 +4,12 @@
 # Victor Calderon
 # Created      : 2018-05-02
 # Last Modified: 2018-05-02
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "IDL_read_file",
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "IDL_read_file",
                     "fast_food_reader",
                     "read_pandas_hdf5",
                     "read_hdf5_file_to_pandas_DF",
@@ -20,9 +20,10 @@ __all__        =[   "IDL_read_file",
 Set of functions to read various types of files
 """
 
-## Import modules
-import sys
+# Import modules
 import struct
+import os
+import sys
 import numpy as np
 import pandas as pd
 import h5py
@@ -32,7 +33,7 @@ from   cosmo_utils.custom_exceptions import LSSUtils_Error
 
 ## Functions
 
-## Reads in IDL catalogue as Python dictionary
+# Reads in IDL catalogue as Python dictionary
 def IDL_read_file(idl_file):
     """
     Reads an IDL file and converts it to a Python dictionary
@@ -59,7 +60,7 @@ def IDL_read_file(idl_file):
 
     return idl_dict
 
-## Reads in `fastfood`-type files and converts it to an array
+# Reads in `fastfood`-type files and converts it to an array
 def fast_food_reader(key, nitems, filename):
     """
     Reads in `fastfood`-type file and converts it to an array
@@ -80,13 +81,11 @@ def fast_food_reader(key, nitems, filename):
     items_arr : np.ndarray, shape (`nitems`,)
         Array of elements from `filename` with length `nitems`.
     """
-    # Constants
-    err_no = int(0)
     # Dictionaries with values for `key`
     size_types  = { 'int'       :4  , 'float'       :4   , 'char'    :1 ,\
                     'short_int' :2  , 'long_int'    :4   , 'bool'    :1 ,\
                     'double'    :8  , 'long_double' :8   , 'wchart_t':2 }
-    
+    ##
     type_string = { 'char'         :'c', 'signed_char'       :'b',\
                     'unsigned_char':'B', '_Bool'             :'?',\
                     'short'        :'h', 'unsigned_short'    :'H',\
@@ -108,18 +107,18 @@ def fast_food_reader(key, nitems, filename):
         size_type = size_types ['double']
         type_str  = type_string['double']
     ##
-    ## Top padding (it should contain 4 bytes for `.ff` files)
+    # Top padding (it should contain 4 bytes for `.ff` files)
     # 1st padding = nbyte1
-    nbyte1_read = file.read(1*size_types['int'] )
-    nbyte1      = struct.unpack(1*type_string['int'], nbyte1_read)
+    nbyte1_read = filename.read(1 * size_types['int'])
+    nbyte1      = struct.unpack(1 * type_string['int'], nbyte1_read)
     nbyte1_val  = int(nbyte1[0])
     if len(nbyte1) != 1:
         errno = -10
-        raise ValueError ('Read error: file empty?. \nError: '+str(errno))
+        raise ValueError('Read error: file empty?. \nError: ' + str(errno))
         sys.exit()
     # Extracting data
-    nitem1_read = file.read(size_type*nitems)
-    items_arr     = struct.unpack( type_str*nitems, nitem1_read)
+    nitem1_read = filename.read(size_type * nitems)
+    items_arr     = struct.unpack(type_str * nitems, nitem1_read)
     val_len     = len(items_arr)
     if val_len != nitems:
         errno = -20
@@ -127,34 +126,34 @@ def fast_food_reader(key, nitems, filename):
             nitems, val_len))
         sys.exit()
     # Bottom padding
-    nbyte2_read = file.read(size_types['int'])
-    nbyte2      = struct.unpack(1*type_string['int'], nbyte2_read)
+    nbyte2_read = filename.read(size_types['int'])
+    nbyte2      = struct.unpack(1 * type_string['int'], nbyte2_read)
     nbyte2_val  = int(nbyte2[0])
-    if len(nbyte2)!=1:
+    if len(nbyte2) != 1:
         errno = -30
-        raise ValueError('Read Error: File too short?\n Errno: '+str(errno))
+        raise ValueError('Read Error: File too short?\n Errno: ' + str(errno))
         sys.exit()
     # Checking top and bottom
     if nbyte1_val != nbyte2_val:
         errno = -1
-        Err_msg = 'Read Warning. Byte numbers do not match \n '
+        Err_msg = 'Read warning. Byte numbers do not match \n '
         Err_msg += 'nbyte1 = {0}, nbyte2 = {1}\n'.format(nbyte1, nbyte2)
         raise ValueError(Err_msg + 'Errno: {0}'.format(errno))
         sys.exit()
     # Checking that nbye1_val = nitems*Size_type[key]
-    if nbyte1_val != nitems*size_type:
+    if nbyte1_val != nitems * size_type:
         errno = -2
-        Err_msg = 'Read Warning. Byte numbers do not match \n '
+        Err_msg = 'Read warning. Byte numbers do not match \n '
         Err_msg += 'nbyte1 = {0}, nitems = {1}\n'.format(nbyte1, nitems)
         raise ValueError(Err_msg + 'Errno: {0}'.format(errno))
         sys.exit()
-    ##
-    ## Converting values to numpy array
+    #
+    # Converting values to numpy array
     items_arr = np.asarray(items_arr)
 
     return items_arr
 
-## Reads in a pandas DataFrame from a HDF5 file
+# Reads in a pandas DataFrame from a HDF5 file
 def read_pandas_hdf5(hdf5_file, key=None, ret=False):
     """
     Reads a HDF5 file that contains one or many datasets.
@@ -174,11 +173,11 @@ def read_pandas_hdf5(hdf5_file, key=None, ret=False):
         By default, it is set to False.
 
     Returns
-    ----------    
+    ----------
     df : `pandas.DataFrame`
         DataFrame from the `hdf5_file` with the data from the `key` directory
     """
-    file_msg = Program_Msg(__file__)
+    file_msg = fd.Program_Msg(__file__)
     # Checking that file exists
     fd.File_Exists(hdf5_file)
     # Checking number of keys
@@ -186,7 +185,7 @@ def read_pandas_hdf5(hdf5_file, key=None, ret=False):
     hdf5_keys = [ii for ii in hdf5_obj.keys()]
     hdf5_obj.close()
     # Reading in HDF5 file
-    if key == None:
+    if key is None:
         try:
             df = pd.read_hdf(hdf5_file)
             if ret:
@@ -212,7 +211,7 @@ def read_pandas_hdf5(hdf5_file, key=None, ret=False):
             else:
                 return df
 
-## Reads HDF5 files and converts them to pandas dataframe
+# Reads HDF5 files and converts them to pandas dataframe
 def read_hdf5_file_to_pandas_DF(hdf5_file, key=None):
     """
     Reads content of HDF5 file and converts it to a Pandas DataFrame
@@ -220,11 +219,11 @@ def read_hdf5_file_to_pandas_DF(hdf5_file, key=None):
     Parameters
     ----------
     hdf5_file : str
-        Path to the HDF5 file. This is the file that will be converted 
+        Path to the HDF5 file. This is the file that will be converted
         to a pandas DataFrame.
 
     key : str or NoneType, optional
-        Key or path in `hdf5_file` for the pandas DataFrame and the normal 
+        Key or path in `hdf5_file` for the pandas DataFrame and the normal
         HDF5 file.
 
     Returns
@@ -244,7 +243,7 @@ def read_hdf5_file_to_pandas_DF(hdf5_file, key=None):
 
     return df
 
-## Converts pandas DataFrame to HDF5 file format
+# Converts pandas DataFrame to HDF5 file format
 def pandas_file_to_hdf5_file(df_file, hdf5_file, key=None, mode='w'):
     """
     Converts a HDF5 with pandas format and converts it to normal HDF5 file
@@ -261,7 +260,7 @@ def pandas_file_to_hdf5_file(df_file, hdf5_file, key=None, mode='w'):
         Key or path in HDF5 file for the `df_file` and `hdf5_file`
     """
     file_msg = fd.Program_Msg(__file__)
-    fd.File_Exists(filename)
+    fd.File_Exists(df_file)
     # Reading in DataFrame
     if not key:
         data, key = read_pandas_hdf5(df_file, key=None, ret=True)
@@ -269,10 +268,10 @@ def pandas_file_to_hdf5_file(df_file, hdf5_file, key=None, mode='w'):
         data = read_pandas_hdf5(df_file, key=key)
     # Rearranging data
     arr_names   = data.dtypes.index.values
-    dtype_arr   = data.dtypes.values
+    dtypes_arr  = data.dtypes.values
     dtypes_arr  = np.array([x.str for x in dtypes_arr])
     data_dtypes = np.dtype(zip(arr_names, dtypes_arr))
-    dataset     = np.recarray((len(data),),dtype=data_dtypes)
+    dataset     = np.recarray((len(data),), dtype=data_dtypes)
     for name in dataset.dtype.names:
         dataset[name] = data[name]
     # Saving file to HDF5 format
@@ -280,8 +279,9 @@ def pandas_file_to_hdf5_file(df_file, hdf5_file, key=None, mode='w'):
     hdf5_obj.create_dataset(key, data=dataset)
     hdf5_obj.close()
     msg = '{0} HDF5 file created: {1}'.format(file_msg, hdf5_file)
+    print(msg)
 
-## Saves a pandas DataFrame into a normal or a `pandas` HDF5 file
+# Saves a pandas DataFrame into a normal or a `pandas` HDF5 file
 def pandas_df_to_hdf5_file(df, hdf5_file, key=None, mode='w', complevel=8):
     """
     Saves a `pandas.DataFrame` into a `pandas` HDF5 FILE.
@@ -316,7 +316,7 @@ def pandas_df_to_hdf5_file(df, hdf5_file, key=None, mode='w', complevel=8):
         msg = '{0} Could not create HDF5 file'.format(file_msg)
         raise LSSUtils_Error(msg)
 
-## Concatenating pandas DataFrame into a single DataFrame
+# Concatenating pandas DataFrame into a single DataFrame
 def concatenate_pd_df(directory, filetype='hdf5', foutput=None, outonly=True):
     """
     Concatenates pandas DataFrames into a single DataFrame
@@ -346,7 +346,7 @@ def concatenate_pd_df(directory, filetype='hdf5', foutput=None, outonly=True):
     Raises
     ----------
     LSSUtils_Error : Exception
-        If no files are found in `directory`, it raises an error 
+        If no files are found in `directory`, it raises an error
         warning about this.
     """
     file_msg = fd.Program_Msg(__file__)
@@ -356,11 +356,11 @@ def concatenate_pd_df(directory, filetype='hdf5', foutput=None, outonly=True):
             file_msg, directory)
         raise LSSUtils_Error(msg)
     # Concatenating files
-    files_arr = df.index(directory, '.'+filetype, sort=True)
+    files_arr = fd.index(directory, '.' + filetype, sort=True)
     print('{0} Found `{1}` files'.format(file_msg, files_arr.size))
     if len(files_arr) > 0:
         # Initializing array that contains info
-        df_arr    = [[] for x in range(len(files_arr))]
+        df_arr = [[] for x in range(len(files_arr))]
         # Looping over HDF5 (pandas) files
         for ii, file_ii in enumerate(files_arr):
             df_arr[ii] = read_pandas_hdf5(file_ii)
@@ -374,11 +374,12 @@ def concatenate_pd_df(directory, filetype='hdf5', foutput=None, outonly=True):
             pandas_df_to_hdf5_file(df_conc, foutput_file, key='/Main')
             # Checking file exists
             fd.File_Exists(foutput_file)
-            print('{0} Output file saved in: {2}'.format(file_msg, foutput_file))
+            print('{0} Output file saved in: {2}'.format(
+                file_msg, foutput_file))
         # If only outputting concatenated DataFrame
         if outonly:
             return df_conc
     else:
         msg = '{0} No files in `{1}` with extension `{2}`'.format(file_msg,
-                    directory, filetype)
+                directory, filetype)
         raise LSSUtils_Error(msg)

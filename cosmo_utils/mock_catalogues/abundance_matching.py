@@ -4,21 +4,21 @@
 # Victor Calderon
 # Created      : 2018-05-07
 # Last Modified: 2018-05-07
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "abundance_matching_f",
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "abundance_matching_f",
                     "reversed_arrays"]
 
-## Importing modules
+# Importing modules
 import numpy as np
 from   scipy.interpolate import interp1d
 from   cosmo_utils.utils import file_utils as fd
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
 
-## Functions
+# Functions
 
 # Reversed arrays
 def reversed_arrays(x, y):
@@ -45,7 +45,7 @@ def reversed_arrays(x, y):
         Program exception if input parameters are accepted
     """
     file_msg = fd.Program_Msg(__file__)
-    ## Testing input arguments
+    # Testing input arguments
     # x-array
     valid_types = (list, np.ndarray)
     if not (isinstance(x, valid_types)):
@@ -64,11 +64,8 @@ def reversed_arrays(x, y):
         msg = '{0} The shape of `x` ({1}) and `y` ({2}) are not the same'
         msg = msg.format(file_msg, x.shape, y.shape)
         raise LSSUtils_Error(msg)
-    # Constants
-    n_greater = 0.
-    n_less    = 0.
-    ##
-    ## Checking if arrays increase or decrease monotonically
+    #
+    # Checking if arrays increase or decrease monotonically
     x_diff = np.diff(x).sum()
     y_diff = np.diff(y).sum()
     # Monotonically increasing or decreasing
@@ -81,7 +78,7 @@ def reversed_arrays(x, y):
 
 ## Abundance Matching function
 def abundance_matching_f(dict1, dict2, volume1=1., volume2=1., reverse=True,
-    dens1_opt = False):
+    dens1_opt=False):
     """
     Abundance matching based on 2 quantities.
     It assigns values from `dict2` to elements in `dict1`
@@ -120,10 +117,11 @@ def abundance_matching_f(dict1, dict2, volume1=1., volume2=1., reverse=True,
     Returns
     -----------
     var1_ab : `numpy.ndarray`
-        Array of elements matching those of `dict1`, after matching with `dict2`.
+        Array of elements matching those of `dict1`, after matching with
+        `dict2`.
     """
     file_msg = fd.Program_Msg(__file__)
-    ## Check types of input paramenters
+    # Check types of input paramenters
     valid_types = (list, dict, np.ndarray)
     # `dict1`
     if not (isinstance(dict1, valid_types)):
@@ -134,35 +132,35 @@ def abundance_matching_f(dict1, dict2, volume1=1., volume2=1., reverse=True,
         msg = '{0} `dict2` must be a dictionary. Its type is `{1}`'.format(
             file_msg, type(dict2))
         raise LSSUtils_Error(msg)
-    ## 2nd property
+    # 2nd property
     var2  = np.asarray(dict2['var '])
     dens2 = np.asarray(dict2['dens'])
-    ##
-    ## `dens1_opt`
+    #
+    # `dens1_opt`
     if dens1_opt:
         # 1st Property
-        var1  = np.asarray(dict1['var' ])
-        dens1 = np.asarray(dict1['dens'])
+        var1   = np.asarray(dict1['var' ])
+        dens_1 = np.asarray(dict1['dens'])
     else:
         if (isinstance(dict1, dict)):
             var1 = dict1['var']
         elif (isinstance(dict1, (list, np.ndarray))):
             var1 = dict1.copy()
-        ##
-        ## Determining relation between `var1` and `var2`
+        #
+        # Determining relation between `var1` and `var2`
         mono_opt_1 = reversed_arrays(var1, var2)
         # Monotonically increasing
         if mono_opt_1:
             counts_1 = np.array([np.where(var1 > x)[0].size for x in var1])
         else:
             counts_1 = np.array([np.where(var1 < x)[0].size for x in var1])
-        ##
-        ## Determining density of 1st property
-        dens_1 = counts1.astype(float) / volume1
-    ##
-    ## Interpolation for 2nd property
+        #
+        # Determining density of 1st property
+        dens_1 = counts_1.astype(float) / volume1
+    #
+    # Interpolation for 2nd property
     var2_interp = interp1d(dens2, var2, bounds_error=True, assume_sorted=False)
-    ## Assigning values to property 1
+    # Assigning values to property 1
     var1_ab = np.asarray([var2_interp(xx) for xx in dens_1])
 
     return var1_ab

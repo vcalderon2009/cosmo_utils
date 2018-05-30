@@ -4,28 +4,26 @@
 # Victor Calderon
 # Created      : 2018-05-02
 # Last Modified: 2018-05-02
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "Program_Msg",
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "Program_Msg",
                     "Index",
                     "get_immediate_subdirectories",
                     "Path_Folder",
                     "File_Exists",
                     "File_Download_needed",
-                    "mark_parametrize"]
+                    "MarkParametrize"]
 """
 Utilities for verifying file existence, directory paths, etc.
 """
 
 ## Import modules
 import os
-import sys
 import subprocess
 import time
-import traceback
 import numpy as np
 from   pathlib import Path
 from   cosmo_utils.utils import file_utils as fd
@@ -45,18 +43,18 @@ def Program_Msg(filename):
 
     Returns
     ----------
-    Prog_msg : string
+    prog_msg : string
         String message for given `filename`
     """
     try:
         assert(os.path.exists(filename))
         # Creating message
-        Prog_msg = '\n\t\t==> {} >>> '.format(os.path.basename(filename))
+        prog_msg = '\n\t\t==> {} >>> '.format(os.path.basename(filename))
     except:
         msg = '>>> `filename` {} not found! Exiting!'.format(filename)
         raise ValueError(msg)
 
-    return Prog_msg
+    return prog_msg
 
 ## Compiles the array of files with matching pattern
 def Index(pathdir, datatype, sort=True, basename=False):
@@ -76,7 +74,7 @@ def Index(pathdir, datatype, sort=True, basename=False):
         If this is set to True, the output list is sorted by name
 
     basename : `bool`, optional
-        If this is set to True, the output list will contain only the 
+        If this is set to True, the output list will contain only the
         basename of the files in `pathdir`
 
     Returns
@@ -87,8 +85,8 @@ def Index(pathdir, datatype, sort=True, basename=False):
     # Checking that directory exists
     if os.path.exists(pathdir):
         # List of files
-        Path_obj = Path(os.path.abspath(pathdir))
-        file_arr = list(Path_obj.rglob('*{0}'.format(datatype)))
+        path_obj = Path(os.path.abspath(pathdir))
+        file_arr = list(path_obj.rglob('*{0}'.format(datatype)))
         file_arr = np.array([x.as_posix() for x in file_arr])
         # Sorting
         if sort:
@@ -122,11 +120,11 @@ def get_immediate_subdirectories(pathdir, sort=True):
         If this is set to True, the output list is sorted by name
     """
     if os.path.exists(pathdir):
-        Path_obj   = Path(pathdir)
+        path_obj = Path(pathdir)
         # List of subdirectories
-        subdir_arr = np.array([x for x in os.listdir(pathdir) \
-                                if (os.path.isdir(str(Path_obj.joinpath(x))) and 
-                                    ('__' not in x))])
+        subdir_arr = np.array([x for x in os.listdir(pathdir)
+                            if (os.path.isdir(str(path_obj.joinpath(x))) and
+                                ('__' not in x))])
         if sort:
             subdir_arr = np.sort(subdir_arr)
     else:
@@ -147,7 +145,7 @@ def Path_Folder(pathdir, time_sleep=0.5):
         Path to the desired directory
 
     time_sleep : float, optional
-        Amount of time in seconds to `sleep` or wait for the process to 
+        Amount of time in seconds to `sleep` or wait for the process to
         finish. By default `time_slee` is set to 0.5 seconds.
     """
     if os.path.exists(pathdir):
@@ -194,7 +192,7 @@ def File_Exists(filename):
 def File_Download_needed(localpath, remotepath):
     """
     Determines if there exists a local copy of a file.
-    If not, the file is downloaded from the remote server and a copy of 
+    If not, the file is downloaded from the remote server and a copy of
     the file is saved locally
 
     Parameters
@@ -203,7 +201,7 @@ def File_Download_needed(localpath, remotepath):
         Local path to the file.
 
     remotepath : str
-        Remote path to the file. This is the URL of the file, if there is 
+        Remote path to the file. This is the URL of the file, if there is
         no local copy of the file
     """
     file_msg = Program_Msg(__file__)
@@ -241,9 +239,9 @@ def File_Download_needed(localpath, remotepath):
     File_Exists(localpath)
 
 ## Parametrize set of inputs to a function
-class mark_parametrize(object):
+class MarkParametrize(object):
     """
-    Parametrizes a set of values and changes the input variables 
+    Parametrizes a set of values and changes the input variables
     of a function.
     """
     def __init__(self, argname, argvalues):
@@ -258,13 +256,13 @@ class mark_parametrize(object):
 
         argvalues : array-like
             List of argvalues for each of the `argnames`.
-            This list will be used to loop over the values and 
+            This list will be used to loop over the values and
             replace them into the main dictionary.
-        
+
         Notes
         ----------
         This function loops over the many different elements in `argvalues`.
-        This function is meant to be used as a `decorator` for some 
+        This function is meant to be used as a `decorator` for some
         function whose input a dictionary.
         """
         file_msg = fd.Program_Msg(__file__)

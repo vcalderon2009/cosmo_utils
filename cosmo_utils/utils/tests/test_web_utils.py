@@ -4,17 +4,16 @@
 # Victor Calderon
 # Created      : 2018-05-09
 # Last Modified: 2018-05-09
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
 """
 Set of test functions for the `web_utils` functions
 """
 
 ## Import modules
-import numpy as np
 import pytest
 from   cosmo_utils.utils import web_utils
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
@@ -29,7 +28,7 @@ urls_test_arr = [   'https://www.google.com/',
 @pytest.mark.parametrize('url_str', urls_test_arr)
 def test_url_checker(url_str):
     """
-    Tests the function `cosmo_utils.utils.web_utils.url_checker` for input and 
+    Tests the function `cosmo_utils.utils.web_utils.url_checker` for input and
     output parameters
 
     Parameters
@@ -48,7 +47,7 @@ urls_test_errors_arr = [    'https://www.google.com/1',
 @pytest.mark.parametrize('url_str', urls_test_errors_arr)
 def test_url_checker(url_str):
     """
-    Tests the function `cosmo_utils.utils.web_utils.url_checker` for input and 
+    Tests the function `cosmo_utils.utils.web_utils.url_checker` for input and
     output parameters
 
     Parameters
@@ -61,11 +60,11 @@ def test_url_checker(url_str):
         web_utils.url_checker(url_str)
 
 ## Testing URLS - Errors - Input type
-urls_test_types_err_arr = [ 1, 2, [1,2,3]]
+urls_test_types_err_arr = [1, 2, [1, 2, 3]]
 @pytest.mark.parametrize('url_str', urls_test_types_err_arr)
 def test_url_checker(url_str):
     """
-    Tests the function `cosmo_utils.utils.web_utils.url_checker` for input and 
+    Tests the function `cosmo_utils.utils.web_utils.url_checker` for input and
     output parameters
 
     Parameters

@@ -4,12 +4,12 @@
 # Victor Calderon
 # Created      : 2018-04-28
 # Last Modified: 2018-04-28
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "git_root_dir",
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "git_root_dir",
                     "cookiecutter_paths",
                     "get_code_c",
                     "get_sdss_catl_dir",
@@ -21,7 +21,6 @@ Set of files to facilitate paths
 ## Import modules
 import os
 import git
-import socket
 from   cosmo_utils.utils import file_utils as fd
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
 
@@ -31,10 +30,10 @@ from   cosmo_utils.custom_exceptions import LSSUtils_Error
 def git_root_dir(path='./'):
     """
     Determines the path to the main .git folder of the project.
-    
+
     Taken from:
         - https://goo.gl/46y9v1
-    
+
     Parameters
     ----------
     path : str, optional
@@ -67,7 +66,7 @@ def cookiecutter_paths(path='./'):
     Return
     ----------
     param_dict : python dictionary
-        Dictionary with info of the proect that uses the Data Science 
+        Dictionary with info of the proect that uses the Data Science
         cookiecutter template.
 
     Raises
@@ -123,16 +122,16 @@ def get_code_c():
     c_path : str
         Path to the directory with scripts written in C.
     """
-    # Hostname
-    hostname = socket.gethostname()
     # Path Directory
-
-
     try:
-        c_path = os.path.join(os.getenv('HOME'),'Codes2','custom_utilities_c/')
+        c_path = os.path.join(  os.getenv('HOME'),
+                                'Codes2',
+                                'custom_utilities_c/')
         assert(os.path.exists(c_path))
     except AssertionError:
-        c_path = os.path.join(os.getenv('HOME'),'Codes','custom_utilities_c/')
+        c_path = os.path.join(  os.getenv('HOME'),
+                                'Codes',
+                                'custom_utilities_c/')
         assert(os.path.exists(c_path))
 
     return c_path
@@ -149,7 +148,7 @@ def get_sdss_catl_dir(path='./'):
         This path is only used if the environment variable `sdss_catl_path`
         is not available to the system.
         This variable is set to './' by default.
-    
+
     Returns
     ----------
     catl_path : `str`

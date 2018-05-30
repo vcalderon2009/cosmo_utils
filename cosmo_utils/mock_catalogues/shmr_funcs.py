@@ -4,12 +4,12 @@
 # Victor Calderon
 # Created      : 2018-05-14
 # Last Modified: 2018-05-14
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "Behroozi_relation"]
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "Behroozi_relation"]
 
 ## Import modules
 import numpy as np
@@ -21,21 +21,21 @@ from   cosmo_utils.custom_exceptions import LSSUtils_Error
 ## Retrieves default values for Behroozie et al. (2013)
 def _retrieve_Behroozi_default_dict():
     """
-    Dictionary of default values of all model parameters set to the 
+    Dictionary of default values of all model parameters set to the
     column 2 values in Table 2 of Behroozi et al. (2013)
 
     Returns
     --------
     d : `dict`
-        Dictionary containing default parameters for the Stellar-Halo 
+        Dictionary containing default parameters for the Stellar-Halo
         Mass relation of Behroozi et al. (2013)
 
     Notes
     ----------
-    All calculations are done internally ising the same h=0.7 units as 
-    in Behroozi ete al. (2010), ['arXiv:1001.0015'] so the parameter values 
-    here are the same as in Table 2, even though the `mean_log_halo_mass` 
-    and `mean_stellar_mass` methods use accept and return arguments in 
+    All calculations are done internally ising the same h=0.7 units as
+    in Behroozi ete al. (2010), ['arXiv:1001.0015'] so the parameter values
+    here are the same as in Table 2, even though the `mean_log_halo_mass`
+    and `mean_stellar_mass` methods use accept and return arguments in
     h=1 units.
     """
     ## Main dictionary
@@ -55,19 +55,19 @@ def _retrieve_Behroozi_default_dict():
 ## Behroozi SHMR function
 def Behroozi_relation(log_mstar, z=0., return_mhalo_h0=False, mstar_h0=False):
     """
-    Returns the halo mass of a central galaxy as a function of its stellar 
+    Returns the halo mass of a central galaxy as a function of its stellar
     mass.
 
     Parameters
     -----------
     log_mstar : `float` ,`np.ndarray`, or array-like
-        Value or array of values of base-10 logarithm of stellar mass 
+        Value or array of values of base-10 logarithm of stellar mass
         in h=1 solar mass units.
 
     z : int, float, `np.ndarray` or array-like
         Redshift of the halo hosting the galaxy. If passing an array,
         it must be of the same length as the input `log_mstar`.
-    
+
     return_mhalo_h0 : `bool`, optional
         If True, the function returns the halo masses in ``h=1`` units.
         This variable is set to False by default.
@@ -86,8 +86,8 @@ def Behroozi_relation(log_mstar, z=0., return_mhalo_h0=False, mstar_h0=False):
     ----------
     The parameter values in Behroozi+10 were fit to data assuming ``h=0.7``,
     but all halotools inputs are in ``h=1`` units. Thus we will transform
-    our input stellar mass to ``h=0.7`` units, evaluate using the 
-    Behroozi parameters, and then transform back to ``h=1`` units before 
+    our input stellar mass to ``h=0.7`` units, evaluate using the
+    Behroozi parameters, and then transform back to ``h=1`` units before
     returning the result.
     """
     file_msg = fd.Program_Msg(__file__)
@@ -148,19 +148,3 @@ def Behroozi_relation(log_mstar, z=0., return_mhalo_h0=False, mstar_h0=False):
         return np.log10((10.**log_halo_mass)*little_h)
     else:
         return log_halo_mass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

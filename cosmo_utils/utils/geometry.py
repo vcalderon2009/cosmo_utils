@@ -4,16 +4,16 @@
 # Victor Calderon
 # Created      : 2018-05-03
 # Last Modified: 2018-05-03
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "flip_angles",
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "flip_angles",
                     "Ang_Distance",
                     "Coord_Transformation"]
 """
-Set of geometrical definitions for translations, coordinate tranformations, 
+Set of geometrical definitions for translations, coordinate tranformations,
 etc.
 """
 
@@ -53,7 +53,7 @@ def flip_angles(ang, unit='deg'):
     ----------
     >>> flip_angles(-50, unit='deg')
     310.0
-    
+
     >>> flip_angles(110, unit='deg')
     110.0
     """
@@ -95,7 +95,7 @@ def flip_angles(ang, unit='deg'):
             elif unit == 'deg':
                 ang_converted = ang
             # Checking the range of `ang`
-            ang_converted = np.asarray([xx if xx > 0 else xx+360 for xx in 
+            ang_converted = np.asarray([xx if xx > 0 else xx+360 for xx in
                 ang_converted])
             # Converting back to radians, if applicable
             if unit == 'rad':
@@ -121,12 +121,12 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
     Parameters
     -----------
     ra1, ra2 : float
-        Right Ascension of the 1st and 2nd points. Units in `degrees` 
+        Right Ascension of the 1st and 2nd points. Units in `degrees`
         by default.
 
     dec1, dec2 : float
         Declination of the 1st and 2nd points. Units in `degrees` by default.
-    
+
     unit : {'dec','rad'} str, optional
         Unit of `ra1`, `ra2`, `dec1`, and `dec2`.
         This will also determine the final unit that outputs this function.
@@ -134,7 +134,7 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
     method : {'haversine', 'astropy'} str, optional
         Method to use in order to calculate angular separation.
         This variable is to by default to the `haversine` method.
-        If `astropy`, it will use the astropy framework to determine the 
+        If `astropy`, it will use the astropy framework to determine the
         angular separation.
 
     Returns
@@ -176,13 +176,13 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
         B = np.radians(90. - dec2)
         D = np.radians(ra1 - ra2 )
         # Distance
-        ang_sep = (np.sin((A-B)*.5))**2. + np.sin(A)*np.sin(B)*(np.sin(D*.5))**2.
-        ang_sep = np.degrees(2 * np.arcsin(ang_sep**0.5))
+        ang_sep  = (np.sin((A - B) * .5))**2.
+        ang_sep += np.sin(A) * np.sin(B) * (np.sin(D * .5))**2.
+        ang_sep  = np.degrees(2 * np.arcsin(ang_sep**0.5))
     ##
     ## Astropy Method
     if method == 'astropy':
         # Imports
-        from astropy import coordinates as coord
         from astropy.coordinates import SkyCoord
         from astropy import units as u
         # Converting to `units`
@@ -191,9 +191,10 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
         elif unit == 'rad':
             unit_opt = u.radians
         # Calculations
-        P1    = SkyCoord(ra=ra1, dec=dec1, unit=(unit_opt, unit_opt))
-        P2    = SkyCoord(ra=ra2, dec=dec2, unit=(unit_opt, unit_opt))
-        ang_sep = P1.separation(P2)
+        p1 = SkyCoord(ra=ra1, dec=dec1, unit=(unit_opt, unit_opt))
+        p2 = SkyCoord(ra=ra2, dec=dec2, unit=(unit_opt, unit_opt))
+        # Angular Separation
+        ang_sep = p1.separation(p2)
         # Converting to final units
         if unit == 'deg':
             ang_sep = ang_sep.degree
@@ -206,7 +207,7 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
 def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     trans_opt=4, return_dict=False, unit='deg'):
     """
-    Transforms spherical coordinates (ra, dec, dist) into cartesian 
+    Transforms spherical coordinates (ra, dec, dist) into cartesian
     coordinates.
 
     Parameters
@@ -216,8 +217,8 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
         Units are ['degrees', 'degrees', 'distance_units']
 
     ra_cen, dec_cen, dist_cen : float, int
-        Right Ascension, declination, and distance for the center of 
-        the coordinates. These correspond to where the corodinates 
+        Right Ascension, declination, and distance for the center of
+        the coordinates. These correspond to where the corodinates
         `ra`, `dec`, and `dist` will be centered.
 
     trans_opt : {1, 2, 3, 4} int, optional
@@ -231,8 +232,8 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
             - 4 : Translation and 2 rotaitons about the center point
 
     return_dict : {True, False}, `bool`, optional
-        If `True`, this functions returns 2 dictionaries with `spherical` 
-        and `cartesian` coordinates. 
+        If `True`, this functions returns 2 dictionaries with `spherical`
+        and `cartesian` coordinates.
         If `False`, it returns a `pandas.DataFrame` with the columns.
         This variable is set to `False` by default.
 
@@ -244,9 +245,9 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     Returns
     -----------
     coord_dict (coord_pd) : python dictionary
-        Dictionary with spherical and cartesian dictionary of elements 
-        based on `trans_opt` value. This value is returned if 
-        `return_dict` is set to `True`. If not, a `pandas.DataFrame` is 
+        Dictionary with spherical and cartesian dictionary of elements
+        based on `trans_opt` value. This value is returned if
+        `return_dict` is set to `True`. If not, a `pandas.DataFrame` is
         return.
     """
     file_msg = fd.Program_Msg(__file__)
@@ -254,23 +255,27 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     # Units
     unit_arr = ['deg', 'rad']
     if not (unit in unit_arr):
-        '{0} `unit` ({1}) is not a valid input!'.format(file_msg, unit)
+        '{0} `unit` ({1}) is not a valid input!'.format(
+            file_msg, unit)
     # Valid types
     valid_types = (float, int, np.ndarray, list)
     # Right Ascension
     if not (isinstance(ra, valid_types)):
-        msg = '{0} `ra` ({1}) is not a valid type!'.format(file_msg, type(ra))
+        msg = '{0} `ra` ({1}) is not a valid type!'.format(
+            file_msg, type(ra))
         raise LSSUtils_Error(msg)
     # Declination
     if not (isinstance(dec, valid_types)):
-        msg = '{0} `dec` ({1}) is not a valid type!'.format(file_msg, type(dec))
+        msg = '{0} `dec` ({1}) is not a valid type!'.format(
+            file_msg, type(dec))
         raise LSSUtils_Error(msg)
     # Distance
     if not (isinstance(dist, valid_types)):
-        msg = '{0} `dist` ({1}) is not a valid type!'.format(file_msg, type(dist))
+        msg = '{0} `dist` ({1}) is not a valid type!'.format(
+            file_msg, type(dist))
         raise LSSUtils_Error(msg)
     # trans_opt
-    if not (trans_opt in list(range(1,5))):
+    if not (trans_opt in list(range(1, 5))):
         msg = '{0} `trans_opt` ({1}) is not within valid range!'.format(
             file_msg, trans_opt)
         raise LSSUtils_Error(msg)
@@ -280,19 +285,22 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     if (isinstance(ra_cen, float)):
         ra_cen = flip_angles(ra_cen)
     else:
-        msg = '{0} `ra_cen` ({1}) is not a float!'.format(file_msg, type(ra_cen))
+        msg = '{0} `ra_cen` ({1}) is not a float!'.format(
+            file_msg, type(ra_cen))
         raise LSSUtils_Error(msg)
     # Declination
     if (isinstance(dec_cen, float)):
         dec_cen = flip_angles(dec_cen)
     else:
-        msg = '{0} `dec_cen` ({1}) is not a float!'.format(file_msg, type(dec_cen))
+        msg = '{0} `dec_cen` ({1}) is not a float!'.format(
+            file_msg, type(dec_cen))
         raise LSSUtils_Error(msg)
     # Distance
     if (isinstance(dist_cen, float)):
         dist_cen = float(dist_cen)
     else:
-        msg = '{0} `dist_cen` ({1}) is not a float!'.format(file_msg, type(dist_cen))
+        msg = '{0} `dist_cen` ({1}) is not a float!'.format(
+            file_msg, type(dist_cen))
         raise LSSUtils_Error(msg)
     ##
     ## Check type of elements
@@ -315,28 +323,24 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     ## Converting to desired units
     if unit == 'rad':
         # Right Ascension
-        ra_deg     = np.degrees(ra)
         ra_rad     = ra
         ra_cen_deg = np.degrees(ra_cen)
         ra_cen_rad = ra_cen
         # Declination
-        dec_deg     = np.degrees(dec)
         dec_rad     = dec
         dec_cen_deg = np.degrees(dec_cen)
         dec_cen_rad = dec_cen
     elif unit == 'deg':
-        ra_deg     = ra
         ra_rad     = np.radians(ra)
         ra_cen_deg = ra_cen
         ra_cen_rad = np.radians(ra_cen)
         # Declination
-        dec_deg     = dec
         dec_rad     = np.radians(dec)
         dec_cen_deg = dec_cen
         dec_cen_rad = np.radians(dec_cen)
     ##
     ## Initializing pandas DataFrame
-    dict_keys  = ['ra','dec','dist']
+    dict_keys  = ['ra', 'dec', 'dist']
     coord_dict = dict(zip(dict_keys, np.vstack([ra, dec, dist])))
     ##
     ## Spherical to Cartesian transformation

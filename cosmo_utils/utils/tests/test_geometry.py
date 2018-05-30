@@ -4,11 +4,11 @@
 # Victor Calderon
 # Created      : 2018-05-07
 # Last Modified: 2018-05-07
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
 """
 Set of test functions for the `geometry` functions
 """
@@ -36,7 +36,7 @@ flip_angles_test_arr = [    (-50, 310.0),
 @pytest.mark.parametrize('input_ang, output_ang', flip_angles_test_arr)
 def test_flip_angles(input_ang, output_ang):
     """
-    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and 
+    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and
     output parameters
 
     Parameters
@@ -56,10 +56,10 @@ def test_flip_angles(input_ang, output_ang):
 ## Testing function Ang_Distance
 def test_Ang_Distance_comparison_astropy():
     """
-    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and 
+    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and
     output parameters.
 
-    This method compares the values obtained from the `haversine` to those 
+    This method compares the values obtained from the `haversine` to those
     using the `astropy` method.
     """
     ## Producing set of Right Ascension and Declination arrays
@@ -80,14 +80,14 @@ def test_Ang_Distance_comparison_astropy():
         np.testing.assert_allclose(out_haversine, out_astropy)
 
 ## Testing `Ang_Distance` for errors - Units
-Ang_Distance_test_unit_arr   = [ 'deg2' , 'nan'      ]
+Ang_Distance_test_unit_arr = ['deg2', 'nan']
 @pytest.mark.parametrize('unit', Ang_Distance_test_unit_arr)
 def test_Ang_Distance_unit_errors(unit):
     """
-    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and 
+    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and
     output parameters.
 
-    This function makes sure that errors are raised whenever a wrong 
+    This function makes sure that errors are raised whenever a wrong
     input is given.
 
     Parameters
@@ -99,7 +99,7 @@ def test_Ang_Distance_unit_errors(unit):
     method : {'haversine', 'astropy'} str, optional
         Method to use in order to calculate angular separation.
         This variable is to by default to the `haversine` method.
-        If `astropy`, it will use the astropy framework to determine the 
+        If `astropy`, it will use the astropy framework to determine the
         angular separation.
     """
     ## Producing set of Right Ascension and Declination arrays
@@ -118,14 +118,14 @@ def test_Ang_Distance_unit_errors(unit):
                 method='astropy', unit=unit)
 
 ## Testing `Ang_Distance` for errors - Method
-Ang_Distance_test_method_arr = [ 'meter', 'NotMethod']
+Ang_Distance_test_method_arr = ['meter', 'NotMethod']
 @pytest.mark.parametrize('method', Ang_Distance_test_method_arr)
 def test_Ang_Distance_method_errors(method):
     """
-    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and 
+    Tests the function `cosmo_utils.utils.geometry.flip_angles` for input and
     output parameters.
 
-    This function makes sure that errors are raised whenever a wrong 
+    This function makes sure that errors are raised whenever a wrong
     input is given.
 
     Parameters
@@ -137,7 +137,7 @@ def test_Ang_Distance_method_errors(method):
     method : {'haversine', 'astropy'} str, optional
         Method to use in order to calculate angular separation.
         This variable is to by default to the `haversine` method.
-        If `astropy`, it will use the astropy framework to determine the 
+        If `astropy`, it will use the astropy framework to determine the
         angular separation.
     """
     ## Producing set of Right Ascension and Declination arrays
@@ -152,7 +152,7 @@ def test_Ang_Distance_method_errors(method):
         ## Testing outputs from different methods
         # Haversine method
         with pytest.raises(LSSUtils_Error):
-            out_astropy   = geometry.Ang_Distance(ra1, ra2, dec1, dec2,
+            out_astropy = geometry.Ang_Distance(ra1, ra2, dec1, dec2,
                 method=method, unit='deg')
 
 ## Testing `Coord_Transformation` for type of what it returns
@@ -161,14 +161,14 @@ Coord_test_return = [   (True, dict),
 @pytest.mark.parametrize('return_dict, return_type', Coord_test_return)
 def test_Coord_Transformation_types(return_dict, return_type):
     """
-    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation` 
+    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation`
     for input and output parameters.
 
-    This function makes sure that errors are raised whenever a wrong 
+    This function makes sure that errors are raised whenever a wrong
     input is given.
     """
     ## Expected keys in dict/DataFrame
-    expected_keys = np.sort(['ra','dec','dist','x','y','z'])
+    expected_keys = np.sort(['ra', 'dec', 'dist', 'x', 'y', 'z'])
     ## Producing set of Right Ascension and Declination arrays
     ra_lim   = (  0, 360.)
     dec_lim  = (-90,  90.)
@@ -207,14 +207,14 @@ def test_Coord_Transformation_types(return_dict, return_type):
             assert(len(output[elem]) == ii)
 
 ## Testing `Coord_Transformation` for errors - Units
-Coord_test_unit_errors = [ 'nan', 'NotDegree']
-@pytest.mark.parametrize('unit', Coord_test_unit_errors     )
+Coord_test_unit_errors = ['nan', 'NotDegree']
+@pytest.mark.parametrize('unit', Coord_test_unit_errors)
 def test_Coord_Transformation_errors(unit):
     """
-    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation` 
+    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation`
     for input and output parameters.
 
-    This function makes sure that errors are raised whenever a wrong 
+    This function makes sure that errors are raised whenever a wrong
     input is given.
 
     Parameters
@@ -254,14 +254,14 @@ def test_Coord_Transformation_errors(unit):
                                                     unit=unit)
 
 ## Testing `Coord_Transformation` for errors - trans_opt
-Coord_test_trans_opt_errors = list(range(5,10))
+Coord_test_trans_opt_errors = list(range(5, 10))
 @pytest.mark.parametrize('trans_opt', Coord_test_trans_opt_errors)
 def test_Coord_Transformation_errors(trans_opt):
     """
-    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation` 
+    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation`
     for input and output parameters.
 
-    This function makes sure that errors are raised whenever a wrong 
+    This function makes sure that errors are raised whenever a wrong
     input is given.
 
     Parameters
@@ -305,21 +305,21 @@ def test_Coord_Transformation_errors(trans_opt):
                                                     unit='deg')
 
 ## Testing `Coord_Transformation` for errors - ra_cen type
-Coord_test_ra_cen_errors = [ '1', 'String']
-@pytest.mark.parametrize('ra_cen', Coord_test_ra_cen_errors     )
+Coord_test_ra_cen_errors = ['1', 'String']
+@pytest.mark.parametrize('ra_cen', Coord_test_ra_cen_errors)
 def test_Coord_Transformation_errors(ra_cen):
     """
-    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation` 
+    Tests the function `cosmo_utils.utils.geometry.Coord_Transformation`
     for input and output parameters.
 
-    This function makes sure that errors are raised whenever a wrong 
+    This function makes sure that errors are raised whenever a wrong
     input is given.
 
     Parameters
     ----------
     ra_cen : float, int
-        Right Ascension, declination, and distance for the center of 
-        the coordinates. These correspond to where the corodinates 
+        Right Ascension, declination, and distance for the center of
+        the coordinates. These correspond to where the corodinates
         `ra`, `dec`, and `dist` will be centered.
 
     """
@@ -348,17 +348,3 @@ def test_Coord_Transformation_errors(ra_cen):
                                                     trans_opt=1,
                                                     return_dict=True,
                                                     unit='deg')
-
-
-
-
-
-
-
-
-
-
-
-
-
-

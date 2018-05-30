@@ -4,12 +4,12 @@
 # Victor Calderon
 # Created      : 2018-04-28
 # Last Modified: 2018-04-28
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "myceil",
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "myceil",
                     "myfloor",
                     "Bins_array_create",
                     "sigma_calcs",
@@ -95,7 +95,7 @@ def myfloor(x, base=10):
 ## Generation of bins evenly spaced out
 def Bins_array_create(arr, base=10):
     """
-    Generates an evenly-spaced array between the minimum and maximum value 
+    Generates an evenly-spaced array between the minimum and maximum value
     of a given array,
 
     Parameters
@@ -128,7 +128,7 @@ def Bins_array_create(arr, base=10):
     return bins_arr
 
 ## Calculations of percentiles and sigmas
-def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
+def sigma_calcs(data_arr, type_sigma='std', perc_arr=[68., 95., 99.7],
     return_mean_std=False):
     """
     Calcualates the 1-, 2-, and 3-sigma ranges for `data_arr`
@@ -152,7 +152,7 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
     Return
     ----------
     sigma_dict: python dicitionary
-        dictionary containg the 1-, 2-, and 3-sigma upper and lower 
+        dictionary containg the 1-, 2-, and 3-sigma upper and lower
         ranges for `data-arr`
 
     mark_mean: array_like
@@ -192,14 +192,14 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
     for ii in range(len(perc_arr)):
         sigma_dict[ii] = []
     ## Using Percentiles to estimate errors
-    if type_sigma=='perc':
+    if type_sigma == 'perc':
         for ii, perc_ii in enumerate(perc_arr):
             mark_lower = np.nanpercentile(data_arr, 50.-(perc_ii/2.),axis=axis)
             mark_upper = np.nanpercentile(data_arr, 50.+(perc_ii/2.),axis=axis)
             # Saving to dictionary
             sigma_dict[ii] = np.column_stack((mark_lower, mark_upper)).T
     ## Using standard deviations to estimate errors
-    if type_sigma=='std':
+    if type_sigma == 'std':
         mean_val = np.nanmean(data_arr, axis=axis)
         std_val  = np.nanstd( data_arr, axis=axis)
         for ii in range(len(perc_arr)):
@@ -210,7 +210,7 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
     ##
     ## Estimating mean and St. Dev. of `data_arr`
     mark_mean = np.nanmean(data_arr, axis=axis)
-    mark_std  = np.nanstd (data_arr, axis=axis)
+    mark_std  = np.nanstd( data_arr, axis=axis)
     ## Fixing values for when `axis == 0`
     if data_arr.ndim == 1:
         for ii in range(len(sigma_dict.keys())):
@@ -222,9 +222,9 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr = [68., 95., 99.7],
         return sigma_dict
 
 ## Main framework for `Stats_one_arr` and `Stats_two_arr`
-def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n', 
+def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     weights=None, statfunc=np.nanmean, bin_statval='average',
-    return_perc=False, failval = np.nan):
+    return_perc=False, failval=np.nan):
     """
     Calculates statists for 2 arrays
 
@@ -244,20 +244,20 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
 
         Options:
             - 'n' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`
-            - 'y' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`, `x_bins_data`, `y_bins_data` 
-            - 'o' : Returns `x_bins_data`, `y_bins_data` 
+            - 'y' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`, `x_bins_data`, `y_bins_data`
+            - 'o' : Returns `x_bins_data`, `y_bins_data`
 
     weights : array_like or NoneType, optional
         Array of weights for values in `y`. This is set to None by default.
 
-    statfunc : {`numpy.nanmean`, `numpy.nanmedian`} statistical function, optional
+    statfunc : {`numpy.nanmean`, `numpy.nanmedian`} statistical func, optional
         Numerical function used to calculate on bins of data.
         By default, this variable is set to `numpy.nanmean`
 
     bin_statval : {'average', 'left', 'right'} str, optional
         Option for where to put the bin values of `x` and `y`.
-        By default, this variable is set to `average`, which means 
-        that the values are those of the averages of the bins in `x` and 
+        By default, this variable is set to `average`, which means
+        that the values are those of the averages of the bins in `x` and
         `y`.
 
     return_perc : `bool`, optional
@@ -322,7 +322,6 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     ## Converting arrays to numpy arrays
     x       = np.asarray(x)
     y       = np.asarray(y)
-    nelem   = len(x)
     arr_len = int(arr_len - 1.) if arr_len != 0 else int(arr_len)
     ##
     ## Statistics calculations
@@ -331,8 +330,8 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     ##
     ## Determining which bins to use
     ## These are the bins that meet the criteria of `arr_len`
-    x_digits_bins = np.array([int(ii) for ii in range(1, len(x_bins)) 
-        if len(x_digits[x_digits==ii]) > arr_len])
+    x_digits_bins = np.array([int(ii) for ii in range(1, len(x_bins))
+        if len(x_digits[x_digits == ii]) > arr_len])
     ## Elements in each bin
     # X-values
     x_bins_data = np.array([x[x_digits == ii] for ii in x_digits_bins])
@@ -346,7 +345,7 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
             for ii in x_bins_data])
     # Left-hand side of the bin
     if (bin_statval == 'left'):
-        x_stat = np.array([x_bins[:-1][ii] if 
+        x_stat = np.array([x_bins[:-1][ii] if
             len(x_bins_data[ii]) > arr_len else failval for ii
             in range(len(x_bins_data))])
     # Right-hand side of the bin

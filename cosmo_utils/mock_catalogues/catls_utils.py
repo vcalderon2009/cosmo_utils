@@ -4,12 +4,12 @@
 # Victor Calderon
 # Created      : 2018-05-08
 # Last Modified: 2018-05-08
-from __future__ import print_function, division, absolute_import
-__author__     =['Victor Calderon']
-__copyright__  =["Copyright 2018 Victor Calderon"]
-__email__      =['victor.calderon@vanderbilt.edu']
-__maintainer__ =['Victor Calderon']
-__all__        =[   "catl_keys",
+from __future__ import absolute_import, division, print_function
+__author__     = ['Victor Calderon']
+__copyright__  = ["Copyright 2018 Victor Calderon"]
+__email__      = ['victor.calderon@vanderbilt.edu']
+__maintainer__ = ['Victor Calderon']
+__all__        = [  "catl_keys",
                     "catl_keys_prop",
                     "catl_sdss_dir",
                     "extract_catls",
@@ -19,9 +19,9 @@ __all__        =[   "catl_keys",
 
 ## Import modules
 import os
+from   collections       import Counter
 import numpy as np
 import pandas as pd
-from   collections       import Counter
 from   cosmo_utils.utils import file_utils   as fd
 from   cosmo_utils.utils import work_paths   as wp
 from   cosmo_utils.utils import file_readers as fr
@@ -118,7 +118,7 @@ def catl_keys(catl_kind, perf_opt=False, return_type='list'):
 ## Catalogue Keys - Properties
 def catl_keys_prop(catl_kind, catl_info='members', return_type='list'):
     """
-    Dictionary keys for the diffeent galaxy and group properties of 
+    Dictionary keys for the diffeent galaxy and group properties of
     catalogues.
 
     Parameters
@@ -156,7 +156,7 @@ def catl_keys_prop(catl_kind, catl_info='members', return_type='list'):
     ------------
     LSSUtils_Error : Exception from `LSSUtils_Error`
         Program exception if input parameters are accepted.
-    
+
     Examples
     ------------
     >>> catl_keys_prop('data')
@@ -185,34 +185,34 @@ def catl_keys_prop(catl_kind, catl_info='members', return_type='list'):
         msg = '{0} `return_type` ({1}) is not a valid input!'.format(
             file_msg, return_type)
         raise LSSUtils_Error(msg)
-    ##
-    ## Property keys
-    ##
-    ## Data
+    #
+    # Property keys
+    #
+    # Data
     if (catl_kind == 'data'):
-        ## Members
+        # Members
         if catl_info == 'members':
             # SSFR and Stellar mass
             logssfr_key, logmstar_key = ['logssfr', 'logMstar_JHU']
-        ## Groups
+        # Groups
         if catl_info == 'groups':
             # SSFR and Stellar mass
             logssfr_key, logmstar_key = ['logssfr_tot', 'logMstar_tot']
-    ##
-    ## Mocks
+    #
+    # Mocks
     if (catl_kind == 'mocks'):
-        ## Members
+        # Members
         if catl_info == 'members':
             # SSFR and Stellar mass
             logssfr_key, logmstar_key = ['logssfr', 'logMstar']
-        ## Groups
+        # Groups
         if catl_info == 'groups':
             # SSFR and Stellar mass
             logssfr_key, logmstar_key = ['logssfr', 'logMstar']
-    ##
-    ## Saving values
+    #
+    # Saving values
     if return_type == 'dict':
-        catl_objs = {   'logssfr_key' : logssfr_key ,
+        catl_objs = {   'logssfr_key' : logssfr_key,
                         'logmstar_key': logmstar_key}
     elif return_type == 'list':
         catl_objs = [   logssfr_key, logmstar_key]
@@ -237,7 +237,7 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
 
     catl_type : {'mr', 'mstar'} str, optional
         Type of catalogue to use. It shows which abundance matching method
-        was used for the CLF when assigning halo masses. This variable is 
+        was used for the CLF when assigning halo masses. This variable is
         set to 'mr' by default.
 
         Options:
@@ -260,7 +260,7 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
             - `groups` : Catalogues with `group` information.
 
     halotype : {'fof', 'so'} str, optional
-        Type of the dark matter halo of the simulation used to create the 
+        Type of the dark matter halo of the simulation used to create the
         synthetic catalogues. This variable is set to `fof` by default.
 
         Options:
@@ -273,21 +273,21 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
 
         Options:
             - `1` : Independent assigment of (g-r) color, sersic, and log(ssfr)
-            - `2` : (g-r) decides active/passive designation and draw values 
+            - `2` : (g-r) decides active/passive designation and draw values
                     independently.
-            - `3` : (g-r) decides active/passive designations, and 
+            - `3` : (g-r) decides active/passive designations, and
                     assigns other galaxy properties for that given galaxy.
 
     hod_n : {0, 1} int, optional
         HOD model to use. Only relevant when `catl_kind == mocks`.
 
     clf_seed : int, optional
-        Seed used for the `CLF` random seed. This variable is set to `1235` 
+        Seed used for the `CLF` random seed. This variable is set to `1235`
         by default.
 
     dv : float, optional
-        Difference between galaxy and mass velocity profiles (v_g-v_c)/(v_m-v_c).
-        This value is set to `1.0` by default.
+        Difference between galaxy and mass velocity profiles
+        (v_g-v_c)/(v_m-v_c). This value is set to `1.0` by default.
 
     perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
@@ -295,7 +295,7 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
 
     print_filedir : `bool`, optional
         If True, the output directory is printed onto the screen.
-    
+
     Returns
     -----------
     catls_path : str
@@ -308,7 +308,7 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
     """
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters
-    catl_kind_valid  = ['data', 'mocks' ]
+    catl_kind_valid  = ['data', 'mocks']
     catl_type_valid  = ['mr', 'mstar']
     sample_s_valid   = ['19', '20', '21']
     catl_info_valid  = ['members', 'groups']
@@ -364,14 +364,14 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
     if not (dv > 0):
         msg = '{0} `dv` ({1}) must be larger than 0!'.format(file_msg, dv)
         raise LSSUtils_Error(msg)
-    ##
-    ## Type of catalogue
+    #
+    # Type of catalogue
     if catl_info == 'members':
         catl_info_str = 'member_galaxy_catalogues'
     elif catl_info == 'groups':
         catl_info_str = 'group_galaxy_catalogues'
-    ##
-    ## Perfect catalogue
+    #
+    # Perfect catalogue
     if perf_opt:
         # Data
         if catl_kind == 'data':
@@ -383,8 +383,8 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
     else:
         # Mocks
         catl_info_perf_str = catl_info_str
-    ##
-    ## Extracting path of the files
+    #
+    # Extracting path of the files
     # Data
     if catl_kind == 'data':
         # Joining paths
@@ -408,20 +408,20 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
                                 catl_type,
                                 'Mr' + sample_s,
                                 catl_info_perf_str)
-    ##
-    ## Making sure `filedir` exists
+    #
+    # Making sure `filedir` exists
     if not (os.path.exists(filedir)):
         msg = '{0} `filedir` ({1}) does NOT exist! Check input variables'
         msg = msg.format(file_msg, filedir)
         raise LSSUtils_Error(msg)
-    ##
-    ## Printing out paths
+    #
+    # Printing out paths
     if print_filedir:
         print('{0} `filedir`: {1}'.format(file_msg, filedir))
 
     return filedir
 
-## Extracting list of synthetic catalogues given input parameters
+# Extracting list of synthetic catalogues given input parameters
 def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
     datatype='.hdf5', catl_info='members', halotype='fof', clf_method=3,
     hod_n=0, clf_seed=1235, dv=1.0, perf_opt=False, return_len=False,
@@ -440,7 +440,7 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
 
     catl_type : {'mr', 'mstar'} str, optional
         Type of catalogue to use. It shows which abundance matching method
-        was used for the CLF when assigning halo masses. This variable is 
+        was used for the CLF when assigning halo masses. This variable is
         set to 'mr' by default.
 
         Options:
@@ -454,9 +454,9 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
             - '19' : Uses the Mr19 volume-limited sample, i.e. 'Consuelo'
             - '20' : Uses the Mr20 volume-limited sample, i.e. 'Esmeralda'
             - '21' : Uses the Mr21 volume-limited sample, i.e. 'Carmen'
-    
+
     datatype : {'.hdf5'} str, optional
-        Data type of the files to be indexed in the folder. This variable 
+        Data type of the files to be indexed in the folder. This variable
         is set to '.hdf5' by default.
 
     catl_info : {'members', 'groups'} str, optional
@@ -467,7 +467,7 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
             - `groups` : Catalogues with `group` information.
 
     halotype : {'fof', 'so'} str, optional
-        Type of the dark matter halo of the simulation used to create the 
+        Type of the dark matter halo of the simulation used to create the
         synthetic catalogues. This variable is set to `fof` by default.
 
         Options:
@@ -480,28 +480,28 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
 
         Options:
             - `1` : Independent assigment of (g-r) color, sersic, and log(ssfr)
-            - `2` : (g-r) decides active/passive designation and draw values 
+            - `2` : (g-r) decides active/passive designation and draw values
                     independently.
-            - `3` : (g-r) decides active/passive designations, and 
+            - `3` : (g-r) decides active/passive designations, and
                     assigns other galaxy properties for that given galaxy.
 
     hod_n : {0, 1} int, optional
         HOD model to use. Only relevant when `catl_kind == mocks`.
 
     clf_seed : int, optional
-        Seed used for the `CLF` random seed. This variable is set to `1235` 
+        Seed used for the `CLF` random seed. This variable is set to `1235`
         by default.
-    
+
     dv : float, optional
-        Difference between galaxy and mass velocity profiles (v_g-v_c)/(v_m-v_c).
-        This value is set to `1.0` by default.
+        Difference between galaxy and mass velocity profiles
+        (v_g-v_c)/(v_m-v_c). This value is set to `1.0` by default.
 
     perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
         catalogues. This variable is set to `False` by default.
-    
+
     return_len : `bool`, optional
-        If True, the function returns the total number of elements in 
+        If True, the function returns the total number of elements in
         the folder that match the criteria.
 
     print_filedir : `bool`, optional
@@ -518,8 +518,8 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
         Program exception if input parameters are accepted.
     """
     file_msg = fd.Program_Msg(__file__)
-    ## Checking input parameters
-    catl_kind_valid  = ['data', 'mocks' ]
+    # Checking input parameters
+    catl_kind_valid  = ['data', 'mocks']
     catl_type_valid  = ['mr', 'mstar']
     sample_s_valid   = ['19', '20', '21']
     catl_info_valid  = ['members', 'groups']
@@ -585,8 +585,8 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
         msg = '{0} `datatype` ({1}) is not a valid type!'.format(file_msg,
             type(datatype))
         raise LSSUtils_Error(msg)
-    ##
-    ## Extracting the path of the catalogues
+    #
+    # Extracting the path of the catalogues
     filedir = catl_sdss_dir(    catl_kind=catl_kind,
                                 catl_type=catl_type,
                                 sample_s=sample_s,
@@ -598,21 +598,21 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
                                 dv=dv,
                                 perf_opt=perf_opt,
                                 print_filedir=print_filedir)
-    ##
-    ## Convertint to array
+    #
+    # Convertint to array
     catl_arr = np.sort(fd.Index(filedir, datatype))
     # Checking number of elements
     if len(catl_arr) == 0:
         msg = '{0} `catl_arr` contains 0 entries!'.format(file_msg)
         raise LSSUtils_Error(msg)
-    ##
-    ## Returning elements
+    #
+    # Returning elements
     if return_len:
         return catl_arr, len(catl_arr)
     else:
         return catl_arr
 
-## Cleaning the catalogue removing `failed` values
+# Cleaning the catalogue removing `failed` values
 def sdss_catl_clean(catl_pd, catl_kind, catl_info='members', reindex=True):
     """
     Cleans the catalogue by removing `failed` values.
@@ -650,8 +650,8 @@ def sdss_catl_clean(catl_pd, catl_kind, catl_info='members', reindex=True):
         Program exception if input parameters are accepted.
     """
     file_msg = fd.Program_Msg(__file__)
-    ## Checking input parameters
-    catl_kind_valid  = ['data', 'mocks' ]
+    # Checking input parameters
+    catl_kind_valid  = ['data', 'mocks']
     catl_info_valid  = ['members', 'groups']
     # `catl_pd`
     if not (isinstance(catl_pd, pd.DataFrame)):
@@ -673,39 +673,40 @@ def sdss_catl_clean(catl_pd, catl_kind, catl_info='members', reindex=True):
         msg = '{0} `reindex` ({1}) is not a valid type!'.format(file_msg,
             type(reindex))
         raise LSSUtils_Error(msg)
-    ##
-    ## Defining `failed` values
+    #
+    # Defining `failed` values
     ssfr_fail_arr  = [0, -99, -999, np.nan]
     mstar_fail_arr = [-1, 0, np.nan]
-    ##
-    ## Getting keys for catalogues
+    #
+    # Getting keys for catalogues
     (   logssfr_key   ,
         logmstar_key  ) = catl_keys_prop(   catl_kind=catl_kind,
                                             catl_info=catl_info,
                                             return_type='list')
-    ##
-    ## Cleaning catalogue entries
+    #
+    # Cleaning catalogue entries
+    #
     # Data
     if catl_kind == 'data':
         # Clean version
-        catl_pd_clean = catl_pd[~catl_pd[logssfr_key].isin(ssfr_fail_arr) &\
+        catl_pd_clean = catl_pd[~catl_pd[logssfr_key].isin(ssfr_fail_arr) & \
                                 ~catl_pd[logmstar_key].isin(mstar_fail_arr)]
     # Mocks
     if catl_kind == 'mocks':
         # Clean version
         catl_pd_clean = catl_pd[~catl_pd[logssfr_key].isin(ssfr_fail_arr)]
-    ##
-    ## Reindexing
+    #
+    # Reindexing
     if reindex:
         catl_pd_clean.reset_index(inplace=True, drop=True)
 
     return catl_pd_clean
 
-## Cleans dataset and includes only groups above a number of galaxy threshold
+# Cleans dataset and includes only groups above a number of galaxy threshold
 def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
     perf_opt=False):
     """
-    Cleans the catalogue removing `failed` values, and only includes 
+    Cleans the catalogue removing `failed` values, and only includes
     galaxies that are in groups/halos above a `nmin` threshold.
 
     Parameters
@@ -747,8 +748,8 @@ def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
         Program exception if input parameters are accepted.
     """
     file_msg = fd.Program_Msg(__file__)
-    ## Checking input parameters
-    catl_kind_valid  = ['data', 'mocks' ]
+    # Checking input parameters
+    catl_kind_valid  = ['data', 'mocks']
     catl_info_valid  = ['members', 'groups']
     # `catl_pd`
     if not (isinstance(catl_pd, pd.DataFrame)):
@@ -775,24 +776,24 @@ def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
         msg = '{0} `perf_opt` ({1}) is not a valid type!'.format(file_msg,
             type(perf_opt))
         raise LSSUtils_Error(msg)
-    ##
-    ## Types of galaxies
+    #
+    # Types of galaxies
     cens = int(1)
     nmin = int(nmin)
-    ##
-    ## Getting keys for catalogue
+    #
+    # Getting keys for catalogue
     (   gm_key,
         id_key,
         galtype_key) = catl_keys(   catl_kind,
                                     return_type='list',
                                     perf_opt=perf_opt)
-    ##
-    ## Cleaning catalogue entries
+    
+    # Cleaning catalogue entries
     catl_pd_clean_all = sdss_catl_clean(    catl_pd,
                                         catl_kind=catl_kind,
                                         catl_info=catl_info,
                                         reindex=True)
-    ## Choosing only galaxies in groups of richness >= `nmin`
+    # Choosing only galaxies in groups of richness >= `nmin`
     # Member galaxies
     if catl_info == 'members':
         # Centrals
@@ -800,7 +801,7 @@ def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
         catl_pd_cl   = catl_pd_clean_all[(catl_pd_clean_all[id_key].isin(catl_pd_cens))]
         # Group counts
         group_counts = Counter(catl_pd_cl[id_key])
-        group_ngals  = np.array([xx for xx in group_counts.keys() if 
+        group_ngals  = np.array([xx for xx in group_counts.keys() if
                                 group_counts[xx] >= nmin])
         # Cleaned version
         catl_pd_clean = catl_pd_cl[catl_pd_cl[id_key].isin(group_ngals)]
@@ -817,7 +818,7 @@ def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
 
     return catl_pd_clean
 
-## Merges the member and group catalogues for a given set of input parameters
+# Merges the member and group catalogues for a given set of input parameters
 def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     sample_s='19', halotype='fof', clf_method=3, hod_n=0, clf_seed=1235,
     dv=1.0, perf_opt=False, return_memb_group=False, print_filedir=False):
@@ -829,7 +830,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     Parameters
     ------------
     catl_pd_ii : int
-        Index of the catalogue to match, 
+        Index of the catalogue to match,
         from :func:`~cosmo_utils.mock_catalogues.catls_utils.extract_catls`
         function.
 
@@ -842,7 +843,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
 
     catl_type : {'mr', 'mstar'} str, optional
         Type of catalogue to use. It shows which abundance matching method
-        was used for the CLF when assigning halo masses. This variable is 
+        was used for the CLF when assigning halo masses. This variable is
         set to 'mr' by default.
 
         Options:
@@ -858,7 +859,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
             - '21' : Uses the Mr21 volume-limited sample, i.e. 'Carmen'
 
     halotype : {'fof', 'so'} str, optional
-        Type of the dark matter halo of the simulation used to create the 
+        Type of the dark matter halo of the simulation used to create the
         synthetic catalogues. This variable is set to `fof` by default.
 
         Options:
@@ -871,21 +872,21 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
 
         Options:
             - `1` : Independent assigment of (g-r) color, sersic, and log(ssfr)
-            - `2` : (g-r) decides active/passive designation and draw values 
+            - `2` : (g-r) decides active/passive designation and draw values
                     independently.
-            - `3` : (g-r) decides active/passive designations, and 
+            - `3` : (g-r) decides active/passive designations, and
                     assigns other galaxy properties for that given galaxy.
 
     hod_n : {0, 1} int, optional
         HOD model to use. Only relevant when `catl_kind == mocks`.
 
     clf_seed : int, optional
-        Seed used for the `CLF` random seed. This variable is set to `1235` 
+        Seed used for the `CLF` random seed. This variable is set to `1235`
         by default.
 
     dv : float, optional
-        Difference between galaxy and mass velocity profiles (v_g-v_c)/(v_m-v_c).
-        This value is set to `1.0` by default.
+        Difference between galaxy and mass velocity profiles
+        (v_g-v_c)/(v_m-v_c). This value is set to `1.0` by default.
 
     perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
@@ -912,7 +913,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     group_pd : `pandas.DataFrame`
         Catalogue of the groups of the i-th catalogue.
         This catalogue contains information of the `galaxy groups`.
-    
+
     Raises
     ------------
     LSSUtils_Error : Exception from `LSSUtils_Error`
@@ -921,10 +922,9 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters
     catl_pd_ii_valid = (float, int)
-    catl_kind_valid  = ['data', 'mocks' ]
+    catl_kind_valid  = ['data', 'mocks']
     catl_type_valid  = ['mr', 'mstar']
     sample_s_valid   = ['19', '20', '21']
-    catl_info_valid  = ['members', 'groups']
     halotype_valid   = ['fof', 'so']
     clf_method_valid = [1, 2, 3]
     hod_n_valid      = np.arange(0, 20)
@@ -984,8 +984,8 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
         msg = '{0} `print_filedir` ({1}) is not a valid type!'.format(file_msg,
             type(print_filedir))
         raise LSSUtils_Error(msg)
-    ##
-    ## Extracting catalogues given input parameters
+    #
+    # Extracting catalogues given input parameters
     (   memb_arr,
         memb_len) = extract_catls(  catl_kind=catl_kind,
                                     catl_type=catl_type,
@@ -1004,8 +1004,8 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
         msg = '{0} `catl_pd_ii` ({1}) is OUT of range ({2})!'.format(
             file_msg, catl_pd_ii, memb_len)
         raise LSSUtils_Error(msg)
-    ##
-    ## Extracting group catalogue
+    #
+    # Extracting group catalogue
     # i-th Galaxy catalogue
     memb_path = memb_arr[catl_pd_ii]
     # i-th Galaxy Group catalogue
@@ -1020,8 +1020,8 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
                                 perf_opt=perf_opt,
                                 catl_info='groups',
                                 print_filedir=print_filedir)
-    ##
-    ## Paths to catalogue
+    #
+    # Paths to catalogue
     # Mocks
     if catl_kind == 'mocks':
         group_path  = os.path.join(group_path, 
@@ -1046,9 +1046,6 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     if len(np.unique(memb_pd[id_key])) == len(np.unique(group_pd[id_key])):
         # Group column names
         group_colnames = np.sort(group_pd.columns.values)
-        group_groupid  = np.sort(np.unique(group_pd[id_key]))
-        n_groups       = len(group_groupid)
-        n_memb         = len(memb_pd)
         ## Sorting `memb_pd` by `id_key`
         # Member catalogue
         memb_pd.sort_values(by=id_key, inplace=True)
@@ -1057,9 +1054,9 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
         group_pd.sort_values(by=id_key, inplace=True)
         group_pd.reset_index(inplace=True, drop=True)
         ## Renaming columns
-        g_colnames_dict = {ii:'GG_' + ii for ii in group_colnames}
+        g_colnames_dict = {ii: 'GG_' + ii for ii in group_colnames}
         group_pd.rename(columns=g_colnames_dict, inplace=True)
-        group_pd.rename(columns={'GG_' + id_key : id_key}, inplace=True)
+        group_pd.rename(columns={'GG_' + id_key: id_key}, inplace=True)
         ##
         ## Merging the 2 DataFrames
         memb_group_pd = pd.merge(   left=memb_pd   ,
