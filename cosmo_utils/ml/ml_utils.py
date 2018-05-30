@@ -181,9 +181,9 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
         raise LSSUtils_Error(msg)
     # `shuffle_opt`
     shuffle_opt_type_valid = (bool)
-    if not (shuffle_opt in shuffle_opt_type_valid):
-        msg = '{0} `shuffle_opt` ({1}) is not a valid input'.format(
-            file_msg, shuffle_opt)
+    if not (isinstance(shuffle_opt, shuffle_opt_type_valid)):
+        msg = '{0} `shuffle_opt` ({1}) is not a valid input type'.format(
+            file_msg, type(shuffle_opt))
         raise LSSUtils_Error(msg)
     # `random_state`
     random_state_type_valid = (int)
@@ -201,9 +201,9 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
     pred_arr = np.asarray(pred_arr)
     feat_arr = np.asarray(feat_arr)
     # Dimensions
-    if (pred_arr.ndim) == 1:
+    if ((pred_arr.shape[1] == 1) or (pred_arr.ndim == 1)):
         pred_arr = pred_arr.reshape(len(pred_arr),)
-    if (feat_arr.ndim) == 1:
+    if ((feat_arr.shape[1] == 1) or (feat_arr.ndim == 1)):
         feat_arr = feat_arr.reshape(len(feat_arr),)
     # Shape
     if (len(pred_arr) != len(feat_arr)):
