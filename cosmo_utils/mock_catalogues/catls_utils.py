@@ -829,19 +829,19 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
 
     Parameters
     ------------
-    catl_pd_ii : int
+    catl_pd_ii : `int`
         Index of the catalogue to match,
         from :func:`~cosmo_utils.mock_catalogues.catls_utils.extract_catls`
         function.
 
-    catl_kind : {'data', 'mocks'} str, optional
+    catl_kind : {'data', 'mocks'} `str`, optional
         Type of catalogue to use. This variable is set to `data` by default.
 
         Options:
             - `data` : catalogues come from SDSS `real` catalogue
             - `mocks` : catalogue come from SDSS `mock` catalogues
 
-    catl_type : {'mr', 'mstar'} str, optional
+    catl_type : {'mr', 'mstar'} `str`, optional
         Type of catalogue to use. It shows which abundance matching method
         was used for the CLF when assigning halo masses. This variable is
         set to 'mr' by default.
@@ -932,8 +932,8 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     if (isinstance(catl_pd_ii, catl_pd_ii_valid)):
         catl_pd_ii = int(catl_pd_ii)
     else:
-        msg = '{0} `catl_kind` ({1}) is not a valid input!'.format(file_msg,
-            type(catl_kind))
+        msg = '{0} `catl_pd_ii` ({1}) is not a valid input!'.format(file_msg,
+            type(catl_pd_ii))
         raise LSSUtils_Error(msg)
     # `catl_kind`
     if not (catl_kind in catl_kind_valid):
