@@ -1,7 +1,7 @@
 0.1.40 (unreleased)
 -----------------------
 
-- No changes yet.
+- Fixed bugs in :py:func:`~cosmo_utils.ml.ml_utils.train_test_dataset`
 
 0.1.39 (2018-05-30)
 -----------------------
