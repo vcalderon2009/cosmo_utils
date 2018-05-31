@@ -16,6 +16,8 @@ Comprehensive Cosmo Utils Reference/API
 
 .. automodapi:: cosmo_utils.utils.geometry
 
+.. automodapi:: cosmo_utils.utils.gen_utils
+
 .. automodapi:: cosmo_utils.custom_exceptions
 
 .. automodapi:: cosmo_utils.mock_catalogues
