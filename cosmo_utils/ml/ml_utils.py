@@ -3,7 +3,7 @@
 
 # Victor Calderon
 # Created      : 2018-05-17
-# Last Modified: 2018-05-17
+# Last Modified: 2018-05-31
 from __future__ import absolute_import, division, print_function
 __author__     = ['Victor Calderon']
 __copyright__  = ["Copyright 2018 Victor Calderon"]
@@ -15,8 +15,10 @@ __all__        = [  "data_preprocessing",
 
 # Importing modules
 import numpy as np
-from   cosmo_utils.utils import file_utils as fd
-from   cosmo_utils.custom_exceptions import LSSUtils_Error
+
+from cosmo_utils.utils import file_utils as fd
+from cosmo_utils.utils import gen_utils as gu
+from cosmo_utils.custom_exceptions import LSSUtils_Error
 
 # ML modules
 import sklearn
@@ -201,10 +203,8 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
     pred_arr = np.asarray(pred_arr)
     feat_arr = np.asarray(feat_arr)
     # Dimensions
-    if ((pred_arr.shape[1] == 1) or (pred_arr.ndim == 1)):
-        pred_arr = pred_arr.reshape(len(pred_arr),)
-    if ((feat_arr.shape[1] == 1) or (feat_arr.ndim == 1)):
-        feat_arr = feat_arr.reshape(len(feat_arr),)
+    pred_arr = gu.reshape_arr_1d(pred_arr)
+    feat_arr = gu.reshape_arr_1d(feat_arr)
     # Shape
     if (len(pred_arr) != len(feat_arr)):
         msg  = '{0} The shape of `pred_arr` ({1}) and `feat_arr` ({2}) must '
