@@ -46,7 +46,7 @@ def reshape_arr_1d(arr):
             type(arr))
         raise TypeError(msg)
     # Dimensions
-    if (isinstance(arr, list)):
+    if (isinstance(arr, arr_valid_types)):
         if not (np.asarray(arr).ndim in [1, 2]):
             msg = '{0} The shape of `arr` ({1}) can only have 1 or 2 '
             msg += 'dimensions'

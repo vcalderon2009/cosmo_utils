@@ -9,11 +9,13 @@ __author__     = ['Victor Calderon']
 __copyright__  = ["Copyright 2018 Victor Calderon"]
 __email__      = ['victor.calderon@vanderbilt.edu']
 __maintainer__ = ['Victor Calderon']
-__all__        = [  "data_preprocessing",
-                    "train_test_dataset",
-                    "scoring_methods"]
+__all__        = ["data_preprocessing",
+                  "train_test_dataset",
+                  "scoring_methods"]
 
 # Importing modules
+import scipy
+
 import numpy as np
 
 from cosmo_utils.utils import file_utils as fd
@@ -21,22 +23,16 @@ from cosmo_utils.utils import gen_utils as gu
 from cosmo_utils.custom_exceptions import LSSUtils_Error
 
 # ML modules
-import sklearn
 import sklearn.metrics          as skmetrics
 import sklearn.model_selection  as skms
-import sklearn.ensemble         as skem
-import sklearn.neural_network   as skneuro
 import sklearn.preprocessing    as skpre
-import scipy
 
 # Extra modules
-from glob import glob
-import copy
 
 ## Functions
 
 # Data preprocessing
-def data_preprocessing(feat_arr, pre_opt='min_max'):
+def data_preprocessing(feat_arr, pre_opt='min_max', reshape=False):
     """
     Preprocess the data used, in order to clean and make the data more
     suitable for the machine learning algorithms
@@ -55,6 +51,11 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
             - 'standard' : Uses `~sklearn.preprocessing.StandardScaler` method
             - 'normalize' : Uses the `~sklearn.preprocessing.Normalizer` method
             - 'no' : No preprocessing on `feat_arr`
+
+    reshape : `bool`, optional
+        If True, it reshapes `feat_arr` into a 1d array if its shapes is
+        equal to (ncols, 1), where `ncols` is the number of columns.
+        This variable is set to `False` by default.
 
     Returns
     -----------
@@ -82,7 +83,8 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
         raise LSSUtils_Error(msg)
     ##
     ## Reshaping `feat_arr`
-    feat_arr = gu.reshape_arr_1d(feat_arr)
+    if reshape:
+        feat_arr = gu.reshape_arr_1d(feat_arr)
     ##
     ## Scaling `feat_arr`
     if (pre_opt == 'min_max'):
@@ -110,7 +112,7 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
 
 # Train-Test Data Split
 def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
-    shuffle_opt=True, random_state=0, test_size=0.25):
+    shuffle_opt=True, random_state=0, test_size=0.25, reshape=False):
     """
     Function to create the training and testing datasets for a given set
     of features array and predicted array.
@@ -151,6 +153,11 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
         Percentage of the catalogue that represents the `test` size of
         the testing dataset. This variable must be between (0,1).
         This variable is set to `0.25` by default.
+
+    reshape : `bool`, optional
+        If True, it reshapes `feat_arr` into a 1d array if its shapes is
+        equal to (ncols, 1), where `ncols` is the number of columns.
+        This variable is set to `False` by default.
 
     Returns
     -----------
@@ -206,8 +213,9 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
     pred_arr = np.asarray(pred_arr)
     feat_arr = np.asarray(feat_arr)
     # Dimensions
-    pred_arr = gu.reshape_arr_1d(pred_arr)
-    feat_arr = gu.reshape_arr_1d(feat_arr)
+    if reshape:
+        pred_arr = gu.reshape_arr_1d(pred_arr)
+        feat_arr = gu.reshape_arr_1d(feat_arr)
     # Shape
     if (len(pred_arr) != len(feat_arr)):
         msg  = '{0} The shape of `pred_arr` ({1}) and `feat_arr` ({2}) must '
@@ -216,7 +224,8 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
         raise LSSUtils_Error(msg)
     ##
     ## Rescaling Dataset
-    feat_arr_scaled = data_preprocessing(feat_arr, pre_opt=pre_opt)
+    feat_arr_scaled = data_preprocessing(feat_arr, pre_opt=pre_opt,
+        reshape=reshape)
     ##
     ## Splitting into `Training` and `Testing` datasets.
     # Scaled
@@ -342,7 +351,7 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     ##
     ## Checking for `model` and `pred_arr`
     # If both are none
-    if ((model == None) and (pred_arr == None)):
+    if ((model is None) and (pred_arr == None)):
         msg  = '{0} `model` and `pred_arr` cannot be both `None`. '
         msg += 'Only one can be `None`'
         msg  = msg.format(file_msg)
