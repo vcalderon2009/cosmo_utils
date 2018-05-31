@@ -351,14 +351,14 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     ##
     ## Checking for `model` and `pred_arr`
     # If both are none
-    if ((model is None) and (pred_arr == None)):
+    if ((model is None) and (pred_arr is None)):
         msg  = '{0} `model` and `pred_arr` cannot be both `None`. '
         msg += 'Only one can be `None`'
         msg  = msg.format(file_msg)
         raise LSSUtils_Error(msg)
     # `pred_arr` - Type
     pred_arr_valid = ((list, np.ndarray))
-    if (model == None):
+    if (model is None):
         if not (isinstance(pred_arr, pred_arr_valid)):
             msg = '{0} `pred_arr` ({1}) is not a valid input type!'.format(
                 file_msg, type(pred_arr))
@@ -368,10 +368,10 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     # Percentile method
     if (score_method == 'perc'):
         # Checking for `pred_arr`
-        if (pred_arr == None):
+        if (pred_arr is None):
             pred_arr = model.predict(feat_arr)
         # Checking for `model`
-        if (model == None):
+        if (model is None):
             pred_arr = np.asarray(pred_arr)
         # Error calcualtion
         pred_err     = np.abs(pred_arr - truth_arr)
@@ -379,10 +379,10 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     # Threshold method
     if (score_method == 'threshold'):
         # Checking for `pred_arr`
-        if (pred_arr == None):
+        if (pred_arr is None):
             pred_arr = model.predict(feat_arr)
         # Checking for `model`
-        if (model == None):
+        if (model is None):
             pred_arr = np.asarray(pred_arr)
         # Error calcualtion
         pred_err     = np.abs(pred_arr - truth_arr)
@@ -391,10 +391,10 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     # R-squared method
     if (score_method == 'r2'):
         # Checking for `pred_arr`
-        if (pred_arr == None):
+        if (pred_arr is None):
             pred_arr = model.predict(feat_arr)
         # Checking for `model`
-        if (model == None):
+        if (model is None):
             pred_arr = np.asarray(pred_arr)
         # Error calcualtion
         method_score = skmetrics.r2_score(truth_arr, pred_arr)
