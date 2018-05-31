@@ -81,6 +81,9 @@ def data_preprocessing(feat_arr, pre_opt='min_max'):
             file_msg, pre_opt)
         raise LSSUtils_Error(msg)
     ##
+    ## Reshaping `feat_arr`
+    feat_arr = gu.reshape_arr_1d(feat_arr)
+    ##
     ## Scaling `feat_arr`
     if (pre_opt == 'min_max'):
         # Scaler
