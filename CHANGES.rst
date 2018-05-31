@@ -1,7 +1,9 @@
-0.1.41 (unreleased)
+0.1.41 (2018-05-31)
 -----------------------
 
-- No changes yet.
+- Added module :py:module:`~cosmo_utils.utils.gen_utils`
+- Expanded functionality in :py:func:`~cosmo_utils.ml.ml_utils.data_preprocessing`
+  and :py:func:`~cosmo_utils.ml.ml_utils.train_test_dataset`.
 
 0.1.40 (2018-05-30)
 -----------------------
