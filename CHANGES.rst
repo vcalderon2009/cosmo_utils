@@ -1,7 +1,8 @@
-0.1.43 (unreleased)
+0.1.43 (2018-06-02)
 -----------------------
 
-- No changes yet. 
+- Fixed another bug in
+  :py:func:`~cosmo_utils.ml.ml_utils.scoring_methods` with the `None` type.
 
 0.1.42 (2018-06-02)
 -----------------------
