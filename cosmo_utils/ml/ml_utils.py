@@ -314,7 +314,7 @@ def scoring_methods(truth_arr, feat_arr=None, pred_arr=None, model=None,
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters
     # `feat_arr`
-    feat_arr_type_valid = (list, np.ndarray, NoneType)
+    feat_arr_type_valid = (list, np.ndarray, type(None))
     if not (isinstance(feat_arr, feat_arr_type_valid)):
         msg = '{0} `feat_arr` ({1}) is not a valid input type'.format(
             file_msg, type(feat_arr))
