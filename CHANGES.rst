@@ -1,4 +1,4 @@
-0.1.42 (unreleased)
+0.1.42 (2018-06-02)
 -----------------------
 
 - Fixed bug with `feat_arr` in 
