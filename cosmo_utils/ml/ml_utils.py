@@ -252,7 +252,7 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
     return train_dict, test_dict
 
 # Scoring methods
-def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
+def scoring_methods(truth_arr, feat_arr=None, pred_arr=None, model=None,
     score_method='perc', threshold=0.1, perc=0.9):
     """
     Determines the overall score for given arrays, i.e. the `predicted`
@@ -260,12 +260,6 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
 
     Parameters
     -----------
-    feat_arr : `numpy.ndarray` or array-like, shape (n_samples, n_features)
-        Array consisting of the `predicted values`. The dimensions of
-        `feat_arr` are `n_samples` by `n_features`, where `n_samples`
-        is the number of observations, and `n_features` the number of
-        features used.
-
     truth_arr : `numpy.ndarray` or array-like, shape (n_samples, n_outcomes)
         Array consisting of the `true` values for the `n_samples`
         observations. The dimensions of `truth_arr` are
@@ -273,15 +267,21 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
         number of observations, and `n_outcomes` the number of predicted
         outcomes.
 
-    model : scikit-learn model object or `NoneType`
-        Model used to estimate the score if ``score_method == 'model_score'``
-        This variable is set to `None` by default.
+    feat_arr : `numpy.ndarray`, array-like, or `NoneType`, shape (n_samples, n_features)
+        Array consisting of the `predicted values`. The dimensions of
+        `feat_arr` are `n_samples` by `n_features`, where `n_samples`
+        is the number of observations, and `n_features` the number of
+        features used. This variable is set to `None` by default.
 
     pred_arr : `numpy.ndarray`, array-like, or `NoneType`, shape (n_samples, n_outcomes)
         Array of predicted values from `feat_arr`. If ``model == None``,
         this variable must be an array-like object. If ``model != None``,
         this variable will not be used, and will be calculated using
         the `model` object. This variable is set to `None` by default.
+
+    model : scikit-learn model object or `NoneType`
+        Model used to estimate the score if ``score_method == 'model_score'``
+        This variable is set to `None` by default.
 
     score_method : {'perc', 'threshold', 'model_score', 'r2'} `str`, optional
         Type of scoring to use when determining how well an algorithm
@@ -314,7 +314,7 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters
     # `feat_arr`
-    feat_arr_type_valid = (list, np.ndarray)
+    feat_arr_type_valid = (list, np.ndarray, NoneType)
     if not (isinstance(feat_arr, feat_arr_type_valid)):
         msg = '{0} `feat_arr` ({1}) is not a valid input type'.format(
             file_msg, type(feat_arr))
@@ -349,14 +349,20 @@ def scoring_methods(feat_arr, truth_arr, model=None, pred_arr=None,
             file_msg, threshold)
         raise LSSUtils_Error(msg)
     ##
-    ## Checking for `model` and `pred_arr`
+    ## Checking for `model`, `pred_arr` and `feat_arr`
     # If both are none
     if ((model is None) and (pred_arr is None)):
-        msg  = '{0} `model` and `pred_arr` cannot be both `None`. '
+        msg  = '{0} `model` and `pred_arr` cannot both be `None`. '
         msg += 'Only one can be `None`'
         msg  = msg.format(file_msg)
         raise LSSUtils_Error(msg)
+    # If `feat_arr` and `pred_arr` are `None`
+    if ((feat_arr is None) and (pred_arr is None)):
+        msg = '{0} `feat_arr` and `pred_arr` cannot both be `None`'.format(
+            file_msg)
+        raise TypeError(msg)
     # `pred_arr` - Type
+    # If both are `None`
     pred_arr_valid = ((list, np.ndarray))
     if (model is None):
         if not (isinstance(pred_arr, pred_arr_valid)):

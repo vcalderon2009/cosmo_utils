@@ -1,7 +1,8 @@
 0.1.42 (unreleased)
 -----------------------
 
-- No changes yet.
+- Fixed bug with `feat_arr` in 
+  :py:func:`~cosmo_utils.ml.ml_utils.scoring_methods`
 
 0.1.41 (2018-05-31)
 -----------------------
