@@ -9,7 +9,8 @@ __author__     = ['Victor Calderon']
 __copyright__  = ["Copyright 2018 Victor Calderon"]
 __email__      = ['victor.calderon@vanderbilt.edu']
 __maintainer__ = ['Victor Calderon']
-__all__        = ["reshape_arr_1d"]
+__all__        = [  "reshape_arr_1d",
+                    "array_insert"]
 """
 General tools for a day-to-day use.
 """
@@ -60,3 +61,40 @@ def reshape_arr_1d(arr):
             arr = arr.reshape(len(arr),)
 
     return arr
+
+def array_insert(arr1, arr2, axis=1):
+    """
+    Joins the two arrays into a `single` multi-dimensional array.
+
+    Parameters
+    ------------
+    arr1 : `numpy.ndarray`
+        1st array to merge
+
+    arr2 : `numpy.ndarray`
+        2nd array to merge
+
+    axis : `axis object`
+        Axis to use for the merging
+
+    Returns
+    ----------
+    arr_merged : `numpy.ndarray`
+        Merged array from `arr1` and `arr2`.
+    """
+    file_msg = fd.Program_Msg(__file__)
+    # Checking input parameters
+    arr_valid_types = (list, np.ndarray)
+    # `arr1`
+    if not (isinstance(arr1, arr_valid_types)):
+        '{0} `arr1` ({1}) is not array-like!'.format(file_msg, type(arr1))
+        raise ValueError(msg)
+    # `arr2`
+    if not (isinstance(arr2, arr_valid_types)):
+        '{0} `arr2` ({1}) is not array-like!'.format(file_msg, type(arr2))
+        raise ValueError(msg)
+    #
+    # Merging arrays
+    arr_merged = np.insert(arr1, len(arr1.T), arr2, axis=axis)
+
+    return arr3
