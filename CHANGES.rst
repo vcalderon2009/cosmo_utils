@@ -1,7 +1,7 @@
 0.1.44 (unreleased)
 -----------------------
 
-- No changes yet.
+- New function :py:func:`~cosmo_utils.utils.gen_utils.array_insert`.
 
 0.1.43 (2018-06-02)
 -----------------------
