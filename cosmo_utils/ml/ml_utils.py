@@ -253,7 +253,7 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
 
 # Scoring methods
 def scoring_methods(truth_arr, feat_arr=None, pred_arr=None, model=None,
-    score_method='perc', threshold=0.1, perc=0.9):
+    score_method='perc', threshold=0.1, perc=0.68):
     """
     Determines the overall score for given arrays, i.e. the `predicted`
     array and the `truth` array
@@ -297,9 +297,9 @@ def scoring_methods(truth_arr, feat_arr=None, pred_arr=None, model=None,
         Value to use when calculating the error within `threshold` value
         from the truth. This variable is set to `0.1` by default.
 
-    perf : float, optional
+    perc : float, optional
         Value used when determining score within some `perc` percentile
-        value form [0,1].
+        value form [0,1]. This variable is set to `0.68` by default.
 
     Returns
     -----------
