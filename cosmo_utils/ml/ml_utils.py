@@ -295,11 +295,13 @@ def scoring_methods(truth_arr, feat_arr=None, pred_arr=None, model=None,
 
     threshold : float, optional
         Value to use when calculating the error within `threshold` value
-        from the truth. This variable is set to `0.1` by default.
+        from the truth. This variable is set to `None` by default.
+        If `None`, this variable assumes a value of `0.1`.
 
     perc : float, optional
         Value used when determining score within some `perc` percentile
-        value form [0,1]. This variable is set to `0.68` by default.
+        value form [0,1]. This variable is set to `None` by default.
+        If `None`, it assumes a value of `0.68`.
 
     Returns
     -----------
