@@ -81,7 +81,7 @@ def cookiecutter_paths(path='./'):
         # Plot Directory
         plot_dir = os.path.join(base_dir, 'reports', 'figures/')
         # Source directory
-        src_dir  = os.path.join(base_dir, 'src', 'data')
+        src_dir  = os.path.join(base_dir, 'src', 'data/')
         # Data path
         data_dir = os.path.join(base_dir, 'data/')
         # External path
