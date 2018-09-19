@@ -53,7 +53,7 @@ def _retrieve_Behroozi_default_dict():
     return d
 
 ## Behroozi SHMR function
-def Behroozi_relation(log_mstar, z=0., return_mhalo_h0=False, mstar_h0=False):
+def Behroozi_relation(log_mstar, z=0.):
     """
     Returns the halo mass of a central galaxy as a function of its stellar
     mass.
@@ -68,14 +68,6 @@ def Behroozi_relation(log_mstar, z=0., return_mhalo_h0=False, mstar_h0=False):
         Redshift of the halo hosting the galaxy. If passing an array,
         it must be of the same length as the input `log_mstar`.
 
-    return_mhalo_h0 : `bool`, optional
-        If True, the function returns the halo masses in ``h=1`` units.
-        This variable is set to False by default.
-
-    mstar_h0 : `bool`, optional
-        If True, the stellar mass in `log_mstar` is converted from ``h=1``
-        units to ``h=0.7`` units. This variable is set to False by default.
-
     Returns
     -----------
     log_halo_mass : float or `np.ndarray`
@@ -84,11 +76,10 @@ def Behroozi_relation(log_mstar, z=0., return_mhalo_h0=False, mstar_h0=False):
 
     Notes
     ----------
-    The parameter values in Behroozi+10 were fit to data assuming ``h=0.7``,
-    but all halotools inputs are in ``h=1`` units. Thus we will transform
-    our input stellar mass to ``h=0.7`` units, evaluate using the
-    Behroozi parameters, and then transform back to ``h=1`` units before
-    returning the result.
+    The parameter values in Behroozi+10 were fit to data assuming ``h=0.7``.
+    Thus, we will transform our input stellar mass to ``h=0.7`` units,
+    evaluate using the Behroozi parameters, and then transform back to
+    ``h=1`` units before returning the result.
     """
     file_msg = fd.Program_Msg(__file__)
     little_h = 0.7
@@ -105,46 +96,28 @@ def Behroozi_relation(log_mstar, z=0., return_mhalo_h0=False, mstar_h0=False):
         msg = '{0} `z` ({1}) is not a valid type!'.format(
             file_msg, type(z))
         raise LSSUtils_Error(msg)
-    # `return_mhalo_h0`
-    return_mhalo_h0_valid_types = (bool)
-    if not (isinstance(return_mhalo_h0, return_mhalo_h0_valid_types)):
-        msg = '{0} `return_mhalo_h0` ({1}) is not a valid type!'.format(
-            file_msg, type(return_mhalo_h0))
-        raise LSSUtils_Error(msg)
-    # `mstar_h0`
-    mstar_h0_valid_types = (bool)
-    if not (isinstance(mstar_h0, mstar_h0_valid_types)):
-        msg = '{0} `mstar_h0` ({1}) is not a valid type!'.format(
-            file_msg, type(mstar_h0))
-        raise LSSUtils_Error(msg)
     ##
     ## Behroozi dictionary
     param_dict = _retrieve_Behroozi_default_dict()
-    ## Converting from different `h` units
-    if mstar_h0:
-        mstar = (10**log_mstar)/(little_h**2)
-    else:
-        mstar = 10.**(log_mstar)
-    # Scale factor
+    ## COnverting stellar mass from ``h=1`` units to ``h=0.7`` units.
+    mstar = (10.**log_mstar) / (little_h**2)
+    ## Scale factor
     a = 1./(1. + z)
     ##
     ## Behroozi function
-    logm0 = param_dict['smhm_m0_0'] + param_dict['smhm_m0_a']*(a - 1)
+    logm0 = param_dict['smhm_m0_0'] + param_dict['smhm_m0_a']*(a - 1.)
     m0    = 10.**logm0
-    logm1 = param_dict['smhm_m1_0'] + param_dict['smhm_m1_a']*(a - 1)
-    beta  = param_dict['smhm_beta_0'] + param_dict['smhm_beta_a']*(a - 1)
+    logm1 = param_dict['smhm_m1_0'   ] + param_dict['smhm_m1_a'   ]*(a - 1)
+    beta  = param_dict['smhm_beta_0' ] + param_dict['smhm_beta_a' ]*(a - 1)
     delta = param_dict['smhm_delta_0'] + param_dict['smhm_delta_a']*(a - 1)
     gamma = param_dict['smhm_gamma_0'] + param_dict['smhm_gamma_a']*(a - 1)
     #
     stellar_mass_by_m0 = mstar/m0
     term3_numerator    = (stellar_mass_by_m0)**delta
     term3_denominator  = 1. + (stellar_mass_by_m0)**(-gamma)
-
+    #
     log_halo_mass = logm1 + beta*np.log10(stellar_mass_by_m0)
     log_halo_mass += (term3_numerator/term3_denominator) - 0.5
-
-    # convert back from h=0.7 to h=1 and return the result
-    if return_mhalo_h0:
-        return np.log10((10.**log_halo_mass)*little_h)
-    else:
-        return log_halo_mass
+    #
+    # Convert back from ``h=0.7`` to ``h=1`` units
+    return np.log10((10.**log_halo_mass)*(little_h))

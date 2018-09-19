@@ -226,7 +226,7 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     weights=None, statfunc=np.nanmean, bin_statval='average',
     return_perc=False, failval=np.nan):
     """
-    Calculates statists for 2 arrays
+    Calculates statistics for 2 arrays
 
     Parameters
     ----------

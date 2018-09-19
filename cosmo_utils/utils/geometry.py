@@ -399,3 +399,127 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     else:
         coord_pd = pd.DataFrame(coord_dict)
         return coord_pd
+
+## Coordinate Transformation - Cartesian to Spherical coordinates
+def cart_to_sph_coords(dist, x_arr, y_arr, z_arr, return_dict=False,
+    unit='deg'):
+    """
+    Transforms cartesian coordinates (x, y, z) into spherical
+    coordinates.
+
+    Parameters
+    -----------
+    dist : `np.ndarray`
+        Array of the the distance to the N-number of objects.
+        Shape (N,).
+
+    x_arr, y_arr, z_arr : `np.ndarray`
+        Arrays of the cartesian coordinates (x, y, z) of the
+        N objects. Shape (N,). Units are in `unit`.
+
+    return_dict : {True, False}, `bool`, optional
+        If `True`, this functions returns 2 dictionaries with `spherical`
+        and `cartesian` coordinates.
+        If `False`, it returns a `pandas.DataFrame` with the columns.
+        This variable is set to `False` by default.
+
+    unit : {'dec','rad'} `str`, optional
+        Unit of the output `ra`, `dec` coordinates.
+        This variable is set to `deg` by default.
+
+    Returns
+    -----------
+    coord_dict (coord_pd) : `dict`
+        Dictionary with spherical coordinates (`ra`, `dec`) and
+        distance (`dist`) of N elements. This value is returned if
+        `return_dict` is set to `True`. If not, a `pd.DataFrame` is
+        returned.
+    """
+    file_msg = fd.Program_Msg(__file__)
+    ## Check types of elements
+    # Units
+    unit_arr = ['deg', 'rad']
+    if not (unit in unit_arr):
+        '{0} `unit` ({1}) is not a valid input!'.format(
+            file_msg, unit)
+    # Valid types
+    valid_types = (float, int, np.ndarray, list)
+    # X-coordinate
+    if not (isinstance(x_arr, valid_types)):
+        msg = '{0} `x_arr` ({1}) is not a valid type!'.format(
+            file_msg, type(x_arr))
+        raise LSSUtils_Error(msg)
+    # Y-coordinate
+    if not (isinstance(y_arr, valid_types)):
+        msg = '{0} `y_arr` ({1}) is not a valid type!'.format(
+            file_msg, type(y_arr))
+        raise LSSUtils_Error(msg)
+    # Z-coordinate
+    if not (isinstance(z_arr, valid_types)):
+        msg = '{0} `z_arr` ({1}) is not a valid type!'.format(
+            file_msg, type(z_arr))
+        raise LSSUtils_Error(msg)
+    # Distance
+    if not (isinstance(dist, valid_types)):
+        msg = '{0} `dist` ({1}) is not a valid type!'.format(
+            file_msg, type(dist))
+        raise LSSUtils_Error(msg)
+    ##
+    ## Check type of elements
+    # X-Coordinate
+    if (isinstance(x_arr, float) or isinstance(x_arr, int)):
+        x_arr = np.array([x_arr])
+    else:
+        x_arr = np.array(x_arr)
+    # Y-Coordinate
+    if (isinstance(y_arr, float) or isinstance(y_arr, int)):
+        y_arr = np.array([y_arr])
+    else:
+        y_arr = np.array(y_arr)
+    # Z-Coordinate
+    if (isinstance(z_arr, float) or isinstance(z_arr, int)):
+        z_arr = np.array([z_arr])
+    else:
+        z_arr = np.array(z_arr)
+    # Distance
+    if (isinstance(dist, float) or isinstance(dist, int)):
+        dist = np.array([dist])
+    else:
+        dist = np.array(dist)
+    ##
+    ## Initializing pandas DataFrame
+    dict_keys  = ['x', 'y', 'z', 'dist']
+    coord_dict = dict(zip(dict_keys, np.vstack([x_arr, y_arr, z_arr, dist])))
+    ##
+    ## Cartesian to Spherical coordinates
+    ##
+    ## - Normalized cartesian coordinates
+    cart_arr = np.column_stack([x_arr, y_arr, z_arr])
+
+
+
+
+
+    (   x_val,
+        y_val,
+        z_val) = cart_arr/float(dist)
+    # Distance to object
+    dist = float(dist)
+    ## Declination
+    dec_val = 90. - num.degrees(num.arccos(z_val))
+    ## Right ascension
+    if x_val == 0:
+        if y_val > 0.:
+            ra_val = 90.
+        elif y_val < 0.:
+            ra_val = -90.
+    else:
+        ra_val = num.degrees(num.arctan(y_val/x_val))
+    ##
+    ## Seeing on which quadrant the point is at
+    if x_val < 0.:
+        ra_val += 180.
+    elif (x_val >= 0.) and (y_val < 0.):
+        ra_val += 360.
+
+    return ra_val, dec_val
