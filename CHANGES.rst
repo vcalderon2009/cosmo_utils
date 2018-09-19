@@ -1,7 +1,9 @@
-0.1.44 (unreleased)
+0.1.44 (2018-09-19)
 -----------------------
 
 - New function :py:func:`~cosmo_utils.utils.gen_utils.array_insert`.
+- Updated function :py:func:`~cosmo_utils.mock_catalogues.shmr_funcs.Behroozi_relation`
+  and fixed bug.
 
 0.1.43 (2018-06-02)
 -----------------------
