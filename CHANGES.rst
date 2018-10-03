@@ -1,7 +1,8 @@
-0.1.45 (unreleased)
+0.1.45 (2018-10-03)
 -----------------------
 
-- No changes yet
+- Added new class for determining average number of galaxies as function
+  of logarithmic halo mass :py:class:`~cosmo_utils.mock_catalogues.hod_funcs.HOD`
 
 0.1.44 (2018-09-19)
 -----------------------
