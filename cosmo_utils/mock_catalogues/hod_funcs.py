@@ -13,7 +13,7 @@ __all__        = [  "HOD"]
 
 ## Import modules
 import numpy as np
-import panda as pd
+import pandas as pd
 from   scipy                         import special, stats
 from   cosmo_utils.utils             import stats_funcs
 from   cosmo_utils.utils             import file_utils as fd
