@@ -14,6 +14,7 @@ __all__        = [  "HOD"]
 ## Import modules
 import numpy as np
 import pandas as pd
+import warnings
 from   scipy                         import special, stats
 from   cosmo_utils.utils             import stats_funcs
 from   cosmo_utils.utils             import file_utils as fd
@@ -33,6 +34,12 @@ class HOD(object):
         """
         Parameters
         -----------
+        use_identity : `bool`, optional
+            If True, it uses the identity of expectation values, i.e.
+            ``<A> + <B> = <A + B>``. If False, it returns the number of
+            galaxies by computing the total number of central and
+            satellite galaxies. This variable is set to 'True' by default.
+
         log_m0 : `float`
             Halo mass, below which there are no satellite galaxies.
         
@@ -45,11 +52,24 @@ class HOD(object):
         sigma_logM : `float`
             Scatter around `Mmin`
 
-        log_alpha : `float`
+        alpha : `float`
             Slope of the power-law occupation function at high masses.
+
+        mass_bin : `float`, optional
+            Bin/step size of the logarithmic halo mass array. This variable
+            is set to ``0.01`` by default.
+
+        log_mhalo_min : `float`, optional
+            Minimum logarithmic halo mass to consider. This variable is set
+            to ``10.`` by default.
+
+        log_mhalo_max : `float`, optional
+            Maximum logarithmic halo mass to consider. This variable is set
+            to ``15.`` by default.
         """
         super().__init__()
         # Assigning variables
+        self.use_identity         = kwargs.get('use_identity', True)
         self.log_m0               = kwargs.get('log_m0', 12.25)
         self.log_m1               = kwargs.get('log_m1', 12.56)
         self.log_Mmin             = kwargs.get('log_Mmin',  11.36)
@@ -60,15 +80,12 @@ class HOD(object):
         self.Mmin                 = 10.**self.log_Mmin
         # Extra variables
         self.hod_params           = self._retrieve_hod_params_dict()
-        self.mass_bin             = kwargs.get('mass_bin', 0.4)
-        self.n_draws              = kwargs.get('n_draws', 1000)
+        self.mass_bin             = kwargs.get('mass_bin', 0.01)
         self.log_mhalo_min        = kwargs.get('log_mhalo_min', 10.)
         self.log_mhalo_max        = kwargs.get('log_mhalo_max', 15.)
         # Arrays
         self.log_mhalo_arr        = self._log_mhalo_arr_create()
-        self.log_mhalo_bins       = self._log_mhalo_bins_create()
-        self.log_mhalo_repeat_arr = self._log_mhalo_repeat_arr_create()
-        self.rands_arr            = self._random_arr_create()
+        self.mhalo_arr            = 10.**self.log_mhalo_arr
 
     # Average number of central galaxies as function of halo mass.
     def ncen_avg(self):
@@ -83,7 +100,7 @@ class HOD(object):
             halo mass.
         """
         # Special error function component
-        erf_component = (self.log_mhalo_repeat_arr - self.log_Mmin)
+        erf_component  = (self.log_mhalo_arr - self.log_Mmin)
         erf_component /= self.sigma_logM
         # Average number of centrals
         ncen_avg_arr = 0.5 * (1. + special.erf(erf_component))
@@ -98,26 +115,24 @@ class HOD(object):
 
         Returns
         -----------
-        nsat_avg : `numpy.ndarray`
+        nsat_avg_arr : `numpy.ndarray`
             Array of average number of central galaxies as function of
             halo mass.
         """
-        # Array of halo masses
-        mass_repeat_arr     = 10**self.log_mhalo_repeat_arr
-        # Average number of centrals
+        # Average number of central galaxies
         ncen_avg_arr = self.ncen_avg()
-        # Average number of satellite galaxies
-        nsat_component = ((mass_repeat_arr - self.m0)/self.m1)**(self.alpha)
-        nsat_avg_arr   = ncen_avg_arr * nsat_component
-        # Replacing NaN's with zeros
-        nsat_avg_arr[np.isnan(nsat_avg_arr)] = 0.
+        # Satellite galaxies
+        nsat_comp = np.array([np.power((xx - self.m0)/self.m1, self.alpha)
+                        if (xx >= self.m0) else 0. for xx in self.mhalo_arr])
+        nsat_avg_arr = ncen_avg_arr * nsat_comp
+        # nsat_avg_arr[np.isnan(nsat_avg_arr)] = 0.
 
         return nsat_avg_arr
 
     # Average number of galaxies (centrals and satellites) as function of halo
     # mass.
     def ngals_avg(self, arr_len=10, bin_statval='left',
-        return_pd_dict=True):
+        return_pd_dict=True, use_identity=True):
         """
         Computes the average number of galaxies (centrals + satellites) as
         function of halo mass.
@@ -134,127 +149,54 @@ class HOD(object):
 
         Returns
         ---------
-        ngals_dict : `dict`
-            Dictionary containing information about the `mean`/`average`
-            number of 1) central, 2) satellite, and 3) total number of galaxies
-            based on a given set of HOD parameters. The keys of the resulting
-            dicitonaries are:
-            ['ncen_avg_data', 'nsat_avg_data', 'ncen_binned',
-                'nsat_binned','ngal_binned']
-
-        Notes
-        -------
-        Each of the data in `ngals_dict` consists of two columns, with the
-        first element corresponding to logarithmic halo masses, and the second
-        to the statistic observed.
+        ngal_choice : `numpy.ndarray`
+            Array of total number of galaxies. This variable depends on the
+            choice of `use_identity`.
         """
         # Average number of central galaxies
         ncen_avg_arr = self.ncen_avg()
         # Average number of satellite galaxies
         nsat_avg_arr = self.nsat_avg()
-        # Total number of central galaxies
-        n_cen_arr = (ncen_avg_arr / self.rands_arr).astype(int)
-        n_cen_arr[np.nonzero(n_cen_arr)] = int(1)
-        # Total number of satellite galaxies
-        n_sat_arr = np.array([np.random.poisson(nsat_avg_arr[ii])
-                        if ((ncen_avg_arr[ii] != 0) and (nsat_avg_arr[ii] > 0))
-                        else 0 for ii in range(len(n_cen_arr))])
         # Total number of galaxies
-        n_gal_arr = n_cen_arr + n_sat_arr
-        # Average number of galaxies as function of halo mass - Binning
-        (   log_mhalo_repeat_mean_ngals,
-            n_gal_mean_binned,
-            n_gal_std_binned,
-            n_gal_std_err_binned) = stats_funcs.Stats_one_arr(
-                                        self.log_mhalo_repeat_arr,
-                                        n_gal_arr,
-                                        base=self.mass_bin,
-                                        arr_digit='n',
-                                        arr_len=arr_len,
-                                        bin_statval=bin_statval)
-        # Binning average number of central galaxies
-        (   log_mhalo_repeat_mean_ncen,
-            ncen_mean_binned,
-            ncen_std_binned,
-            ncen_std_err_binned) = stats_funcs.Stats_one_arr(
-                                        self.log_mhalo_repeat_arr,
-                                        n_cen_arr,
-                                        base=self.mass_bin,
-                                        arr_digit='n',
-                                        arr_len=arr_len,
-                                        bin_statval=bin_statval)
-        # Binning average number of satellite galaxies
-        (   log_mhalo_repeat_mean_nsats,
-            nsats_mean_binned,
-            nsats_std_binned,
-            nsats_std_err_binned) = stats_funcs.Stats_one_arr(
-                                        self.log_mhalo_repeat_arr,
-                                        n_sat_arr,
-                                        base=self.mass_bin,
-                                        arr_digit='n',
-                                        arr_len=arr_len,
-                                        bin_statval=bin_statval)
-        # Constructing DataFrames
-        if return_pd_dict:
-            # Average number of central galaxies
-            ncen_avg_data = pd.DataFrame({
-                                    'log_mhalo':self.log_mhalo_repeat_arr,
-                                    'ncen_avg': ncen_avg_arr})
-            # Average number of satellite galaxies
-            nsat_avg_data = pd.DataFrame({
-                                    'log_mhalo':self.log_mhalo_repeat_arr,
-                                    'nsat_avg': nsat_avg_arr})
-            # Average number of galaxies (cens + sats)
-            ngal_binned = pd.DataFrame({
-                                    'log_mhalo':log_mhalo_repeat_mean_ngals,
-                                    'ngal_avg': n_gal_mean_binned})
-            # Binned central galaxies
-            ncen_binned = pd.DataFrame({
-                                    'log_mhalo':log_mhalo_repeat_mean_ncen,
-                                    'ncen_binned': ncen_mean_binned})
-            # Binned satellite galaxies
-            nsat_binned = pd.DataFrame({
-                                    'log_mhalo':log_mhalo_repeat_mean_nsats,
-                                    'nsat_binned': nsats_mean_binned})
+        ncen_arr = np.array([int(1) if xx > 0 else 0 for xx in ncen_avg_arr])
+        nsat_arr = np.array([np.random.poisson(nsat_avg_arr[ii])
+                        if ((ncen_avg_arr[ii] != 0) and (nsat_avg_arr[ii] > 0))
+                        else 0 for ii in range(len(ncen_arr))])
+        ngal_arr = ncen_arr + nsat_arr
+        # Average number of galaxies using identity for expectation values
+        ngal_avg_arr = ncen_avg_arr + nsat_avg_arr
+
+        if use_identity:
+            ngal_choice = ngal_avg_arr
         else:
-            # Averages
-            ncen_avg_data = np.column_stack((   self.log_mhalo_repeat_arr,
-                                                ncen_avg))
-            nsat_avg_data = np.column_stack((   self.log_mhalo_repeat_arr,
-                                                nsat_avg))
-            # Binned data
-            ncen_binned = np.column_stack((log_mhalo_repeat_mean_ncen,
-                                            ncen_mean_binned))
-            nsat_binned = np.column_stack((log_mhalo_repeat_mean_nsats,
-                                            nsats_mean_binned))
-            ngal_binned = np.column_stack((log_mhalo_repeat_mean_ngals,
-                                            n_gal_mean_binned))
-        #
-        # Saving as dictionary
-        ngals_dict = {}
-        ngals_dict['ncen_avg_data'] = ncen_avg_data
-        ngals_dict['nsat_avg_data'] = nsat_avg_data
-        ngals_dict['ncen_binned'  ] = ncen_binned
-        ngals_dict['nsat_binned'  ] = nsat_binned
-        ngals_dict['ngal_binned'  ] = ngal_binned
+            ngal_choice = ngal_arr
 
-        return ngals_dict
+        return ngal_choice
 
-    # Creating random number of halo masses
-    def _log_mhalo_bins_create(self):
+    def ngals_avg_pd_create(self):
         """
-        Creates an array of fictitious halo masses.
+        Creates a DataFrame with the information of mass and the average
+        numbers of 1) Centrals, 2) satellites, and 3) all galaxies.
 
         Returns
         --------
-        log_mhalo_bins : `numpy.ndarray`
-            Array of bin edges of logarithmic halo masses.
+        gals_pd : `pd.DataFrame`
+            DataFrame containing info about the average numbers of different
+            types of galaxies and their corresponding halo masses.
         """
-        log_mhalo_bins = stats_funcs.Bins_array_create( [self.log_mhalo_min,
-                                                        self.log_mhalo_max],
-                                                        base=self.mass_bin)
+        # Average number of central galaxies
+        ncen_avg_arr = self.ncen_avg()
+        # Average number of satellite galaxies
+        nsat_avg_arr = self.nsat_avg()
+        # Average number of all galaxies
+        ngal_avg_arr = self.ngals_avg()
+        # Converting to DataFrame
+        gals_pd      = pd.DataFrame({   'ncen': ncen_avg_arr,
+                                        'nsat': nsat_avg_arr,
+                                        'ngal': ngal_avg_arr,
+                                        'log_mhalo': self.log_mhalo_arr})
 
-        return log_mhalo_bins
+        return gals_pd
 
     def _log_mhalo_arr_create(self):
         """
@@ -266,39 +208,11 @@ class HOD(object):
             Array of fictitious logarithmic halo masses.
         """
         # Constants
-        log_mhalo_arr = np.random.uniform(  self.log_mhalo_min,
-                                            self.log_mhalo_max,
-                                            self.n_draws)
+        log_mhalo_arr = np.arange(  self.log_mhalo_min,
+                                    self.log_mhalo_max,
+                                    self.mass_bin)
 
         return log_mhalo_arr
-
-    def _log_mhalo_repeat_arr_create(self):
-        """
-        Creates a tiled version of `log_mhalo_arr` array.
-
-        Returns
-        ---------
-        log_mhalo_repeat_arr : `numpy.ndarray`
-            Tiled array of logarithmic halo masses
-        """
-        log_mhalo_repeat_arr = np.tile(self.log_mhalo_arr, self.n_draws)
-
-        return log_mhalo_repeat_arr
-
-    def _random_arr_create(self):
-        """
-        Creates an array of random floats [0,1] with specified shape.
-
-        Returns
-        ---------
-        rands_arr : `numpy.ndarray`
-            Array of random float with specified shape.
-        """
-        rand_shape = len(self.log_mhalo_repeat_arr)
-        rands_arr  = np.random.random(rand_shape)
-
-        return rands_arr
-
 
     def _retrieve_hod_params_dict(self):
         """
