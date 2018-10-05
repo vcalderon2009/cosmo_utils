@@ -180,7 +180,7 @@ class HOD(object):
 
         Returns
         --------
-        gals_pd : `pd.DataFrame`
+        gals_pd : `pandas.DataFrame`
             DataFrame containing info about the average numbers of different
             types of galaxies and their corresponding halo masses.
         """
