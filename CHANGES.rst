@@ -1,7 +1,7 @@
-0.1.46 (unreleased)
+0.1.46 (2018-10-04)
 -----------------------
 
-- No changes yet.
+- Updated function :py:class:`~cosmo_utils.mock_catalogues.hod_funcs.HOD` to accomodate for better use.
 
 0.1.45 (2018-10-03)
 -----------------------
