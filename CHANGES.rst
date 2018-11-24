@@ -1,7 +1,7 @@
-0.1.47 (unreleased)
+0.1.47 (2018-11-24)
 -----------------------
 
-- No changes yet
+- Fixed bug in :py:func:`~cosmo_utils.utils.stats_funcs.Stats_one_arr`.
 
 0.1.46 (2018-10-04)
 -----------------------
