@@ -146,7 +146,6 @@ def url_files_download(url, ext, outdir, check_exist=False, create_dir=False,
         Options:
             - 'tqdm' : Uses a tqdm-based progress bar
             - 'native': Used the wget-based native progress bar.
-
     """
     file_msg = fd.Program_Msg(__file__)
     ## Checking for file type
@@ -176,7 +175,7 @@ def url_files_download(url, ext, outdir, check_exist=False, create_dir=False,
             type(create_dir))
         raise TypeError(msg)
     # `bar` - Type
-    if not (isinstance(bar_opt, bool)):
+    if not (isinstance(bar_opt, str)):
         msg = '`bar_opt` ({0}) must be of `boolean` type!'.format(
             type(bar_opt))
         raise TypeError(msg)
