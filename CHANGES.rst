@@ -1,4 +1,4 @@
-0.1.48 (unreleased)
+0.1.49 (unreleased)
 -----------------------
 
 - No changes yet.

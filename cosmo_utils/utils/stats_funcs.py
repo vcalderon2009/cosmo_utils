@@ -339,20 +339,20 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     y_bins_data = np.array([y[x_digits == ii] for ii in x_digits_bins])
     ##
     ## Selecting data in bins
-    # Centered around the average
-    if (bin_statval == 'average'):
-        x_stat = np.array([statfunc(ii) if len(ii) > arr_len else failval
-            for ii in x_bins_data])
     # Left-hand side of the bin
     if (bin_statval == 'left'):
         x_stat = np.array([x_bins[:-1][ii] if
             len(x_bins_data[ii]) > arr_len else failval for ii
             in range(len(x_bins_data))])
-    # Right-hand side of the bin
-    if (bin_statval == 'right'):
-        x_stat = np.array([x_bins[1:][ii] if
+    elif (bin_statval == 'right'):
+        # Right-hand side of the bin
+        x_stat = np.array([x_bins[:-1][ii] if
             len(x_bins_data[ii]) > arr_len else failval for ii
             in range(len(x_bins_data))])
+    elif (bin_statval == 'average'):
+        # Centered around the average
+        x_stat = np.array([np.nanmean(ii) if len(ii) > arr_len else failval
+            for ii in x_bins_data])
     ##
     ## Determining the values in `y`
     # `stat_function`
