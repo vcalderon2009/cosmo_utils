@@ -1,9 +1,4 @@
-0.1.49 (unreleased)
------------------------
-
-- No changes yet.
-
-0.1.48 (2018-12-03)
+0.1.50 (2018-12-03)
 -----------------------
 
 - Added :py:func:`~cosmo_utils..utils.web_utils.url_file_list` and
