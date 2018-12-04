@@ -100,11 +100,17 @@ def url_file_list(url, ext):
     page = requests.get(url).text
     # Converting to BeautifulSoup format
     soup = BeautifulSoup(page, 'html.parser')
-    # Obtaining list of files
-    files_arr = np.array([url + '/' + node.get('href') for node in
-                        soup.find_all('a') if node.get('href').endswith(ext)])
+    ## Obtaining list of files
+    # Removing files that are NOT strings
+    files_arr_pre = np.array([ xx.get('href') for xx in soup.find_all('a')
+                                if isinstance(xx.get('href'), str)])
+    # Only those finishing with certain extension
+    files_pre_ext = np.array([xx for xx in files_arr_pre if xx.endswith(ext)])
+    # Checking if file contains string 'http://'
+    files_pre_web = np.array([(url + '/' + xx) if not ('//' in xx) else xx
+                        for xx in files_pre_ext])
     # Sorting out file array
-    files_arr = np.sort(files_arr)
+    files_arr = np.sort(files_pre_web)
 
     return files_arr
 
