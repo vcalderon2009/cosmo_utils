@@ -1,7 +1,7 @@
-0.1.52 (unreleased)
+0.1.52 (2018-12-03)
 -----------------------
 
-- No changes yet.
+- Fixed bug in :py:func:`~cosmo_utils.utils.web_utils.url_files_download` again.
 
 0.1.51 (2018-12-03)
 -----------------------
