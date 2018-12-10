@@ -133,7 +133,7 @@ def abundance_matching_f(dict1, dict2, volume1=1., volume2=1., reverse=True,
             file_msg, type(dict2))
         raise LSSUtils_Error(msg)
     # 2nd property
-    var2  = np.asarray(dict2['var '])
+    var2  = np.asarray(dict2['var' ])
     dens2 = np.asarray(dict2['dens'])
     #
     # `dens1_opt`
