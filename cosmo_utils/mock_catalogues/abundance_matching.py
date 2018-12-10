@@ -59,11 +59,6 @@ def reversed_arrays(x, y):
     # x- and y-array shapes
     x = np.asarray(x)
     y = np.asarray(y)
-    # Checking dimensions
-    if not (x.shape == y.shape):
-        msg = '{0} The shape of `x` ({1}) and `y` ({2}) are not the same'
-        msg = msg.format(file_msg, x.shape, y.shape)
-        raise LSSUtils_Error(msg)
     #
     # Checking if arrays increase or decrease monotonically
     x_diff = np.diff(x).sum()
