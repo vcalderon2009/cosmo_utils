@@ -146,9 +146,9 @@ def abundance_matching_f(dict1, dict2, volume1=1., volume2=1., reverse=True,
         mono_opt_1 = reversed_arrays(var1, var2)
         # Monotonically increasing
         if mono_opt_1:
-            counts_1 = np.array([np.where(var1 > x)[0].size for x in var1])
+            counts_1 = np.array([np.where(var1 > x)[0].size for x in var1]) + 1
         else:
-            counts_1 = np.array([np.where(var1 < x)[0].size for x in var1])
+            counts_1 = np.array([np.where(var1 < x)[0].size for x in var1]) + 1
         #
         # Determining density of 1st property
         dens_1 = counts_1.astype(float) / volume1
