@@ -1,7 +1,7 @@
-0.1.53 (unreleased)
+0.1.53 (2018-12-10)
 -----------------------
 
-- No changes yet.
+- Fixed bug in :py:func:`~cosmo_utils.mock_catalogues.abundance_matching.abundance_matching_f` function.
 
 0.1.52 (2018-12-03)
 -----------------------
