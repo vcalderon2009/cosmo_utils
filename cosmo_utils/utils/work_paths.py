@@ -159,7 +159,7 @@ def get_sdss_catl_dir(path='./'):
 
         Options:
             - 1 : The `sdss_catl_path` environment variable was found
-            - 2 : A local path is being used.
+            - 0 : A local path is being used.
     """
     ## Path to catalogues
     try:
