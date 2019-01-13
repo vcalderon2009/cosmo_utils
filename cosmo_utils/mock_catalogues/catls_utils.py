@@ -222,7 +222,7 @@ def catl_keys_prop(catl_kind, catl_info='members', return_type='list'):
 ## Extracting path of synthetic catalogues
 def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
     catl_info='members', halotype='fof', clf_method=3, hod_n=0, clf_seed=1235,
-    dv=1.0, perf_opt=False, print_filedir=True):
+    dv=1.0, sigma_clf_c=0.1417, perf_opt=False, print_filedir=True):
     """
     Extracts the path to the synthetic catalogues.
 
@@ -288,6 +288,10 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
     dv : float, optional
         Difference between galaxy and mass velocity profiles
         (v_g-v_c)/(v_m-v_c). This value is set to `1.0` by default.
+
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies in the CLF.
+        This variable is set to ``0.1417`` by default.
 
     perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
@@ -364,6 +368,16 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
     if not (dv > 0):
         msg = '{0} `dv` ({1}) must be larger than 0!'.format(file_msg, dv)
         raise LSSUtils_Error(msg)
+    # `sigma_clf_c` - Type
+    if not (isinstance(sigma_clf_c, float)):
+        msg = '{0} `sigma_clf_c` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(sigma_clf_c))
+        raise LSSUtils_Error(msg)
+    # `sigma_clf_c` - Value
+    if not (sigma_clf_c >= 0.):
+        msg = '{0} `sigma_clf_c` ({1}) must be larger than 0!'
+        msg = msg.format(file_msg, sigma_clf_c)
+        raise LSSUtils_Error(msg)
     #
     # Type of catalogue
     if catl_info == 'members':
@@ -405,6 +419,7 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
                                 'hod_model_{0}'.format(hod_n),
                                 'clf_seed_{0}'.format(clf_seed),
                                 'clf_method_{0}'.format(clf_method),
+                                'sigma_c_{0}'.format(sigma_clf_c),
                                 catl_type,
                                 'Mr' + sample_s,
                                 catl_info_perf_str)
@@ -424,8 +439,8 @@ def catl_sdss_dir(catl_kind='data', catl_type='mr', sample_s='19',
 # Extracting list of synthetic catalogues given input parameters
 def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
     datatype='.hdf5', catl_info='members', halotype='fof', clf_method=3,
-    hod_n=0, clf_seed=1235, dv=1.0, perf_opt=False, return_len=False,
-    print_filedir=True):
+    hod_n=0, clf_seed=1235, dv=1.0, sigma_clf_c=0.1417, perf_opt=False,
+    return_len=False, print_filedir=True):
     """
     Extracts a list of synthetic catalogues given input parameters
 
@@ -495,6 +510,10 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
     dv : float, optional
         Difference between galaxy and mass velocity profiles
         (v_g-v_c)/(v_m-v_c). This value is set to `1.0` by default.
+
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies in the CLF.
+        This variable is set to ``0.1417`` by default.
 
     perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
@@ -575,6 +594,16 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
     if not (dv > 0):
         msg = '{0} `dv` ({1}) must be larger than 0!'.format(file_msg, dv)
         raise LSSUtils_Error(msg)
+    # `sigma_clf_c` - Type
+    if not (isinstance(sigma_clf_c, float)):
+        msg = '{0} `sigma_clf_c` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(sigma_clf_c))
+        raise LSSUtils_Error(msg)
+    # `sigma_clf_c` - Value
+    if not (sigma_clf_c >= 0.):
+        msg = '{0} `sigma_clf_c` ({1}) must be larger than 0!'
+        msg = msg.format(file_msg, sigma_clf_c)
+        raise LSSUtils_Error(msg)
     # `return_len`
     if not (isinstance(return_len, bool)):
         msg = '{0} `return_len` ({1}) is not a valid type!'.format(file_msg,
@@ -596,10 +625,11 @@ def extract_catls(catl_kind='data', catl_type='mr', sample_s='19',
                                 hod_n=hod_n,
                                 clf_seed=clf_seed,
                                 dv=dv,
+                                sigma_clf_c=sigma_clf_c,
                                 perf_opt=perf_opt,
                                 print_filedir=print_filedir)
     #
-    # Convertint to array
+    # Converting to array
     catl_arr = np.sort(fd.Index(filedir, datatype))
     # Checking number of elements
     if len(catl_arr) == 0:
@@ -821,7 +851,7 @@ def sdss_catl_clean_nmin(catl_pd, catl_kind, catl_info='members', nmin=1,
 # Merges the member and group catalogues for a given set of input parameters
 def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     sample_s='19', halotype='fof', clf_method=3, hod_n=0, clf_seed=1235,
-    dv=1.0, perf_opt=False, return_memb_group=False, print_filedir=False):
+    dv=1.0, sigma_clf_c=0.1417, perf_opt=False, return_memb_group=False, print_filedir=False):
     """
     Merges the member and group catalogues for a given set of input parameters,
     and returns a modified version of the galaxy group catalogues with added
@@ -887,6 +917,10 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     dv : float, optional
         Difference between galaxy and mass velocity profiles
         (v_g-v_c)/(v_m-v_c). This value is set to `1.0` by default.
+
+    sigma_clf_c : `float`, optional
+        Value of the scatter in log(L) for central galaxies in the CLF.
+        This variable is set to ``0.1417`` by default.
 
     perf_opt : `bool`, optional
         If True, it chooses to analyze the `perfect` set of synthetic
@@ -964,6 +998,16 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
     if not (dv > 0):
         msg = '{0} `dv` ({1}) must be larger than 0!'.format(file_msg, dv)
         raise LSSUtils_Error(msg)
+    # `sigma_clf_c` - Type
+    if not (isinstance(sigma_clf_c, float)):
+        msg = '{0} `sigma_clf_c` ({1}) is not a valid input type!'
+        msg = msg.format(file_msg, type(sigma_clf_c))
+        raise LSSUtils_Error(msg)
+    # `sigma_clf_c` - Value
+    if not (sigma_clf_c >= 0.):
+        msg = '{0} `sigma_clf_c` ({1}) must be larger than 0!'
+        msg = msg.format(file_msg, sigma_clf_c)
+        raise LSSUtils_Error(msg)
     # `hod_n`
     if not (hod_n in hod_n_valid):
         msg = '{0} `hod_n` ({1}) is not a valid input!'.format(file_msg,
@@ -995,6 +1039,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
                                     hod_n=hod_n,
                                     clf_seed=clf_seed,
                                     dv=dv,
+                                    sigma_clf_c=sigma_clf_c,
                                     perf_opt=perf_opt,
                                     catl_info='members',
                                     return_len=True,
@@ -1015,6 +1060,7 @@ def catl_sdss_merge(catl_pd_ii, catl_kind='data', catl_type='mr',
                                 halotype=halotype,
                                 clf_method=clf_method,
                                 dv=dv,
+                                sigma_clf_c=sigma_clf_c,
                                 hod_n=hod_n,
                                 clf_seed=clf_seed,
                                 perf_opt=perf_opt,
