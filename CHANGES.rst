@@ -1,7 +1,8 @@
-0.1.54 (unreleased)
+0.1.54 (2019-01-13)
 -----------------------
 
-- No changes yet.
+- Added new feature ``sigma_clf_c`` which corresponds to the scatter in
+  ``log(L)`` for central galaxies in the `conditional luminosity function`.
 
 0.1.53 (2018-12-10)
 -----------------------
