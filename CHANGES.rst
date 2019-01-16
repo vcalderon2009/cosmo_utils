@@ -1,7 +1,8 @@
-0.1.55 (unreleased)
+0.1.55 (2019-01-16)
 -----------------------
 
-- No changes yet.
+- Modified the function `~cosmo_utils.ml.ml_utils.train_test_dataset` to accept
+  `pandas.DataFrame` input variables.
 
 0.1.54 (2019-01-13)
 -----------------------

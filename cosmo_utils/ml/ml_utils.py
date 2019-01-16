@@ -17,6 +17,7 @@ __all__        = ["data_preprocessing",
 import scipy
 
 import numpy as np
+import pandas as pd
 
 from cosmo_utils.utils import file_utils as fd
 from cosmo_utils.utils import gen_utils as gu
@@ -39,7 +40,7 @@ def data_preprocessing(feat_arr, pre_opt='min_max', reshape=False):
 
     Parameters
     -----------
-    feat_arr : `numpy.ndarray`
+    feat_arr : `numpy.ndarray`, `list`, `pandas.DataFrame`
         Array of feature values. This array is used for training a
         ML algorithm.
 
@@ -70,7 +71,7 @@ def data_preprocessing(feat_arr, pre_opt='min_max', reshape=False):
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters
     # `feat_arr`
-    feat_arr_type_valid = (list, np.ndarray)
+    feat_arr_type_valid = (list, np.ndarray, pd.DataFrame)
     if not (isinstance(feat_arr, feat_arr_type_valid)):
         msg = '{0} `feat_arr` ({1}) is not a valid input type'.format(
             file_msg, type(feat_arr))
@@ -112,20 +113,21 @@ def data_preprocessing(feat_arr, pre_opt='min_max', reshape=False):
 
 # Train-Test Data Split
 def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
-    shuffle_opt=True, random_state=0, test_size=0.25, reshape=False):
+    shuffle_opt=True, random_state=0, test_size=0.25, reshape=False,
+    return_idx=False):
     """
     Function to create the training and testing datasets for a given set
     of features array and predicted array.
 
     Parameters
     -----------
-    pred_arr : `numpy.ndarray` or array-like, shape (n_samples, n_outcomes)
+    pred_arr : `pandas.DataFrame` `numpy.ndarray` or array-like, shape (n_samples, n_outcomes)
         Array consisting of the `predicted values`. The dimensions of
         `pred_arr` are `n_samples` by `n_outcomes`, where `n_samples` is the
         number of observations, and `n_outcomes` the number of predicted
         outcomes.
 
-    feat_arr : `numpy.ndarray` or array-like, shape (n_samples, n_features)
+    feat_arr : `numpy.ndarray`, `pandas.DataFrame` or array-like, shape (n_samples, n_features)
         Array consisting of the `predicted values`. The dimensions of
         `feat_arr` are `n_samples` by `n_features`, where `n_samples`
         is the number of observations, and `n_features` the number of
@@ -159,6 +161,10 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
         equal to (ncols, 1), where `ncols` is the number of columns.
         This variable is set to `False` by default.
 
+    return_idx : `bool`, optional
+        If `True`, it returns the indices of the `training` and `testing`
+        datasets. This variable is set to `False` by default.
+
     Returns
     -----------
     train_dict : `dict`
@@ -174,13 +180,13 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
     file_msg = fd.Program_Msg(__file__)
     ## Checking input parameters
     # `pred_arr`
-    pred_arr_type_valid = (list, np.ndarray)
+    pred_arr_type_valid = (list, np.ndarray, pd.DataFrame)
     if not (isinstance(pred_arr, pred_arr_type_valid)):
         msg = '{0} `pred_arr` ({1}) is not a valid input type'.format(
             file_msg, type(pred_arr))
         raise LSSUtils_Error(msg)
     # `feat_arr`
-    feat_arr_type_valid = (list, np.ndarray)
+    feat_arr_type_valid = (list, np.ndarray, pd.DataFrame)
     if not (isinstance(feat_arr, feat_arr_type_valid)):
         msg = '{0} `feat_arr` ({1}) is not a valid input type'.format(
             file_msg, type(feat_arr))
@@ -208,6 +214,21 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
         msg = '{0} `test_size` ({1}) must be in range (0,1)'.format(
             file_msg, test_size)
         raise LSSUtils_Error(msg)
+    ##
+    ## Checking indices of `pred_arr` and `feat_arr`
+    if return_idx:
+        # If object is a DataFrame
+        if (    isinstance(pred_arr, pd.DataFrame) and
+                isinstance(feat_arr, pd.DataFrame)):
+            pred_arr_idx = pred_arr.index.values
+            feat_arr_idx = feat_arr.index.values
+        else:
+            pred_arr_idx = np.arange(len(pred_arr))
+            feat_arr_idx = np.arange(len(feat_arr))
+        # Reshaping if necessary
+        if reshape:
+            pred_arr_idx = gu.reshape_arr_1d(pred_arr_idx)
+            feat_arr_idx = gu.reshape_arr_1d(feat_arr_idx)
     ##
     ## Checking dimensions of `pred_arr` and `feat_arr`
     pred_arr = np.asarray(pred_arr)
@@ -242,12 +263,36 @@ def train_test_dataset(pred_arr, feat_arr, pre_opt='min_max',
                                                         test_size=test_size,
                                                         shuffle=shuffle_opt,
                                                         random_state=random_state)
+    # Returning indices if necessary
+    if return_idx:
+        # Splitting to `training` and `testing`
+        (   X_train_idx, X_test_idx,
+            Y_train_idx, Y_test_idx) = skms.train_test_split(
+                                                        feat_arr_idx,
+                                                        pred_arr_idx,
+                                                        test_size=test_size,
+                                                        shuffle=shuffle_opt,
+                                                        random_state=random_state)
+        if not (np.array_equal(X_train_idx, Y_train_idx) and 
+                np.array_equal(X_test_idx, Y_test_idx)):
+            msg = '{0} Index arrays are not equal to each other!'
+            raise LSSUtils_Error(msg)
     ##
     ## Assigning `training` and `testing` datasets to dictionaries
-    train_dict = {  'X_train': X_train, 'Y_train': Y_train,
-                    'X_train_ns': X_train_ns, 'Y_train_ns': Y_train_ns}
-    test_dict  = {'X_test': X_test, 'Y_test': Y_test,
-                    'X_test_ns': X_test_ns, 'Y_test_ns': Y_test_ns}
+    # Saving indices if necessary
+    if return_idx:
+        # Adding 'indices' to dictionaries
+        train_dict = {  'X_train': X_train, 'Y_train': Y_train,
+                        'X_train_ns': X_train_ns, 'Y_train_ns': Y_train_ns,
+                        'train_idx': X_train_idx}
+        test_dict  = {'X_test': X_test, 'Y_test': Y_test,
+                        'X_test_ns': X_test_ns, 'Y_test_ns': Y_test_ns,
+                        'test_idx': X_test_idx}
+    else:
+        train_dict = {  'X_train': X_train, 'Y_train': Y_train,
+                        'X_train_ns': X_train_ns, 'Y_train_ns': Y_train_ns}
+        test_dict  = {'X_test': X_test, 'Y_test': Y_test,
+                        'X_test_ns': X_test_ns, 'Y_test_ns': Y_test_ns}
 
     return train_dict, test_dict
 
