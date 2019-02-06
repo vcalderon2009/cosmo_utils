@@ -11,4 +11,3 @@ from cosmo_utils.mock_catalogues import hod_funcs
 from cosmo_utils.mock_catalogues import mags_calculations
 from cosmo_utils.mock_catalogues import shmr_funcs
 from cosmo_utils.mock_catalogues import spherematch
-from cosmo_utils.mock_catalogues import pair_counters
