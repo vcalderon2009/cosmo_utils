@@ -36,8 +36,6 @@ Comprehensive Cosmo Utils Reference/API
 
 .. automodapi:: cosmo_utils.mock_catalogues.spherematch
 
-.. automodapi:: cosmo_utils.mock_catalogues.pair_counters
-
 .. automodapi:: cosmo_utils.ml
 
 .. automodapi:: cosmo_utils.ml.ml_utils
