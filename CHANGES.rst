@@ -1,7 +1,7 @@
-0.1.56 (unreleased)
+0.1.56 (2019-02-06)
 -----------------------
 
-- No changes yet.
+- Removed `pairwise_counting` module (Cython version) from the main package
 
 0.1.55 (2019-01-16)
 -----------------------
