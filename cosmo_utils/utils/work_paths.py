@@ -177,7 +177,7 @@ def get_output_path():
     # Reading in `output` path
     catl_path = get_sdss_catl_dir()
     # Main SDSS paths
-    path = os.path.join(catl_path, 'data', 'processed')
+    path = os.path.join(catl_path, 'data', 'external')
     assert(os.path.exists(path))
 
     return path
