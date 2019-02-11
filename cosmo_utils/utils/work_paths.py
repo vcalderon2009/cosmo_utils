@@ -66,7 +66,7 @@ def cookiecutter_paths(path='./'):
     Return
     ----------
     param_dict : python dictionary
-        Dictionary with info of the proect that uses the Data Science
+        Dictionary with info of the project that uses the Data Science
         cookiecutter template.
 
     Raises
@@ -136,7 +136,7 @@ def get_code_c():
 
     return c_path
 
-## Directory for SDSS Catalogues
+## Directory for SDSS Catalogs
 def get_sdss_catl_dir(path='./'):
     """
     Extracts the path to the set of SDSS catalogues
@@ -153,25 +153,16 @@ def get_sdss_catl_dir(path='./'):
     ----------
     catl_path : `str`
         Absolute path to the set of mock catalogues for SDSS.
-
-    catl_opt : `int`
-        Option of where the catalogues are located.
-
-        Options:
-            - 1 : The `sdss_catl_path` environment variable was found
-            - 0 : A local path is being used.
     """
     ## Path to catalogues
     try:
         catl_path = os.environ['sdss_catl_path']
         assert(os.path.exists(catl_path))
-        catl_opt  = 1
     except:
         proj_dict = cookiecutter_paths(path)
         catl_path = proj_dict['base_dir']
-        catl_opt  = 0
 
-    return catl_path, catl_opt
+    return catl_path
 
 ## Output directory for SDSS catalogues
 def get_output_path():
@@ -184,12 +175,9 @@ def get_output_path():
         Path to the main output directory of the SDSS catalogues
     """
     # Reading in `output` path
-    catl_path, catl_opt = get_sdss_catl_dir()
+    catl_path = get_sdss_catl_dir()
     # Main SDSS paths
-    if catl_opt == 1:
-        path = os.path.join(catl_path, 'data', 'processed')
-    elif catl_opt == 0:
-        path = os.path.join(catl_path, 'data', 'external')
+    path = os.path.join(catl_path, 'data', 'processed')
     assert(os.path.exists(path))
 
     return path
