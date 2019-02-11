@@ -1,7 +1,8 @@
-0.1.57 (unreleased)
+0.1.57 (2019-02-11)
 -----------------------
 
-- No changes yet.
+- Changes to `~cosmo_utils.utils.work_paths.get_output_path`. Now all the
+  catalogues are under the `external` directory.
 
 0.1.56 (2019-02-06)
 -----------------------
