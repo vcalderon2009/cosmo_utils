@@ -396,8 +396,7 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
         y_std_err *= 1.253
     ##
     ## Returning percentiles
-    if return_perc:
-        perc_arr_lims = sigma_calcs(y_stat, type_sigma=type_sigma)
+    perc_arr_lims = sigma_calcs(y_stat, type_sigma=type_sigma)
     ##
     # Building dictionary
     xy_dict                  = {}
