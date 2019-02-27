@@ -367,7 +367,7 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     elif (bin_statval == 'right'):
         x_stat = x_bins_criteria.T[1]
     elif (bin_statval == 'center'):
-        x_stat = num.mean(x_bins_criteria, axis=1)
+        x_stat = np.mean(x_bins_criteria, axis=1)
     elif (bin_statval == 'average'):
         x_stat = np.array([np.nanmean(ii) if (len(ii) > arr_len)
                     else failval for ii in x_bins_data])
