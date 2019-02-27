@@ -1,7 +1,8 @@
-0.1.59 (unreleased)
+0.1.59 (2019-02-27)
 -----------------------
 
-- No changes yet.
+- Changes to the function `~cosmo_utils.utils.stats_funcs.Stats_one_arr`.
+  Fixed issue with `bin_statval` argument within the function.
 
 0.1.58 (2019-02-11)
 -----------------------
