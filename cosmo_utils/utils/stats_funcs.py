@@ -93,7 +93,7 @@ def myfloor(x, base=10):
     return y
 
 ## Generation of bins evenly spaced out
-def Bins_array_create(arr, base=10):
+def Bins_array_create(arr, base=10, return_tuple=False):
     """
     Generates an evenly-spaced array between the minimum and maximum value
     of a given array,
@@ -103,8 +103,12 @@ def Bins_array_create(arr, base=10):
     arr : array_like
         Array of of numbers or floats
 
-    base : int or float, optional
+    base : `int` or `float`, optional
         Interval used to create the evenly-spaced array of elements
+
+    return_tuple : `bool`, optional
+        If `True`, the function returns a set of tuples for each bin. This
+        variable  is set to `False` by default.
 
     Returns
     ----------
@@ -124,8 +128,15 @@ def Bins_array_create(arr, base=10):
     arr_min  = myfloor(arr.min(), base=base)
     arr_max  = myceil(arr.max(), base=base)
     bins_arr = np.arange(arr_min, arr_max + 0.5*base, base)
+    # Creating tuple if necessary
+    if return_tuple:
+        bins_arr_mod = (np.array([[bins_arr[ii], bins_arr[ii+1]]
+                            for ii in range(len(bins_arr) - 1)]))
+        return_obj = bins_arr_mod
+    else:
+        return_obj = bins_arr
 
-    return bins_arr
+    return return_obj
 
 ## Calculations of percentiles and sigmas
 def sigma_calcs(data_arr, type_sigma='std', perc_arr=[68., 95., 99.7],
@@ -224,7 +235,7 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr=[68., 95., 99.7],
 ## Main framework for `Stats_one_arr` and `Stats_two_arr`
 def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     weights=None, statfunc=np.nanmean, bin_statval='average',
-    return_perc=False, failval=np.nan):
+    return_perc=False, failval=np.nan, type_sigma='std'):
     """
     Calculates statistics for 2 arrays
 
@@ -254,7 +265,7 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
         Numerical function used to calculate on bins of data.
         By default, this variable is set to `numpy.nanmean`
 
-    bin_statval : {'average', 'left', 'right'} str, optional
+    bin_statval : {'average', 'left', 'right', 'center'} str, optional
         Option for where to put the bin values of `x` and `y`.
         By default, this variable is set to `average`, which means
         that the values are those of the averages of the bins in `x` and
@@ -265,9 +276,17 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
         Last item in the return list.
         This variable is set to False by default.
 
-    failval : int, float, NoneType, or NaN, optional
+    failval : `int`, `float`, `NoneType`, or `NaN`, optional
         This is the value used when no data is available for the bin.
         This is set to `numpy.nan` by default
+
+    type_sigma : {'perc', 'std'} string, optional (default = 'std')
+        Option for calculating either `percentiles` or `standard deviations`.
+        This variable is set to `std` by default.
+
+        Options:
+            - ``perc`` : calculates percentiles
+            - ``std`` : uses standard deviations as 1-, 2-, and 3-sigmas
 
     Returns
     ----------
@@ -314,7 +333,7 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
             file_msg, arr_len)
         raise LSSUtils_Error(msg)
     # `bin_statval`
-    if not (bin_statval in ['average', 'left', 'right']):
+    if not (bin_statval in ['average', 'left', 'right', 'center']):
         msg = '{0} `bin_statval` ({1}) is not a valid input! Exiting'.format(
             file_msg, bin_statval)
         raise LSSUtils_Error(msg)
@@ -325,46 +344,41 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     arr_len = int(arr_len - 1.) if arr_len != 0 else int(arr_len)
     ##
     ## Statistics calculations
-    x_bins   = Bins_array_create(x, base=base)
-    x_digits = np.digitize(x, x_bins)
+    x_bins_edges = Bins_array_create(x, base=base)
+    x_digits     = np.digitize(x, x_bins_edges) - 1
+    # Tuple for `x_bins`
+    x_bins = Bins_array_create(x, base=base, return_tuple=True)
+    nbins  = len(x_bins)
     ##
     ## Determining which bins to use
     ## These are the bins that meet the criteria of `arr_len`
-    x_digits_bins = np.array([int(ii) for ii in range(1, len(x_bins))
-        if len(x_digits[x_digits == ii]) > arr_len])
-    ## Elements in each bin
-    # X-values
+    x_digits_bins = np.array([int(ii) for ii in range(nbins) if
+        len(x_digits[x_digits == ii]) > arr_len])
+    # Elements in each bin
+    # `x` values
     x_bins_data = np.array([x[x_digits == ii] for ii in x_digits_bins])
-    # Y-values
+    # `y` values
     y_bins_data = np.array([y[x_digits == ii] for ii in x_digits_bins])
-    ##
+    # Bins that meet the `arr_len` criteria
+    x_bins_criteria = x_bins[x_digits_bins]
     ## Selecting data in bins
-    # Left-hand side of the bin
     if (bin_statval == 'left'):
-        x_stat = np.array([x_bins[:-1][ii] if
-            len(x_bins_data[ii]) > arr_len else failval for ii
-            in range(len(x_bins_data))])
+        x_stat = x_bins_criteria.T[0]
     elif (bin_statval == 'right'):
-        # Right-hand side of the bin
-        x_stat = np.array([x_bins[:-1][ii] if
-            len(x_bins_data[ii]) > arr_len else failval for ii
-            in range(len(x_bins_data))])
+        x_stat = x_bins_criteria.T[1]
+    elif (bin_statval == 'center'):
+        x_stat = num.mean(x_bins_criteria, axis=1)
     elif (bin_statval == 'average'):
-        # Centered around the average
-        x_stat = np.array([np.nanmean(ii) if len(ii) > arr_len else failval
-            for ii in x_bins_data])
-    ##
-    ## Determining the values in `y`
+        x_stat = np.array([np.nanmean(ii) if (len(ii) > arr_len)
+                    else failval for ii in x_bins_data])
+    # Determining the values in `y`
     # `stat_function`
-    y_stat = np.array([statfunc(ii) if len(ii) > arr_len else failval
-        for ii in y_bins_data])
+    y_stat = np.array([statfunc(ii) for ii in y_bins_data])
     # Standard Deviation
-    y_std  = np.array([np.nanstd(ii) if len(ii) > arr_len else failval
-            for ii in y_bins_data])
+    y_std  = np.array([np.nanstd(ii) for ii in y_bins_data])
     # Error in the mean/median
-    y_std_err = np.array([
-        np.nanstd(ii)/math.sqrt(len(ii)) if len(ii) > arr_len else failval
-        for ii in y_bins_data])
+    y_std_err = np.array([np.nanstd(ii)/math.sqrt(len(ii)) for ii in
+        y_bins_data])
     ##
     ## Correcting error inf `statfunc` == `numpy.nanmedian`
     if statfunc == np.nanmedian:
@@ -372,7 +386,7 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     ##
     ## Returning percentiles
     if return_perc:
-        perc_arr_lims = sigma_calcs(y_stat)
+        perc_arr_lims = sigma_calcs(y_stat, type_sigma=type_sigma)
     ##
     ## Returning values
     if return_perc:
