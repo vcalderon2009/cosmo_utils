@@ -1,7 +1,8 @@
-0.1.60 (unreleased)
+0.1.60 (2019-02-27)
 -----------------------
 
-- No changes yet.
+- Fixed bug in `~cosmo_utils.utils.stats_funcs.Stats_one_arr` again, and
+  added option for returning a `dict` with the output variables
 
 0.1.59 (2019-02-27)
 -----------------------
