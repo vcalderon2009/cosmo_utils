@@ -234,8 +234,8 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr=[68., 95., 99.7],
 
 ## Main framework for `Stats_one_arr` and `Stats_two_arr`
 def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
-    weights=None, statfunc=np.nanmean, bin_statval='average',
-    return_perc=False, failval=np.nan, type_sigma='std'):
+    statfunc=np.nanmean, bin_statval='average',
+    return_perc=False, failval=np.nan, type_sigma='std', return_dict=False):
     """
     Calculates statistics for 2 arrays
 
@@ -257,9 +257,6 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
             - 'n' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`
             - 'y' : Returns `x_stat`, `y_stat`, `y_std`, `y_std_err`, `x_bins_data`, `y_bins_data`
             - 'o' : Returns `x_bins_data`, `y_bins_data`
-
-    weights : array_like or NoneType, optional
-        Array of weights for values in `y`. This is set to None by default.
 
     statfunc : {`numpy.nanmean`, `numpy.nanmedian`} statistical func, optional
         Numerical function used to calculate on bins of data.
@@ -287,6 +284,10 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
         Options:
             - ``perc`` : calculates percentiles
             - ``std`` : uses standard deviations as 1-, 2-, and 3-sigmas
+
+    return_dict : `bool`, optional
+        If `True`, the function returns a `dict` with the binned statistics
+        and more. This variable is set to `False` by default.
 
     Returns
     ----------
@@ -354,31 +355,41 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     ## These are the bins that meet the criteria of `arr_len`
     x_digits_bins = np.array([int(ii) for ii in range(nbins) if
         len(x_digits[x_digits == ii]) > arr_len])
-    # Elements in each bin
-    # `x` values
-    x_bins_data = np.array([x[x_digits == ii] for ii in x_digits_bins])
-    # `y` values
-    y_bins_data = np.array([y[x_digits == ii] for ii in x_digits_bins])
-    # Bins that meet the `arr_len` criteria
-    x_bins_criteria = x_bins[x_digits_bins]
-    ## Selecting data in bins
-    if (bin_statval == 'left'):
-        x_stat = x_bins_criteria.T[0]
-    elif (bin_statval == 'right'):
-        x_stat = x_bins_criteria.T[1]
-    elif (bin_statval == 'center'):
-        x_stat = np.mean(x_bins_criteria, axis=1)
-    elif (bin_statval == 'average'):
-        x_stat = np.array([np.nanmean(ii) if (len(ii) > arr_len)
-                    else failval for ii in x_bins_data])
-    # Determining the values in `y`
-    # `stat_function`
-    y_stat = np.array([statfunc(ii) for ii in y_bins_data])
-    # Standard Deviation
-    y_std  = np.array([np.nanstd(ii) for ii in y_bins_data])
-    # Error in the mean/median
-    y_std_err = np.array([np.nanstd(ii)/math.sqrt(len(ii)) for ii in
-        y_bins_data])
+    # Running only if there is data
+    if (len(x_digits_bins) > 0):
+        # Elements in each bin
+        # `x` values
+        x_bins_data = np.array([x[x_digits == ii] for ii in x_digits_bins])
+        # `y` values
+        y_bins_data = np.array([y[x_digits == ii] for ii in x_digits_bins])
+        # Bins that meet the `arr_len` criteria
+        x_bins_criteria = x_bins[x_digits_bins]
+        ## Selecting data in bins
+        if (bin_statval == 'left'):
+            x_stat = x_bins_criteria.T[0]
+        elif (bin_statval == 'right'):
+            x_stat = x_bins_criteria.T[1]
+        elif (bin_statval == 'center'):
+            x_stat = np.mean(x_bins_criteria, axis=1)
+        elif (bin_statval == 'average'):
+            x_stat = np.array([np.nanmean(ii) if (len(ii) > arr_len)
+                        else failval for ii in x_bins_data])
+        # Determining the values in `y`
+        # `stat_function`
+        y_stat = np.array([statfunc(ii) for ii in y_bins_data])
+        # Standard Deviation
+        y_std  = np.array([np.nanstd(ii) for ii in y_bins_data])
+        # Error in the mean/median
+        y_std_err = np.array([np.nanstd(ii)/math.sqrt(len(ii)) for ii in
+            y_bins_data])
+    else:
+        x_bins_data     = np.array([np.nan])
+        y_bins_data     = np.array([np.nan])
+        x_bins_criteria = np.array([np.nan])
+        x_stat          = np.array([np.nan])
+        y_stat          = np.array([np.nan])
+        y_std           = np.array([np.nan])
+        y_std_err       = np.array([np.nan])
     ##
     ## Correcting error inf `statfunc` == `numpy.nanmedian`
     if statfunc == np.nanmedian:
@@ -388,22 +399,38 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
     if return_perc:
         perc_arr_lims = sigma_calcs(y_stat, type_sigma=type_sigma)
     ##
-    ## Returning values
+    # Building dictionary
+    xy_dict                  = {}
+    xy_dict['x_stat'       ] = x_stat
+    xy_dict['y_stat'       ] = y_stat
+    xy_dict['y_std'        ] = y_std
+    xy_dict['y_std_err'    ] = y_std_err
+    xy_dict['perc_arr_lims'] = perc_arr_lims
+    xy_dict['x_bins_data'  ] = x_bins_data
+    xy_dict['y_bins_data'  ] = y_bins_data
+    # Determine entries to return
+    if (arr_digit == 'n'):
+        return_val = [  'x_stat', 'y_stat', 'y_std', 'y_std_err']
+    if (arr_digit == 'y'):
+        return_val = [  'x_stat', 'y_stat', 'y_std', 'y_std_err',
+                        'x_bins_data', 'y_bins_data']
+    if (arr_digit == 'o'):
+        return_val = [  'x_bins_data', 'y_bins_data']
+    # Aggregating percentage/std info if necessary
     if return_perc:
-        if arr_digit == 'n':
-            return_val = [  x_stat, y_stat, y_std, y_std_err, perc_arr_lims]
-        if arr_digit == 'y':
-            return_val = [  x_stat, y_stat, y_std, y_std_err,
-                            x_bins_data, y_bins_data, perc_arr_lims]
-        if arr_digit == 'o':
-            return_val = [  x_bins_data, y_bins_data, perc_arr_lims]
+        return_val.append('perc_arr_lims')
+    # Determining object to return
+    if return_dict:
+        # Initiating dictionary with output values
+        return_obj = {}
+        # Populating output object
+        for key_val in return_val:
+            return_obj[key_val] = xy_dict[key_val]
     else:
-        if arr_digit == 'n':
-            return_val = [  x_stat, y_stat, y_std, y_std_err]
-        if arr_digit == 'y':
-            return_val = [  x_stat, y_stat, y_std, y_std_err,
-                            x_bins_data, y_bins_data]
-        if arr_digit == 'o':
-            return_val = [  x_bins_data, y_bins_data]
+        # Initiating output object
+        return_obj = [[] for x in range(len(return_val))]
+        # Populating output object
+        for jj, key_val in enumerate(return_val):
+            return_obj[jj] = xy_dict[key_val]
 
-    return return_val
+    return return_obj
