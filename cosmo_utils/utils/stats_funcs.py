@@ -193,44 +193,120 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr=[68., 95., 99.7],
     if not (type_sigma in type_sigma_valid):
         msg = '{0} `type_sigma` ({1}) is not a valid input choice!'.format(
             file_msg, type_sigma)
-    ## Determining shape of `data_arr`
-    if data_arr.ndim == 1:
-        axis = 0
+    ## Determining if the object is a list of list or not
+    data_arr_type = [[] for x in range(len(data_arr))]
+    arr_type      = (np.ndarray, list)
+    # Checking type of input parameter
+    for zz, data_zz in enumerate(data_arr):
+        data_arr_type[zz] = isinstance(data_zz, arr_type)
+    # Choosing axis
+    if (all([(zz == True) for zz in data_arr_type])):
+        # If `data_arr` is a list of lists
+        list_opt = True
+        # Checking data dimension
+        if (data_arr.ndim == 1):
+            # Array of multiple elements in each bin
+            ax_opt = True
+        else:
+            # Same number of elements in each bin
+            ax_opt = False
     else:
-        axis = 1
-    ## Creating dictionary for saving `sigma`s
-    sigma_dict = {}
-    for ii in range(len(perc_arr)):
-        sigma_dict[ii] = []
-    ## Using Percentiles to estimate errors
-    if type_sigma == 'perc':
-        for ii, perc_ii in enumerate(perc_arr):
-            mark_lower = np.nanpercentile(data_arr, 50.-(perc_ii/2.),axis=axis)
-            mark_upper = np.nanpercentile(data_arr, 50.+(perc_ii/2.),axis=axis)
-            # Saving to dictionary
-            sigma_dict[ii] = np.column_stack((mark_lower, mark_upper)).T
-    ## Using standard deviations to estimate errors
-    if type_sigma == 'std':
-        mean_val = np.nanmean(data_arr, axis=axis)
-        std_val  = np.nanstd( data_arr, axis=axis)
-        for ii in range(len(perc_arr)):
-            mark_lower = mean_val - ((ii+1) * std_val)
-            mark_upper = mean_val + ((ii+1) * std_val)
-            # Saving to dictionary
-            sigma_dict[ii] = np.column_stack((mark_lower, mark_upper)).T
-    ##
-    ## Estimating mean and St. Dev. of `data_arr`
-    mark_mean = np.nanmean(data_arr, axis=axis)
-    mark_std  = np.nanstd( data_arr, axis=axis)
-    ## Fixing values for when `axis == 0`
-    if data_arr.ndim == 1:
-        for ii in range(len(sigma_dict.keys())):
-            sigma_dict[ii] = sigma_dict[ii].flatten()
-
+        # If `data_arr` is a 1D array
+        list_opt = False
+        # Checking data dimension
+        if (data_arr.ndim == 1):
+            ax_opt = False
+        else:
+            msg = '{0} Invalid input of `data_arr`'.format(file_msg)
+            raise TypeError(msg)
+    # Determining `mean` and `standard deviation`
+    if list_opt:
+        # If different number of elements in each bin
+        if ax_opt:
+            # Number of bins in `data_arr`
+            nbins = len(data_arr)
+            # Calculating statistics
+            mark_mean = np.zeros(nbins) * np.nan
+            mark_std  = np.zeros(nbins) * np.nan
+            # Calculating `mean` and `stdev` for each bin
+            for ii, data_ii in enumerate(data_arr):
+                mark_mean[ii] = np.nanmean(data_ii, axis=0)
+                mark_std [ii] = np.nanstd( data_ii, axis=0)
+        else:
+            # Calculating `mean` and `stdev` for each bin
+            mark_mean = np.nanmean(data_arr, axis=1)
+            mark_std  = np.nanstd( data_arr, axis=1)
+    else:
+        # When dealing with a 1D array
+        mark_mean = np.nanmean(data_arr, axis=0)
+        mark_std  = np.nanstd( data_arr, axis=0)
+    #
+    ## Determining errors in each bin
+    # Creating dictionary for saving `sigma`s
+    sigma_dict = {ii: [] for ii in range(len(perc_arr))}
+    # Using percentiles to estimate errors
+    if (type_sigma == 'perc'):
+        # If `data_arr` is a list
+        if list_opt:
+            # If different number of elements in each bin
+            if ax_opt:
+                # Number of bins in `data_arr`
+                nbins = len(data_arr)
+                # Looping over sigma values
+                for zz, perc_zz in enumerate(perc_arr):
+                    # Defining lower and upper ranges
+                    mark_lims = np.zeros((nbins, 2)) * np.nan
+                    # Populating lower and upper limits
+                    for ii, data_ii in enumerate(data_arr):
+                        perc_lims  = [50 - (perc_zz/2.), 50 + (perc_zz/2.)]
+                        mark_lower = np.nanpercentile(data_ii, perc_lims[0])
+                        mark_upper = np.nanpercentile(data_ii, perc_lims[1])
+                        # Saving to `mark_lims`
+                        mark_lims[ii] = [mark_lower, mark_upper]
+                    # Saving to `sigma_dict`
+                    sigma_dict[zz] = mark_lims.T
+            else:
+                # If same number of elements in each bin
+                # Looping over sigma values
+                for zz, perc_zz in enumerate(perc_arr):
+                    perc_lims  = [50 - (perc_zz/2.), 50 + (perc_zz/2.)]
+                    mark_lower = np.nanpercentile(data_arr, perc_lims[0], axis=1)
+                    mark_upper = np.nanpercentile(data_arr, perc_lims[1], axis=1)
+                    mark_lims  = np.column_stack((mark_lower, mark_upper))
+                    # Saving to dictionary
+                    sigma_dict[zz] = mark_lims.T
+        else:
+            # Looping over sigma's
+            for zz, perc_zz in enumerate(perc_arr):
+                perc_lims  = [50 - (perc_zz/2.), 50 + (perc_zz/2.)]
+                mark_lower = np.nanpercentile(data_arr, perc_lims[0], axis=0)
+                mark_upper = np.nanpercentile(data_arr, perc_lims[1], axis=0)
+                mark_lims  = np.column_stack((mark_lower, mark_upper))[0]
+                # Saving to dictionary
+                sigma_dict[zz] = mark_lims
+    # Using standard deviation to estimate errors
+    if (type_sigma == 'std'):
+        # Number of bins in `perc_arr`
+        nperc = len(perc_arr)
+        # Looping over St. Dev. ranges
+        for zz in range(nperc):
+            mark_lower = mark_mean - (mark_std * (zz + 1))
+            mark_upper = mark_mean + (mark_std * (zz + 1))
+            # Populating lower and upper limits
+            sigma_dict[zz] = np.column_stack((mark_lower, mark_upper)).T
+    #
+    # Fixing values for when it's a 1D array
+    if (not list_opt) and (not ax_opt):
+        for zz in range(len(sigma_dict.keys())):
+            sigma_dict[zz] = sigma_dict[zz].flatten()
+    #
+    # Deciding which objects to return
     if return_mean_std:
-        return sigma_dict, mark_mean, mark_std
+        return_obj = [sigma_dict, mark_mean, mark_std]
     else:
-        return sigma_dict
+        return_obj = sigma_dict
+
+    return return_obj
 
 ## Main framework for `Stats_one_arr` and `Stats_two_arr`
 def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
@@ -396,7 +472,7 @@ def Stats_one_arr(x, y, base=1., arr_len=0, arr_digit='n',
         y_std_err *= 1.253
     ##
     ## Returning percentiles
-    perc_arr_lims = sigma_calcs(y_stat, type_sigma=type_sigma)
+    perc_arr_lims = sigma_calcs(y_bins_data, type_sigma=type_sigma)
     ##
     # Building dictionary
     xy_dict                  = {}
