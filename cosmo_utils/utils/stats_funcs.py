@@ -302,7 +302,7 @@ def sigma_calcs(data_arr, type_sigma='std', perc_arr=[68., 95., 99.7],
     #
     # Deciding which objects to return
     if return_mean_std:
-        return_obj = [sigma_dict, mark_mean, mark_std]
+        return_obj = sigma_dict, mark_mean, mark_std
     else:
         return_obj = sigma_dict
 
