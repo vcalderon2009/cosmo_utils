@@ -1,7 +1,8 @@
-0.1.61 (unreleased)
+0.1.61 (2019-03-05)
 -----------------------
 
-- No changes yet.
+- Fixed bug in `~cosmo_utils.utils.stats_funcs.sigma_calcs` in how it returns
+  percentiles.
 
 0.1.60 (2019-02-27)
 -----------------------
