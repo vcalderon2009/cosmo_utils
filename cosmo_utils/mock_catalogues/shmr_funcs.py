@@ -39,10 +39,6 @@ class Behroozi2010Relation(object):
             Value of the Hubble constant in limits of between :math:`[0, 1]`.
             This variable acts as the output `h` of variables, and it is set
             to `1` by default.
-
-        Examples
-        ------------
-        >>> from cosmo_utils.mock_catalogues.shmr_funcs import BehrooziRelation
         """
         # Assigning variables
         self.input_h = kwargs.get('input_h', 1)
@@ -276,10 +272,6 @@ class Moster2010Relation(object):
             Value of the Hubble constant in limits of between :math:`[0, 1]`.
             This variable acts as the output `h` of variables, and it is set
             to `1` by default.
-
-        Examples
-        ------------
-        >>> from cosmo_utils.mock_catalogues.shmr_funcs import BehrooziRelation
         """
         # Assigning variables
         self.input_h = kwargs.get('input_h', 1)
