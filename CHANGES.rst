@@ -1,7 +1,8 @@
-0.1.62 (unreleased)
+0.1.62 (2019-03-06)
 -----------------------
 
-- No changes yet.
+- Added new function `cosmo_utils.mock_catalogues.shmr_funcs.Behroozi2010Relation`
+   and `cosmo_utils.mock_catalogues.shmr_funcs.Moster2010Relation`
 
 0.1.61 (2019-03-05)
 -----------------------
