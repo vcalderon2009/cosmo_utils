@@ -22,7 +22,7 @@ Set of statistical functions
 ## Import modules
 import math
 import numpy as np
-from scipy.stats import median_absolute_deviation as med_abs_dev
+from   scipy import stats as sstats
 from   cosmo_utils.utils             import file_utils as fd
 from   cosmo_utils.custom_exceptions import LSSUtils_Error
 
@@ -696,7 +696,8 @@ def Stats_one_arr_mod(x, y, base=1., arr_len=0, statfunc=np.nanmean,
             if (statfunc == np.nanmedian):
                 y_err *= 1.253
         elif (type_sigma == 'med_abs'):
-            y_err = np.asarray([med_abs_dev(xx) for xx in y_mod])
+            y_err = np.asarray([sstats.median_absolute_deviation(xx)
+                for xx in y_mod])
     else:
         x_stat        = np.array([np.nan])
         y_stat        = np.array([np.nan])
