@@ -1,7 +1,7 @@
-0.1.64 (unreleased)
+0.1.65 (2019-08-14)
 -----------------------
 
-- No changes yet.
+- Fixed functions in `cosmo_utils.utils.geometry`.
 
 0.1.63 (2019-08-14)
 -----------------------
