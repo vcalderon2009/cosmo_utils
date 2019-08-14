@@ -1,7 +1,8 @@
-0.1.63 (unreleased)
+0.1.63 (2019-08-14)
 -----------------------
 
-- No changes yet.
+- Modified the functions from `cosmo_utils.utils.stats_funcs` and
+  `cosmo_utils.utils.geometry`.
 
 0.1.62 (2019-03-06)
 -----------------------
