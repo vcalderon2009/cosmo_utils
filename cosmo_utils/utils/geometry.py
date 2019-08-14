@@ -521,7 +521,7 @@ def sph_to_cartesian(sph_obj, return_type='df', unit='deg'):
             try:
                 sph_pd = pd.DataFrame(dict(zip(sph_names_arr,
                     sph_obj.values.T)))
-            else:
+            except:
                 sph_pd = pd.Series(dict(zip(sph_names_arr,
                     sph_obj.values.T)))
     # `unit` - Type
