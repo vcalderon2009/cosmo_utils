@@ -207,7 +207,7 @@ def Ang_Distance(ra1, ra2, dec1, dec2, unit='deg', method='haversine'):
 def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     trans_opt=4, return_dict=False, unit='deg'):
     """
-    Transforms spherical coordinates (ra, dec, dist) into cartesian
+    Transforms spherical coordinates (ra, dec, dist) into Cartesian
     coordinates.
 
     Parameters
@@ -218,22 +218,22 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
 
     ra_cen, dec_cen, dist_cen : float, int
         Right Ascension, declination, and distance for the center of
-        the coordinates. These correspond to where the corodinates
+        the coordinates. These correspond to where the coordinates
         `ra`, `dec`, and `dist` will be centered.
 
     trans_opt : {1, 2, 3, 4} int, optional
-        Option for cartesian translation/transformation for elements.
+        Option for Cartesian translation/transformation for elements.
         This variable ist set to `4` by default.
 
         Options:
             - 1 : No translation involved
             - 2 : Translation to the center point.
             - 3 : Translation `and` rotation to the center point.
-            - 4 : Translation and 2 rotaitons about the center point
+            - 4 : Translation and 2 rotations about the center point
 
     return_dict : {True, False}, `bool`, optional
         If `True`, this functions returns 2 dictionaries with `spherical`
-        and `cartesian` coordinates.
+        and `Cartesian` coordinates.
         If `False`, it returns a `pandas.DataFrame` with the columns.
         This variable is set to `False` by default.
 
@@ -245,7 +245,7 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     Returns
     -----------
     coord_dict (coord_pd) : python dictionary
-        Dictionary with spherical and cartesian dictionary of elements
+        Dictionary with spherical and Cartesian dictionary of elements
         based on `trans_opt` value. This value is returned if
         `return_dict` is set to `True`. If not, a `pandas.DataFrame` is
         return.
@@ -344,7 +344,7 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     coord_dict = dict(zip(dict_keys, np.vstack([ra, dec, dist])))
     ##
     ## Spherical to Cartesian transformation
-    ## 1st tranformation
+    ## 1st transformation
     # Centre
     x_cen = dist_cen * np.cos(ra_cen_rad) * np.cos(dec_cen_rad)
     y_cen = dist_cen * np.sin(ra_cen_rad) * np.cos(dec_cen_rad)
@@ -371,7 +371,7 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
     y3 = y2 * np.cos(tau) - z2 * np.sin(tau)
     z3 = z2 * np.sin(tau) + z2 * np.cos(tau)
     ##
-    ## Definining which variables to return
+    ## Defining which variables to return
     # No Translation
     if trans_opt == 1:
         coord_dict['x'] = x
@@ -400,126 +400,461 @@ def Coord_Transformation(ra, dec, dist, ra_cen, dec_cen, dist_cen,
         coord_pd = pd.DataFrame(coord_dict)
         return coord_pd
 
-## Coordinate Transformation - Cartesian to Spherical coordinates
-def cart_to_sph_coords(dist, x_arr, y_arr, z_arr, return_dict=False,
-    unit='deg'):
+## Cartesian translation function
+def cartesian_translation(cart_obj, cart_origin_obj):
     """
-    Transforms cartesian coordinates (x, y, z) into spherical
-    coordinates.
+    Function that translates a set of points given a new `origin`
 
     Parameters
     -----------
-    dist : `np.ndarray`
-        Array of the the distance to the N-number of objects.
-        Shape (N,).
+    cart_obj : `pandas.DataFrame` or `numpy.ndarray`
+        Object containing the set of Cartesian Coordinates in the order
+        of ['x', 'y', 'z'].
 
-    x_arr, y_arr, z_arr : `np.ndarray`
-        Arrays of the cartesian coordinates (x, y, z) of the
-        N objects. Shape (N,). Units are in `unit`.
+    cart_origin_obj : `pandas.DataFrame` or `numpy.ndarray`
+        Object containing the Cartesian coordinates of the new `origin`
+        for `cart_obj`
 
-    return_dict : {True, False}, `bool`, optional
-        If `True`, this functions returns 2 dictionaries with `spherical`
-        and `cartesian` coordinates.
-        If `False`, it returns a `pandas.DataFrame` with the columns.
-        This variable is set to `False` by default.
+    Returns
+    ----------
+    cart_tr_obj : `pandas.DataFrame` or `numpy.ndarray`
+        Object containing the `translated` Cartesian coordinates of `cart_obj`.
+    """
+    file_msg = fd.Program_Msg(__file__)
+    # Cartesian names array
+    cart_names = ['x', 'y', 'z']
+    ## Checking input parameters
+    #
+    # Checking type of `cart_obj` and converting to DataFrame if needed.
+    cart_obj_type_arr = (np.ndarray, list, pd.DataFrame, pd.Series)
+    if not (isinstance(cart_obj, cart_obj_type_arr)):
+        msg = '{0} `cart_obj` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(cart_obj), cart_obj_type_arr)
+        raise TypeError(msg)
+    else:
+        if (isinstance(cart_obj, np.ndarray)):
+            cart_pd = pd.DataFrame(dict(zip(cart_names, cart_obj.T)))
+        elif (isinstance(cart_obj, list)):
+            cart_pd = pd.DataFrame(dict(zip(cart_names, np.asarray(cart_obj).T)))
+        elif (isinstance(cart_obj, pd.DataFrame)):
+            cart_pd = pd.DataFrame(dict(zip(cart_names, cart_obj.values.T)))
+    #
+    # Checking type of `cart_obj_cen`
+    cart_origin_obj_type_arr = (np.ndarray, list, pd.DataFrame, pd.Series)
+    if not (isinstance(cart_origin_obj, cart_origin_obj_type_arr)):
+        msg = '{0} `cart_origin_obj` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(cart_origin_obj),
+            cart_origin_obj_type_arr)
+        raise TypeError(msg)
+    else:
+        if isinstance(cart_origin_obj, list):
+            cart_origin_obj = np.asarray(cart_origin_obj).flatten()
+        elif isinstance(cart_origin_obj, (pd.DataFrame, pd.Series)):
+            cart_origin_obj = pd.Series(dict(zip(cart_names,
+                cart_origin_obj.values)))
+    #
+    # Translating Cartesian coordinates
+    # This translation puts the `cart_origin_obj` at the origin of
+    # `cart_pd`
+    cart_tr_obj = (cart_pd - cart_origin_obj)
+    #
+    # Returning object with designated type
+    if not (isinstance(cart_pd, (pd.Series, pd.DataFrame))):
+        cart_tr_obj = cart_tr_obj.values
 
-    unit : {'dec','rad'} `str`, optional
-        Unit of the output `ra`, `dec` coordinates.
-        This variable is set to `deg` by default.
+    return cart_tr_obj
+
+## Coordinate Transformation - Spherical to Cartesian
+def spherical_cartesian(sph_obj, sph_cen_obj, trans_opt=4, return_dict=False,
+    rotoder='t', unit='deg'):
+    """
+    Transforms spherical coordinates (ra, dec, dist) into Cartesian
+    coordinates.
+
+    Parameters:
+    -------------
+    sph_obj : `numpy.ndarray` or `pandas.DataFrame`
+        Object containing the positions of points in spherical coordinates.
+        The object must include the `ra`, `dec`, and `distance` to
+        each object to the observer.
+
+    sph_cen_obj : `numpy.ndarray` or `pandas.DataFrame`
+        Object containing the position of the `origin` or `center` of
+        the points. It contains the `ra`, `cen`, and `dist` to main
+        object. This variable is used when translating the set of points.
+    
+    trans_opt : {1, 2, 3, 4}, `int`, optional
+        Option for Cartesian translation / transformation for elements.
+        This variable is set to `4` by default.
+
+        Options:
+            - `1` : No translation involved.
+            - `2` : Translation to the center point
+            - `3` : Translation and rotation to the center point.
+            - `4` : Translation and 2 rotations about the center point.
+
+    return_dict : `bool`, optional
+        If `True`, this function returns 2 dictionaries with `spherical`
+        and `Cartesian` coordinates. If `False`, the function returns the
+        a `pandas.DataFrame` with the columns.
+
+    unit : {'deg', 'rad'} `str`, optional
+        Unit of angles provided. This will also determine the final
+        unit that outputs this function. This variable is set to `deg`
+        by default.
+
+    Returns
+    ------------
+    coord_obj : `dict` or `pandas.DataFrame`
+        Object containing the spherical and Cartesian coordinates of the
+        elements from `sph_obj`. 
+    """
+
+## Coordinate Transformation - Cartesian to Spherical coordinates
+def cart_to_sph_coords(cart_obj, unit='deg', return_type='df'):
+    """
+    Transforms Cartesian coordinates (x, y, z) into spherical coordinates
+    (ra, dec).
+
+    Parameters
+    -------------
+    cart_obj : `numpy.ndarray`, `pandas.DataFrame`, or `pandas.Series`
+        Object containing the set of Cartesian coordinates of the points,
+        along with the distance to each object.
+
+    unit : {``deg``, ``rad``}, optional
+        Variable that determines the final value of the spherical coordinates.
+        This variable is set to ``deg`` by default.
+
+    return_type : {``df``, ``array``}, optional
+        Option for the output type of `sph_obj`. This variable is set to
+        ``df`` by default.
+
+        Options :
+             - ``df`` : Returns a `pandas.DataFrame` with spherical coords.
+             - ``array`` : Returns a `numpy.ndarray`.
+
+    Returns
+    ----------
+    sph_obj : `numpy.ndarray`, `pandas.DataFrame`, or `pandas.Series`
+        Spherical coordinates for a given set of points from `cart_obj`
+    """
+    file_msg       = fd.Program_Msg(__file__)
+    cart_names_arr = ['x', 'y', 'z']
+    sph_names_arr  = ['ra', 'dec', 'dist']
+    ## Checking types of elements
+    # `cart_obj` - Type
+    cart_obj_type_arr = (list, np.ndarray, pd.DataFrame, pd.Series)
+    if not (isinstance(cart_obj, cart_obj_type_arr)):
+        msg = '{0} `cart_obj` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(cart_obj), cart_obj_type_arr)
+        raise TypeError(msg)
+    else:
+        if isinstance(cart_obj, (np.ndarray, list)):
+            cart_pd = pd.DataFrame(dict(zip(cart_names_arr,
+                            cart_obj.T)))
+        elif isinstance(cart_obj, (pd.DataFrame, pd.Series)):
+            cart_pd = pd.DataFrame(dict(zip(cart_names_arr,
+                            cart_obj.values.T)))
+    # `unit` - Type
+    unit_type_arr = (str)
+    if not (isinstance(unit, unit_type_arr)):
+        msg = '{0} `unit` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(unit), unit_type_arr)
+        raise TypeError(msg)
+    # `unit` - Value
+    unit_val_arr = ['deg', 'rad']
+    if not (unit in unit_val_arr):
+        msg = '{0} `unit` ({1}) is not a valid input value ({2})!'
+        msg = msg.format(file_msg, unit, unit_val_arr)
+        raise ValueError(msg)
+    # `return_type` - Type
+    return_type_type_arr = (str)
+    if not (isinstance(return_type, return_type_type_arr)):
+        msg = '{0} `return_type` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(return_type), return_type_type_arr)
+        raise TypeError(msg)
+    # `return_type` - Value
+    return_type_val_arr = ['df', 'array']
+    if not (return_type in return_type_val_arr):
+        msg = '{0} `return_type` ({1}) is not a valid input value ({2})!'
+        msg = msg.format(file_msg, return_type, return_type_val_arr)
+        raise ValueError(msg)
+    ##
+    ## Computing distance
+    dist_arr = np.sum(cart_pd.values.T**2, axis=0)**0.5
+    # Normalizing coordinates
+    cart_norm_pd = cart_pd.divide(dist_arr, axis='rows')
+    ##
+    ## Declination
+    dec_arr = 90. - np.degrees(np.arccos(cart_norm_pd['z']))
+    ##
+    ## Right Ascension
+    ra_arr = [[] for x in range(len(cart_norm_pd))]
+    for ii, cart_ii in cart_norm_pd.iterrows():
+        # Extracting coordinates
+        x_ii, y_ii, z_ii = cart_ii.values
+        # Determining RA values
+        if (x_ii == 0):
+            if (y_ii > 0.):
+                ra_ii = 90.
+            elif (y_ii < 0.):
+                ra_ii = -90.
+        else:
+            ra_ii = np.degrees(np.arctan(y_ii / x_ii))
+        #
+        # Seeing on which quadrant the point is
+        if (x_ii < 0.):
+            ra_ii += 180.
+        elif ((x_ii >= 0.) and (y_ii < 0.)):
+            ra_ii += 360.
+        # Saving RA value
+        ra_arr[ii] = ra_ii
+    #
+    # Creating DataFrame with Spherical coordinates
+    sph_pd = pd.DataFrame(dict(zip(sph_names_arr, [ra_arr, dec_arr, dist_arr])))
+    # Converting to final output
+    if (return_type == 'array'):
+        sph_obj = sph_pd.values
+    elif (return_type == 'df'):
+        sph_obj = sph_pd
+
+    return sph_obj
+
+## Set of rotation matrices
+def cart_rotation_matrices(angle=45, ax='x'):
+    """
+    Set of rotation matrices along some axis `ax` by some angle `angle`.
+
+    Parameters
+    ------------
+    angle : `float`, optional
+        Angle, by which to rotate the points. This variable is set to
+        ``45`` by default.
+
+    ax : {'x', 'y', 'z'} `str`, optional
+        Axis, along which to rotate the points. This variable is set to
+        ``x`` by default.
+    
+    Returns
+    ----------
+    rot_matr : `numpy.ndarray`
+        Rotation matrix for a given axis 'x'
+    """
+    file_msg = fd.Program_Msg(__file__)
+    # Checking type of `angle`
+    angle_type_arr = (float, int)
+    if not (isinstance(angle, angle_type_arr)):
+        msg = '{0} `angle` ({1}) is not a valid input type ({2})'
+        msg = msg.format(file_msg, type(angle), angle_type_arr)
+        raise TypeError(msg)
+    else:
+        angle = float(angle)
+    # Checking range of `angle`
+    if not ((angle >= 0) and (angle <= 360.)):
+        msg = '{0} `angle` ({1}) must be between `0` and `360` degrees!'
+        msg = msg.format(file_msg, angle)
+        raise ValueError(msg)
+    # Checking type of `ax`
+    ax_type = (str)
+    if not (isinstance(ax, ax_type)):
+        msg = '{0} `ax` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(ax), ax_type)
+        raise TypeError(msg)
+    # Checking value of `ax`
+    ax_val_arr = ['x', 'y', 'z']
+    if not (ax in ax_val_arr):
+        msg = '{0} `ax` ({1}) is not a valid input values ({2})!'
+        msg = msg.format(file_msg, ax, ax_val_arr)
+        raise ValueError(msg)
+    ##
+    ## Angle to rad
+    a_rad = np.radians(angle)
+    cos_a = np.cos(a_rad)
+    sin_a = np.sin(a_rad)
+    ## Defining rotation matrices
+    rot_dict = {}
+    # x-axis
+    rot_dict['r_x'] = np.array([(1, 0, 0),
+                                (0, cos_a, -sin_a),
+                                (0, sin_a, cos_a)])
+    # y-axis
+    rot_dict['r_y'] = np.array([(cos_a, 0, sin_a),
+                                (0, 1, 0),
+                                (-sin_a, 0, cos_a)])
+    # z-axis
+    rot_dict['r_z'] = np.array([(cos_a, -sin_a, 0),
+                                (sin_a, cos_a, 0),
+                                (0, 0, 1)])
+
+    return rot_dict['r_{0}'.format(ax)]
+
+## Computes the dot product of a series of rotation matrices
+def rotation_matrices_3D(x_ang=0, y_ang=0, z_ang=0, rot_order='xyz'):
+    """
+    Computes the value of the rotation matrix for 3 different rotations.
+
+    Parameters
+    -------------
+    x_ang : `float`, optional
+        Angle, by which the points are rotated around the `x` axis.
+        This variable is set to ``0`` by default.
+
+    y_ang : `float`, optional
+        Angle, by which the points are rotated around the `y` axis.
+        This variable is set to ``0`` by default.
+
+    z_ang : `float`, optional
+        Angle, by which the points are rotated around the `z` axis.
+        This variable is set to ``0`` by default.
+
+    rot_order : `str`, optional
+        Type of rotation to make. `rot_order` is expected to have THREE
+        letters from {'x', 'y', 'z'} element. This variable is set to
+        ``xyz`` by default.
+
+    Returns
+    ---------
+    rot_prod : `numpy.ndarray`
+        Array containing the product of the dot product of the
+        rotation matrices, based on the order of `rot_order` and the
+        designated angles for each axes.
+    """
+    file_msg = fd.Program_Msg(__file__)
+    # Checking type of `angle`
+    ang_dict = {}
+    cart_arr = ['x', 'y', 'z']
+    ang_arr  = [x_ang, y_ang, z_ang]
+    angle_type_arr = (float, int)
+    for (cart_ii, ang_ii) in zip(cart_arr, ang_arr):
+        if not (isinstance(ang_ii, angle_type_arr)):
+            msg = '{0} `{1}_ang` ({2}) is not a valid input type ({3})'
+            msg = msg.format(file_msg, cart_ii, type(ang_ii), angle_type_arr)
+            raise TypeError(msg)
+        else:
+            ang_dict[cart_ii] = float(ang_ii)
+    # Checking type for `rot_order`
+    rot_order_type_arr = (str)
+    if not (isinstance(rot_order, rot_order_type_arr)):
+        msg = '{0} `rot_order` ({1}) is not a valid input type ({2})'
+        msg = msg.format(file_msg, type(rot_order), rot_order_type_arr)
+        raise TypeError(msg)
+    # Checking that `rot_order` is only composed of ['x', 'y', 'z']
+    rot_order_join = rot_order.lower().replace(' ', '').replace('', ' ').split()
+    rot_order_unq  = set(rot_order_join)
+    if not (all(xx in cart_arr for xx in rot_order_unq)):
+        msg = '{0} `rot_order` ({1}) is not a valid choice!'
+        msg = msg.format(file_msg, rot_order)
+        raise ValueError(msg)
+    else:
+        # Defining order of 
+        rot_order_arr = rot_order_join
+    ##
+    ## Determining the order of rotation matrices
+    rot_matrix_arr = [cart_rotation_matrices(angle=ang_dict[xx], ax=xx)
+                        for xx in rot_order_arr]
+    # Taking the dot product of all matrices
+    if len(rot_matrix_arr) == 1:
+        dot_rot_matrix = rot_matrix_arr[0]
+    elif len(rot_matrix_arr) > 1:
+        dot_rot_matrix = np.linalg.multi_dot(rot_matrix_arr)
+
+    return dot_rot_matrix
+
+## Rotation of points in the Cartesian coordinates
+def cartesian_rotation(cart_obj, x_ang=0, y_ang=0, z_ang=0, rot_order='xyz',
+    return_pd=True):
+    """
+    Function to rotate a set of points in Cartesian coordinates by
+    some `angle` along the `ax` axis.
+
+    Parameters
+    ------------
+    cart_obj = `numpy.ndarray` or `pandas.DataFrame`
+        Set of Cartesian coordinates for a given set of points.
+        This variable has three coordinates.
+
+    x_ang : `float`, optional
+        Angle, by which the points are rotated around the `x` axis.
+        This variable is set to ``0`` by default.
+
+    y_ang : `float`, optional
+        Angle, by which the points are rotated around the `y` axis.
+        This variable is set to ``0`` by default.
+
+    z_ang : `float`, optional
+        Angle, by which the points are rotated around the `z` axis.
+        This variable is set to ``0`` by default.
+
+    rot_order : `str`, optional
+        Type of rotation to make. `rot_order` is expected to have THREE
+        letters from {'x', 'y', 'z'} element. This variable is set to
+        ``xyz`` by default.
+
+    return_pd : `bool`, optional
+        If `True`, the function returns a DataFrame with the transformed
+        Cartesian coordinates of the points. If `False, the function
+        returns a (N,3) `numpy.ndarray`. This variable is set to `True`
+        by default.
 
     Returns
     -----------
-    coord_dict (coord_pd) : `dict`
-        Dictionary with spherical coordinates (`ra`, `dec`) and
-        distance (`dist`) of N elements. This value is returned if
-        `return_dict` is set to `True`. If not, a `pd.DataFrame` is
-        returned.
+    cart_tr : `numpy.ndarray` or `pandas.DataFrame`
+        Transformed set of Cartesian coordinates for each of the points
+        given.
     """
     file_msg = fd.Program_Msg(__file__)
-    ## Check types of elements
-    # Units
-    unit_arr = ['deg', 'rad']
-    if not (unit in unit_arr):
-        '{0} `unit` ({1}) is not a valid input!'.format(
-            file_msg, unit)
-    # Valid types
-    valid_types = (float, int, np.ndarray, list)
-    # X-coordinate
-    if not (isinstance(x_arr, valid_types)):
-        msg = '{0} `x_arr` ({1}) is not a valid type!'.format(
-            file_msg, type(x_arr))
-        raise LSSUtils_Error(msg)
-    # Y-coordinate
-    if not (isinstance(y_arr, valid_types)):
-        msg = '{0} `y_arr` ({1}) is not a valid type!'.format(
-            file_msg, type(y_arr))
-        raise LSSUtils_Error(msg)
-    # Z-coordinate
-    if not (isinstance(z_arr, valid_types)):
-        msg = '{0} `z_arr` ({1}) is not a valid type!'.format(
-            file_msg, type(z_arr))
-        raise LSSUtils_Error(msg)
-    # Distance
-    if not (isinstance(dist, valid_types)):
-        msg = '{0} `dist` ({1}) is not a valid type!'.format(
-            file_msg, type(dist))
-        raise LSSUtils_Error(msg)
-    ##
-    ## Check type of elements
-    # X-Coordinate
-    if (isinstance(x_arr, float) or isinstance(x_arr, int)):
-        x_arr = np.array([x_arr])
+    # Checking type of `cart_obj`
+    cart_obj_type = (np.ndarray, pd.DataFrame)
+    if not (isinstance(cart_obj, cart_obj_type)):
+        msg = '{0} `cart_obj` ({1}) is not a valid input type ({2})'
+        msg = msg.format(file_msg, type(cart_obj), cart_obj_type)
+        raise TypeError(msg)
     else:
-        x_arr = np.array(x_arr)
-    # Y-Coordinate
-    if (isinstance(y_arr, float) or isinstance(y_arr, int)):
-        y_arr = np.array([y_arr])
-    else:
-        y_arr = np.array(y_arr)
-    # Z-Coordinate
-    if (isinstance(z_arr, float) or isinstance(z_arr, int)):
-        z_arr = np.array([z_arr])
-    else:
-        z_arr = np.array(z_arr)
-    # Distance
-    if (isinstance(dist, float) or isinstance(dist, int)):
-        dist = np.array([dist])
-    else:
-        dist = np.array(dist)
+        if isinstance(cart_obj, cart_obj_type[0]):
+            cart_arr = ['x', 'y', 'z']
+            cart_pd  = pd.DataFrame(dict(zip(cart_arr, cart_obj.T)))
+        elif isinstance(cart_obj, cart_obj_type[1]):
+            cart_arr = ['x', 'y', 'z']
+            cart_pd  = pd.DataFrame(dict(zip(cart_arr, cart_obj.values.T)))
+    cart_arr = ['x', 'y', 'z']
+    ang_arr  = [x_ang, y_ang, z_ang]
+    angle_type_arr = (float, int)
+    for (cart_ii, ang_ii) in zip(cart_arr, ang_arr):
+        if not (isinstance(ang_ii, angle_type_arr)):
+            msg = '{0} `{1}_ang` ({2}) is not a valid input type ({3})'
+            msg = msg.format(file_msg, cart_ii, type(ang_ii), angle_type_arr)
+            raise TypeError(msg)
+    # Checking type for `rot_order`
+    rot_order_type_arr = (str)
+    if not (isinstance(rot_order, rot_order_type_arr)):
+        msg = '{0} `rot_order` ({1}) is not a valid input type ({2})'
+        msg = msg.format(file_msg, type(rot_order), rot_order_type_arr)
+        raise TypeError(msg)
+    # Checking type of 'return_pd'
+    return_pd_type_arr = (bool)
+    if not (isinstance(return_pd, return_pd_type_arr)):
+        msg = '{0} `return_pd` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(return_pd), return_pd_type_arr)
+        raise TypeError(msg)
     ##
-    ## Initializing pandas DataFrame
-    dict_keys  = ['x', 'y', 'z', 'dist']
-    coord_dict = dict(zip(dict_keys, np.vstack([x_arr, y_arr, z_arr, dist])))
-    ##
-    ## Cartesian to Spherical coordinates
-    ##
-    ## - Normalized cartesian coordinates
-    cart_arr = np.column_stack([x_arr, y_arr, z_arr])
-
-
-
-
-
-    (   x_val,
-        y_val,
-        z_val) = cart_arr/float(dist)
-    # Distance to object
-    dist = float(dist)
-    ## Declination
-    dec_val = 90. - num.degrees(num.arccos(z_val))
-    ## Right ascension
-    if x_val == 0:
-        if y_val > 0.:
-            ra_val = 90.
-        elif y_val < 0.:
-            ra_val = -90.
+    ## Extracting Cartesian coordinates
+    nelem = len(cart_pd['x'])
+    if (nelem == 1):
+        pos_arr = cart_pd.values[:, np.newaxis]
     else:
-        ra_val = num.degrees(num.arctan(y_val/x_val))
-    ##
-    ## Seeing on which quadrant the point is at
-    if x_val < 0.:
-        ra_val += 180.
-    elif (x_val >= 0.) and (y_val < 0.):
-        ra_val += 360.
+        pos_arr = cart_pd.values.T
+    # Computing Rotation matrices
+    rot_prod = rotation_matrices_3D(x_ang=x_ang,
+                                    y_ang=y_ang,
+                                    z_ang=z_ang,
+                                    rot_order=rot_order)
+    # Multiplying by the Cartesian Coordinates
+    cart_tr_arr = np.dot(rot_prod, pos_arr)
+    # Choosing what to return
+    if return_pd:
+        cart_tr = pd.DataFrame(dict(zip(['x', 'y', 'z'], cart_tr_arr)))
+    else:
+        cart_tr = cart_tr_arr
 
-    return ra_val, dec_val
+    return cart_tr
