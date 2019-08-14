@@ -3,7 +3,7 @@
 
 # Victor Calderon
 # Created      : 2018-05-03
-# Last Modified: 2018-05-03
+# Last Modified: 2019-08-14
 from __future__ import absolute_import, division, print_function
 __author__     = ['Victor Calderon']
 __copyright__  = ["Copyright 2018 Victor Calderon"]
@@ -11,9 +11,16 @@ __email__      = ['victor.calderon@vanderbilt.edu']
 __maintainer__ = ['Victor Calderon']
 __all__        = [  "flip_angles",
                     "Ang_Distance",
-                    "Coord_Transformation"]
+                    "Coord_Transformation",
+                    "cartesian_translation",
+                    "sph_to_cartesian",
+                    "coordinate_transformation",
+                    "cart_to_sph_coords",
+                    "cart_rotation_matrices",
+                    "rotation_matrices_3D",
+                    "cartesian_rotation"]
 """
-Set of geometrical definitions for translations, coordinate tranformations,
+Set of geometrical definitions for translations, coordinate transformations,
 etc.
 """
 
@@ -464,9 +471,109 @@ def cartesian_translation(cart_obj, cart_origin_obj):
 
     return cart_tr_obj
 
+## Spherical to Cartesian coordinates
+def sph_to_cartesian(sph_obj, return_type='df', unit='deg'):
+    """
+    Function that converts spherical coordinates into Cartesian coordinates.
+
+    Parameters
+    -----------
+    sph_obj : `numpy.ndarray` or `pandas.DataFrame`
+        Object containing the positions of points in spherical coordinates.
+        The object must include the `ra`, `dec`, and `distance` to
+        each object to the observer.
+
+    return_type : {'df', 'dict'} `str`, optional
+        Option for the type of output file to return. This variable is
+        set to ``df`` by default.
+
+        Options :
+            - ``df`` : `pandas.DataFrame` with transformed coordinates.
+            - ``dict`` : Dictionary with transformed coordinates.
+
+    unit : {``deg``, ``rad``} `str`, optional
+        Unit of angles provided. This will also determine the final
+        unit that outputs this function. This variable is set to `deg`
+        by default.
+
+    Returns
+    ----------
+    cart_obj : `dict` or `pandas.DataFrame`
+        Object containing the spherical and Cartesian coordinates of the
+        elements from `sph_obj`. 
+    """
+    file_msg       = fd.Program_Msg(__file__)
+    cart_names_arr = ['x', 'y', 'z']
+    sph_names_arr  = ['ra', 'dec', 'dist']
+    ##
+    ## Checking input parameters
+    # `sph_obj` - Type
+    sph_obj_type_arr = (list, np.ndarray, pd.DataFrame, pd.Series)
+    if not (isinstance(sph_obj, sph_obj_type_arr)):
+        msg = '{0} `sph_obj` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(sph_obj), sph_obj_type_arr)
+        raise TypeError(msg)
+    else:
+        if isinstance(list, np.ndarray):
+            sph_pd = pd.DataFrame(dict(zip(sph_names_arr,
+                np.asarray(sph_obj).T)))
+        elif isinstance(pd.DataFrame, pd.Series):
+            try:
+                sph_pd = pd.DataFrame(dict(zip(sph_names_arr,
+                    sph_obj.values.T)))
+            else:
+                sph_pd = pd.Series(dict(zip(sph_names_arr,
+                    sph_obj.values.T)))
+    # `unit` - Type
+    unit_type_arr = (str)
+    if not (isinstance(unit, unit_type_arr)):
+        msg = '{0} `unit` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(unit), unit_type_arr)
+        raise TypeError(msg)
+    # `unit` - Value
+    unit_val_arr = ['deg', 'rad']
+    if not (unit in unit_val_arr):
+        msg = '{0} `unit` ({1}) is not a valid input value ({2})!'
+        msg = msg.format(file_msg, unit, unit_val_arr)
+        raise ValueError(msg)
+    ##
+    ## Converting spherical to Cartesian coordinates
+    if (unit == 'rad'):
+        ra_rad  = sph_pd['ra']
+        dec_rad = sph_pd['dec']
+    elif (unit == 'deg'):
+        ra_rad  = np.radians(sph_pd['ra'])
+        dec_rad = np.radians(sph_pd['dec'])
+    # Distance array
+    dist_arr = sph_pd['dist']
+    #
+    # Converting to Cartesian
+    x = dist_arr * np.cos(ra_rad) * np.cos(dec_rad)
+    y = dist_arr * np.sin(ra_rad) * np.cos(dec_rad)
+    z = dist_arr * np.sin(dec_rad)
+    #
+    # Constructing output object
+    if (return_type == 'df'):
+        if isinstance(x, (list, np.ndarray)):
+            cart_obj = pd.DataFrame(dict(zip(cart_names_arr,
+                np.column_stack(np.asarray([x, y, z]).T))))
+        elif isinstance(x, pd.DataFrame):
+            cart_obj = pd.DataFrame(dict(zip(cart_names_arr,
+                np.vstack(([x.values, y.values, z.values])))))
+        else:
+            cart_obj = pd.Series(dict(zip(cart_names_arr,
+                [x, y, z])))
+    else:
+        cart_obj = {}
+        cart_obj['x'] = x
+        cart_obj['y'] = y
+        cart_obj['z'] = z
+
+    return cart_obj
+
 ## Coordinate Transformation - Spherical to Cartesian
-def spherical_cartesian(sph_obj, sph_cen_obj, trans_opt=4, return_dict=False,
-    rotoder='t', unit='deg'):
+def coordinate_transformation(sph_obj, sph_cen_obj, translation_first=False,
+    trans_opt=2, return_type='df', unit='deg'):
     """
     Transforms spherical coordinates (ra, dec, dist) into Cartesian
     coordinates.
@@ -482,23 +589,31 @@ def spherical_cartesian(sph_obj, sph_cen_obj, trans_opt=4, return_dict=False,
         Object containing the position of the `origin` or `center` of
         the points. It contains the `ra`, `cen`, and `dist` to main
         object. This variable is used when translating the set of points.
-    
-    trans_opt : {1, 2, 3, 4}, `int`, optional
-        Option for Cartesian translation / transformation for elements.
-        This variable is set to `4` by default.
 
-        Options:
-            - `1` : No translation involved.
-            - `2` : Translation to the center point
-            - `3` : Translation and rotation to the center point.
-            - `4` : Translation and 2 rotations about the center point.
+    translation_first : `bool`, optional    
+        If `True`, the new origin of the Cartesian coordinates is set
+        to `sph_cen_obj`. If `False`, no translation is performed at the
+        beginning of the transformation. This variable is set to `False`
+        by default.
 
-    return_dict : `bool`, optional
-        If `True`, this function returns 2 dictionaries with `spherical`
-        and `Cartesian` coordinates. If `False`, the function returns the
-        a `pandas.DataFrame` with the columns.
+    trans_opt : {``1``, ``2``}, `int`, optional
+        Option for how the Cartesian coordinates are translated and/or
+        transformed. This variable is set to ``2`` by default.
 
-    unit : {'deg', 'rad'} `str`, optional
+        Option :
+            - ``0`` : No rotations
+            - ``1`` : Rotation along the `z`-axis.
+            - ``2`` : Rotation along the `x`-axis.
+
+    return_type : {'df', 'dict'} `str`, optional
+        Option for the type of output file to return. This variable is
+        set to ``df`` by default.
+
+        Options :
+            - ``df`` : `pandas.DataFrame` with transformed coordinates.
+            - ``dict`` : Dictionary with transformed coordinates.
+
+    unit : {``deg``, ``rad``} `str`, optional
         Unit of angles provided. This will also determine the final
         unit that outputs this function. This variable is set to `deg`
         by default.
@@ -509,6 +624,123 @@ def spherical_cartesian(sph_obj, sph_cen_obj, trans_opt=4, return_dict=False,
         Object containing the spherical and Cartesian coordinates of the
         elements from `sph_obj`. 
     """
+    file_msg = fd.Program_Msg(__file__)
+    cart_names_arr = ['x', 'y', 'z']
+    sph_names_arr  = ['ra', 'dec', 'dist']
+    cart_rot_dict  = dict(zip([1, 2], ['z', 'zx']))
+    ##
+    ## Checking input parameters
+    # `sph_obj` - Type
+    sph_obj_type_arr = (list, np.ndarray, pd.DataFrame, pd.Series)
+    if not (isinstance(sph_obj, sph_obj_type_arr)):
+        msg = '{0} `sph_obj` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(sph_obj), sph_obj_type_arr)
+        raise TypeError(msg)
+    else:
+        if isinstance(list, np.ndarray):
+            sph_pd = pd.DataFrame(dict(zip(sph_names_arr,
+                np.asarray(sph_obj).T)))
+        elif isinstance(pd.DataFrame, pd.Series):
+            try:
+                sph_pd = pd.DataFrame(dict(zip(sph_names_arr,
+                    sph_obj.values.T)))
+            else:
+                sph_pd = pd.Series(dict(zip(sph_names_arr,
+                    sph_obj.values.T)))
+    # `sph_cen_obj` - Type
+    sph_cen_obj_type_arr = (list, np.ndarray, pd.DataFrame, pd.Series)
+    if not (isinstance(sph_cen_obj, sph_cen_obj_type_arr)):
+        msg = '{0} `sph_cen_obj` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(sph_cen_obj), sph_cen_obj_type_arr)
+        raise TypeError(msg)
+    else:
+        if isinstance(sph_cen_obj, (list, np.ndarray)):
+            sph_cen_pd = pd.Series(dict(zip(sph_names_arr,
+                np.asarray(sph_cen_obj).T)))
+        elif isinstance(sph_cen_obj, (pd.DataFrame, pd.Series)):
+            sph_cen_pd = pd.Series(dict(zip(sph_names_arr,
+                sph_cen_obj.values.T)))
+    # `translation_first` - Type
+    translation_first_type_arr = (bool)
+    if not (isinstance(translation_first, translation_first_type_arr)):
+        msg = '{0} `translation_first` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(translation_first),
+            translation_first_type_arr)
+        raise TypeError(msg)
+    # `trans_opt` - Type
+    trans_opt_type_arr = (int, float)
+    if not (isinstance(trans_opt, trans_opt_type_arr)):
+        msg = '{0} `trans_opt` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(trans_opt), trans_opt_type_arr)
+        raise TypeError(msg)
+    # `trans_opt` - Value
+    trans_opt_val_arr = [0, 1, 2]
+    if not (trans_opt in trans_opt_val_arr):
+        msg = '{0} `trans_opt` ({1}) is not a valid input value ({2})!'
+        msg = msg.format(file_msg, trans_opt, trans_opt_val_arr)
+        raise ValueError(msg)
+    else:
+        trans_opt = int(trans_opt)
+    # `return_type` - Type
+    return_type_type_arr = (str)
+    if not (isinstance(return_type, return_type_type_arr)):
+        msg = '{0} `return_type` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(return_type), return_type_type_arr)
+        raise TypeError(msg)
+    # `return_type` - Value
+    return_type_val_arr = ['df', 'dict']
+    if not (return_type in return_type_val_arr):
+        msg = '{0} `return_type` ({2}) is not a valid input value ({2})!'
+        msg = msg.format(file_msg, return_type, return_type_val_arr)
+        raise ValueError(msg)
+    # `unit` - Type
+    unit_type_arr = (str)
+    if not (isinstance(unit, unit_type_arr)):
+        msg = '{0} `unit` ({1}) is not a valid input type ({2})!'
+        msg = msg.format(file_msg, type(unit), unit_type_arr)
+        raise TypeError(msg)
+    # `unit` - Value
+    unit_val_arr = ['deg', 'rad']
+    if not (unit in unit_val_arr):
+        msg = '{0} `unit` ({1}) is not a valid input value ({2})!'
+        msg = msg.format(file_msg, unit, unit_val_arr)
+        raise ValueError(msg)
+    ##
+    ## Converting spherical to Cartesian coordinates
+    cart_pd     = sph_to_cartesian(sph_obj, return_type='df', unit=unit)
+    cart_cen_pd = sph_to_cartesian(sph_cen_obj, return_type='df', unit=unit)
+    # Translating coordinates, if necessary
+    if translation_first:
+        cart_pd_mod = cartesian_translation(cart_pd, cart_cen_pd)
+    else:
+        cart_pd_mod = cart_pd
+    # Angles, by which to rotate
+    if (unit == 'rad'):
+        omega_z = np.radians(90. - np.degrees(cart_cen_pd['ra']))
+        tau_x   = np.radians(90. - np.degrees(cart_cen_pd['dec']))
+    elif (unit == 'deg'):
+        omega_z = np.radians(90. - cart_cen_pd['ra'])
+        tau_x   = np.radians(90. - cart_cen_pd['dec'])
+    ##
+    ## Specifying rotations
+    if (trans_opt == 0):
+        # No rotations
+        cart_rot_pd = cart_pd_mod
+    else:
+        cart_rot_pd = cartesian_rotation(   cart_pd_mod,
+                                            x_ang=tau_x,
+                                            z_ang=omega_z,
+                                            rot_order=cart_rot_dict[trans_opt],
+                                            return_pd=True)
+    #
+    # Returning object
+    if (return_type == 'df'):
+        coord_obj = cart_rot_pd
+    elif (return_type == 'dict'):
+        coord_obj = dict(zip(coord_obj.columns.values,
+                        cart_pd_mod.values.T))
+
+    return coord_obj
 
 ## Coordinate Transformation - Cartesian to Spherical coordinates
 def cart_to_sph_coords(cart_obj, unit='deg', return_type='df'):
