@@ -514,10 +514,10 @@ def sph_to_cartesian(sph_obj, return_type='df', unit='deg'):
         msg = msg.format(file_msg, type(sph_obj), sph_obj_type_arr)
         raise TypeError(msg)
     else:
-        if isinstance(list, np.ndarray):
+        if isinstance(sph_obj, (list, np.ndarray)):
             sph_pd = pd.DataFrame(dict(zip(sph_names_arr,
                 np.asarray(sph_obj).T)))
-        elif isinstance(pd.DataFrame, pd.Series):
+        elif isinstance(sph_obj, (pd.DataFrame, pd.Series)):
             try:
                 sph_pd = pd.DataFrame(dict(zip(sph_names_arr,
                     sph_obj.values.T)))
