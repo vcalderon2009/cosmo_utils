@@ -439,11 +439,11 @@ def cartesian_translation(cart_obj, cart_origin_obj):
         msg = msg.format(file_msg, type(cart_obj), cart_obj_type_arr)
         raise TypeError(msg)
     else:
-        if (isinstance(cart_obj, np.ndarray)):
+        if (isinstance(cart_obj, (np.ndarray))):
             cart_pd = pd.DataFrame(dict(zip(cart_names, cart_obj.T)))
-        elif (isinstance(cart_obj, list)):
+        elif (isinstance(cart_obj, (list))):
             cart_pd = pd.DataFrame(dict(zip(cart_names, np.asarray(cart_obj).T)))
-        elif (isinstance(cart_obj, pd.DataFrame)):
+        elif (isinstance(cart_obj, (pd.DataFrame))):
             cart_pd = pd.DataFrame(dict(zip(cart_names, cart_obj.values.T)))
     #
     # Checking type of `cart_obj_cen`
@@ -454,7 +454,7 @@ def cartesian_translation(cart_obj, cart_origin_obj):
             cart_origin_obj_type_arr)
         raise TypeError(msg)
     else:
-        if isinstance(cart_origin_obj, list):
+        if isinstance(cart_origin_obj, (list)):
             cart_origin_obj = np.asarray(cart_origin_obj).flatten()
         elif isinstance(cart_origin_obj, (pd.DataFrame, pd.Series)):
             cart_origin_obj = pd.Series(dict(zip(cart_names,
@@ -637,10 +637,10 @@ def coordinate_transformation(sph_obj, sph_cen_obj, translation_first=False,
         msg = msg.format(file_msg, type(sph_obj), sph_obj_type_arr)
         raise TypeError(msg)
     else:
-        if isinstance(list, np.ndarray):
+        if isinstance(sph_obj, (list, np.ndarray)):
             sph_pd = pd.DataFrame(dict(zip(sph_names_arr,
                 np.asarray(sph_obj).T)))
-        elif isinstance(pd.DataFrame, pd.Series):
+        elif isinstance(sph_obj, (pd.DataFrame, pd.Series)):
             try:
                 sph_pd = pd.DataFrame(dict(zip(sph_names_arr,
                     sph_obj.values.T)))
@@ -1043,10 +1043,10 @@ def cartesian_rotation(cart_obj, x_ang=0, y_ang=0, z_ang=0, rot_order='xyz',
         msg = msg.format(file_msg, type(cart_obj), cart_obj_type)
         raise TypeError(msg)
     else:
-        if isinstance(cart_obj, cart_obj_type[0]):
+        if isinstance(cart_obj, (cart_obj_type[0])):
             cart_arr = ['x', 'y', 'z']
             cart_pd  = pd.DataFrame(dict(zip(cart_arr, cart_obj.T)))
-        elif isinstance(cart_obj, cart_obj_type[1]):
+        elif isinstance(cart_obj, (cart_obj_type[1])):
             cart_arr = ['x', 'y', 'z']
             cart_pd  = pd.DataFrame(dict(zip(cart_arr, cart_obj.values.T)))
     cart_arr = ['x', 'y', 'z']
